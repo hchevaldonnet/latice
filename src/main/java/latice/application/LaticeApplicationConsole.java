@@ -8,6 +8,7 @@ public class LaticeApplicationConsole {
 		System.out.println("-- développé par Ferdina                           --");
 		System.out.println("-- et par Mattéo"
 				           + "\n--et par Adam");
+		System.out.println("-- et par Hubert.                                  --");
 		System.out.println("-------------------------------------------------------");
 	}
 
