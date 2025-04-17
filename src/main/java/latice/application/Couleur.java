@@ -1,10 +1,22 @@
 package latice.application;
 
 public enum Couleur {
-	ROUGE,
-	CYAN,
-	VERT,
-	JAUNE,
-	VIOLET,
-	BLEU;
+	ROUGE("rouge"),
+	CYAN("cyan"),
+	VERT("vert"),
+	JAUNE("jaune"),
+	VIOLET("violet"),
+	BLEU("bleu");
+	
+	private final String couleur;
+	
+	private Couleur(String couleur) {
+		this.couleur = couleur;
+		
+	}
+	
+	public String getcouleur() {
+		return this.couleur;
+	}
+	
 }

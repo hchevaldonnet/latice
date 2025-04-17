@@ -1,19 +1,18 @@
 package latice.application;
 
-import latice.application.Couleur;
-import latice.application.Symbole;
-
 public class Tuile {
 	private Couleur couleur;
 	private Symbole symbole;
 	
 	public Tuile(Couleur couleur, Symbole symbole) {
-		//TODO
+		this.couleur = couleur;
+		this.symbole = symbole;
 	}
 	
 	@Override
 	public String toString() {
-		return "";
-		//TODO
+		return "Tuile avec la couleur" + this.couleur.getcouleur() + this.symbole.getSymbole() ;
 	}
+	
+	
 }
