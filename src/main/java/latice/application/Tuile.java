@@ -11,8 +11,10 @@ public class Tuile {
 	
 	@Override
 	public String toString() {
-		return "Tuile avec la couleur" + this.couleur.getcouleur() + this.symbole.getSymbole() ;
+		return "Tuile avec la couleur " + this.couleur.getcouleur() + " et le symbole "+ this.symbole.getSymbole() + " ." ;
 	}
+	
+	
 	
 	
 }
