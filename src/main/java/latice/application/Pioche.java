@@ -28,4 +28,8 @@ public class Pioche {
     		return false;
     	}
     }
+    
+    public int taille() {
+    	return tuiles.size();
+    }
 }
