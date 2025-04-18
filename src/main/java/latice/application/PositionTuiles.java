@@ -1,11 +1,12 @@
 package latice.application;
 
 public class PositionTuiles {
-	private int x;
-	private int y;
+	private int x; //Lignes
+	private int y; //Colonnes
 	
 	public PositionTuiles(int x, int y) {
-		//TODO
+		this.x = x;
+		this.y = y;
 	}
 	
 	public int getX() {
