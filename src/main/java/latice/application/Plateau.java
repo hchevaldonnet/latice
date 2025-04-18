@@ -13,7 +13,7 @@ import latice.application.Tuile;
 public class Plateau {
 	
 	private Map<Tuile, PositionTuiles> cases;
-	private static final Integer nbSunStonesTotal = 16;
+	private static final Integer nbSunStonesTotal = 16; 
 	
 	public Plateau(Tuile tuile, PositionTuiles position) {
 		Map<Tuile, PositionTuiles> cases = new HashMap<>();
