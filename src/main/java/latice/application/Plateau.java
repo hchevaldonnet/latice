@@ -12,7 +12,7 @@ public class Plateau {
 	private static final Integer nbSunStonesTotal = 16;
 	
 	public Plateau(Tuile tuile, PositionTuiles position) {
-		this.cases = new HashMap<>();
+		Map<Tuile, PositionTuiles> cases = new HashMap<>();
 	}
 	
 	public boolean placerTuile(Tuile tuile, PositionTuiles pos) {
