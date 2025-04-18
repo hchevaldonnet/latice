@@ -1,5 +1,6 @@
 package latice.application;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import latice.application.PositionTuiles;
@@ -11,13 +12,16 @@ public class Plateau {
 	private static final Integer nbSunStonesTotal = 16;
 	
 	public Plateau(Tuile tuile, PositionTuiles position) {
-		//TODO
+		this.cases = new HashMap<>();
 	}
 	
 	public boolean placerTuile(Tuile tuile, PositionTuiles pos) {
-		return true;
-		//TODO
-	}
+		if (cases.containsValue(pos)) {
+            return false;
+        }
+        cases.put(tuile, pos);
+        return true;
+       }
 	
 	public Tuile getTuile() {
 		return new Tuile(null, null);
