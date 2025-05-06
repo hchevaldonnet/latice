@@ -58,7 +58,15 @@ public class Plateau {
 				);
 		
 		return listeDeCasesSoleils.contains(pos);
-	
+		
 }
+	public boolean caseIsMoon(PositionTuiles pos) {
+		PositionTuiles moonCase = new PositionTuiles(4,4);
+		
+		return pos.equals(moonCase);
+		
+		
+	}
+	
 	
 }

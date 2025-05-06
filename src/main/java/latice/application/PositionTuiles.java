@@ -12,13 +12,11 @@ public class PositionTuiles {
 	}
 	
 	public int getX() {
-		return -1;
-		//TODO
+		return x;
 	}
 	
 	public int getY() {
-		return -1;
-		//TODO
+		return y;
 	}
 	
 	@Override

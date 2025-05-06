@@ -45,9 +45,12 @@ public class LaticeApplicationConsole {
 		Plateau plateau = new Plateau();
 		
 		
-		int choix = 0;
+		int choix = 1; //TODO permettre à l'utilisateur de changer la variable
 		boolean quitter = false;
 		Scanner scanner = new Scanner(System.in);
+		int ligne = -1;
+		int colonne = -1;
+		int choixCoup = -1;
 		
 		
 		
@@ -57,39 +60,46 @@ public class LaticeApplicationConsole {
 			
 			System.out.print("Sur quelle ligne voulez-vous placez la tuile : ");
 			if (scanner.hasNextInt()) {
-				int ligne = scanner.nextInt();
+				 ligne = scanner.nextInt();
 			}
-			while l
+		
 			System.out.print("Sur quelle colonne voulez-vous placez la tuile : ");
-			int colonne = scanner.nextInt(); //TODO Vérifier que ligne soit dans l'interval
-			scanner.close();
+			if (scanner.hasNextInt()) {
+				colonne = scanner.nextInt(); 
+			}
 			switch (choix) {
 				
 			case 1:
-				plateau.placerTuile(rackJoueur1.getTuiles().get(0), new PositionTuiles(ligne,colonne));
-				if (plateau.caseIsSunStones(new PositionTuiles(0,8))){
-					System.out.print("c'est une case soleil");
+				System.out.println("Veuillez choisir une tuile entre de 1 à 5 : ");
+				if (scanner.hasNextInt()) {
+					choixCoup = scanner.nextInt()-1;
+				}
+				PositionTuiles pos = new PositionTuiles(ligne, colonne);
+				System.out.println(pos.getX());
+				plateau.placerTuile(rackJoueur1.getTuiles().get(choixCoup), pos);
+				if (plateau.caseIsSunStones(pos)){
+					System.out.println("c'est une case soleil");
 				}
 				else {
-					System.out.print("ce n'est pas une case soleil");
+					System.out.println("ce n'est pas une case soleil");
 					
+				}
+				if (plateau.caseIsMoon(pos)) {
+					System.out.println("c'est une case lune");
+				}
+				else {
+					System.out.println("ce n'est pas une case lune");
 				}
 				
 			default:
 				quitter = true;
 				
 			}
+			scanner.close();
 			
 		}
 		
-		plateau.placerTuile(rackJoueur1.getTuiles().get(0), new PositionTuiles(0,0));
-		if (plateau.caseIsSunStones(new PositionTuiles(0,8))){
-			System.out.print("c'est une case soleil");
-		}
-		else {
-			System.out.print("ce n'est pas une case soleil");
-			
-		}
+		
 	}
 
 }
