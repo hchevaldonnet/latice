@@ -45,7 +45,7 @@ public class LaticeApplicationConsole {
 		Plateau plateau = new Plateau();
 		
 		
-		int choix = 1; //TODO permettre à l'utilisateur de changer la variable
+		int choix = -1; 
 		boolean quitter = false;
 		Scanner scanner = new Scanner(System.in);
 		int ligne = -1;
@@ -58,18 +58,26 @@ public class LaticeApplicationConsole {
 		//TODO modifier le code 
 		while (!quitter) {
 			
-			System.out.print("Sur quelle ligne voulez-vous placez la tuile : ");
+			System.out.print("Quels actions voulez-vous faire ? ");
 			if (scanner.hasNextInt()) {
-				 ligne = scanner.nextInt();
+				 choix = scanner.nextInt();
 			}
-		
-			System.out.print("Sur quelle colonne voulez-vous placez la tuile : ");
-			if (scanner.hasNextInt()) {
-				colonne = scanner.nextInt(); 
-			}
+			
+			
 			switch (choix) {
 				
 			case 1:
+				
+				System.out.print("Sur quelle ligne voulez-vous placez la tuile : ");
+				if (scanner.hasNextInt()) {
+					 ligne = scanner.nextInt();
+				}
+			
+				System.out.print("Sur quelle colonne voulez-vous placez la tuile : ");
+				if (scanner.hasNextInt()) {
+					colonne = scanner.nextInt(); 
+				}
+				
 				System.out.println("Veuillez choisir une tuile entre de 1 à 5 : ");
 				if (scanner.hasNextInt()) {
 					choixCoup = scanner.nextInt()-1;
