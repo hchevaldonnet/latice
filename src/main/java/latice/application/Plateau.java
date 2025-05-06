@@ -13,10 +13,10 @@ import latice.application.Tuile;
 public class Plateau {
 	
 	private Map<Tuile, PositionTuiles> cases;
-	private static final Integer nbSunStonesTotal = 16; 
+	private static final Integer nbSunStonesTotal = 16; //A peut-être supprimer
 	
-	public Plateau(Tuile tuile, PositionTuiles position) {
-		Map<Tuile, PositionTuiles> cases = new HashMap<>();
+	public Plateau() {
+		this.cases = new HashMap<>();
 	}
 	
 	public boolean placerTuile(Tuile tuile, PositionTuiles pos) {
@@ -37,7 +37,7 @@ public class Plateau {
 		//TODO
 	}
 	
-	public boolean caseIsSunStones(Map<Tuile, PositionTuiles> cases) {
+	public boolean caseIsSunStones(PositionTuiles pos) {
 		List<PositionTuiles> listeDeCasesSoleils = Arrays.asList( //TODO Changer le type de List par HashSet pour réduire la compléxité
 				new PositionTuiles(0,0),
 				new PositionTuiles(0,4),
@@ -57,7 +57,7 @@ public class Plateau {
 				new PositionTuiles(8,8)
 				);
 		
-		return listeDeCasesSoleils.contains(cases.get(getTuile()));
+		return listeDeCasesSoleils.contains(pos);
 	
 }
 	

@@ -2,6 +2,7 @@ package latice.application;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class LaticeApplicationConsole {
 
@@ -40,6 +41,55 @@ public class LaticeApplicationConsole {
 		System.out.println(rackJoueur1.afficherRack());
 		System.out.println("J2 :");
 		System.out.println(rackJoueur2.afficherRack());
+		
+		Plateau plateau = new Plateau();
+		
+		
+		int choix = 0;
+		boolean quitter = false;
+		Scanner scanner = new Scanner(System.in);
+		
+		
+		
+		
+		//TODO modifier le code 
+		while (!quitter) {
+			
+			System.out.print("Sur quelle ligne voulez-vous placez la tuile : ");
+			if (scanner.hasNextInt()) {
+				int ligne = scanner.nextInt();
+			}
+			while l
+			System.out.print("Sur quelle colonne voulez-vous placez la tuile : ");
+			int colonne = scanner.nextInt(); //TODO Vérifier que ligne soit dans l'interval
+			scanner.close();
+			switch (choix) {
+				
+			case 1:
+				plateau.placerTuile(rackJoueur1.getTuiles().get(0), new PositionTuiles(ligne,colonne));
+				if (plateau.caseIsSunStones(new PositionTuiles(0,8))){
+					System.out.print("c'est une case soleil");
+				}
+				else {
+					System.out.print("ce n'est pas une case soleil");
+					
+				}
+				
+			default:
+				quitter = true;
+				
+			}
+			
+		}
+		
+		plateau.placerTuile(rackJoueur1.getTuiles().get(0), new PositionTuiles(0,0));
+		if (plateau.caseIsSunStones(new PositionTuiles(0,8))){
+			System.out.print("c'est une case soleil");
+		}
+		else {
+			System.out.print("ce n'est pas une case soleil");
+			
+		}
 	}
 
 }

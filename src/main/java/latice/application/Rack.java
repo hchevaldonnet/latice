@@ -42,4 +42,10 @@ public class Rack {
 		}
 		return res;
 	}
+
+	public List<Tuile> getTuiles() {
+		return tuiles;
+	}
+	
+	
 }
