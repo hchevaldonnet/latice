@@ -1,4 +1,4 @@
-package latice.application;
+package latice.model;
 
 public enum Symbole {
 	 FLEUR("🌸"),

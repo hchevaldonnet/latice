@@ -1,10 +1,7 @@
-package latice.application;
+package latice.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import latice.application.Pioche;
-import latice.application.Tuile;
 
 public class Rack {
 	private List<Tuile> tuiles;

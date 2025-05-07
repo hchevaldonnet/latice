@@ -3,6 +3,15 @@ package latice.application;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import latice.model.Couleur;
+import latice.model.Joueur;
+import latice.model.Pioche;
+import latice.model.Plateau;
+import latice.model.PositionTuiles;
+import latice.model.Rack;
+import latice.model.Symbole;
+import latice.model.Tuile;
+import latice.ihm.*;
 
 public class LaticeApplicationConsole {
 
@@ -58,45 +67,37 @@ public class LaticeApplicationConsole {
 		//TODO modifier le code 
 		while (!quitter) {
 			
-			System.out.print("Quels actions voulez-vous faire ? ");
-			if (scanner.hasNextInt()) {
-				 choix = scanner.nextInt();
-			}
+			Joueur joueur = new Joueur();
 			
+			TexteConsole.afficherBienvenue(); //TODO remplacer par autre message de bienvenue fait au début de la SAE
+			TexteConsole.afficherMenu();
+		
+			choix = SaisieConsole.saisieChoix();
 			
 			switch (choix) {
 				
 			case 1:
 				
-				System.out.print("Sur quelle ligne voulez-vous placez la tuile : ");
-				if (scanner.hasNextInt()) {
-					 ligne = scanner.nextInt();
-				}
-			
-				System.out.print("Sur quelle colonne voulez-vous placez la tuile : ");
-				if (scanner.hasNextInt()) {
-					colonne = scanner.nextInt(); 
-				}
+				choixCoup = SaisieConsole.saisieTuiles();
+				ligne = SaisieConsole.saisieEntier("ligne");
+				colonne = SaisieConsole.saisieEntier("colonne");
 				
-				System.out.println("Veuillez choisir une tuile entre de 1 à 5 : ");
-				if (scanner.hasNextInt()) {
-					choixCoup = scanner.nextInt()-1;
-				}
+			
 				PositionTuiles pos = new PositionTuiles(ligne, colonne);
-				System.out.println(pos.getX());
 				plateau.placerTuile(rackJoueur1.getTuiles().get(choixCoup), pos);
+				
 				if (plateau.caseIsSunStones(pos)){
-					System.out.println("c'est une case soleil");
+					TexteConsole.caseSunStone();
 				}
 				else {
-					System.out.println("ce n'est pas une case soleil");
+					TexteConsole.notCaseSunStone();
 					
 				}
 				if (plateau.caseIsMoon(pos)) {
-					System.out.println("c'est une case lune");
+					TexteConsole.caseMoonStone();
 				}
 				else {
-					System.out.println("ce n'est pas une case lune");
+					TexteConsole.notCaseMoonStone();
 				}
 				
 			default:

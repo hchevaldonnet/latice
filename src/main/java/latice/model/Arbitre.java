@@ -1,7 +1,4 @@
-package latice.application;
-
-import latice.application.Joueur;
-import latice.application.Plateau;
+package latice.model;
 
 public class Arbitre {
 	private Plateau plateau;

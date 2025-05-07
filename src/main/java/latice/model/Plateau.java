@@ -1,4 +1,4 @@
-package latice.application;
+package latice.model;
 
 
 import java.util.ArrayList;
@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-
-import latice.application.PositionTuiles;
-import latice.application.Tuile;
 
 public class Plateau {
 	

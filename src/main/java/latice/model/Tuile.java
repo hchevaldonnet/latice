@@ -1,4 +1,4 @@
-package latice.application;
+package latice.model;
 
 public class Tuile {
 	private Couleur couleur;

@@ -1,10 +1,4 @@
-package latice.application;
-
-import latice.application.Arbitre;
-import latice.application.Pioche;
-import latice.application.PositionTuiles;
-import latice.application.Rack;
-import latice.application.Tuile;
+package latice.model;
 
 public class Joueur {
 	private String name;
