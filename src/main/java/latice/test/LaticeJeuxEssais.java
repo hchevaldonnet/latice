@@ -9,7 +9,73 @@ public class LaticeJeuxEssais {
 	
 	@Disabled
 	@Test
-	void laticeTest() {
-		//TODO
+	void TestcaseisMoonTrue() {
+		Plateau plateau = new PlateauJeu();
+		PositionTuiles moonCase = new PositionTuiles(4,4);
+		AssertTrue(plateau.caseIsMoon(pos));
 	}
+	
+	@Test
+	void TestcaseisMoonFalse() {
+		Plateau plateau = new PlateauJeu();
+		PositionTuiles moonCase = new PositionTuiles(2,4);
+		AssertFalse(plateau.caseIsMoon(pos));
+	
+	@Test
+	void TestcaseisSunStone() {
+        PlateauJeu plateau = new PlateauJeu();
+
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 0)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 4)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 8)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(1, 1)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(1, 7)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(2, 2)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(2, 6)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(4, 0)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(4, 8)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(6, 2)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(6, 6)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(7, 1)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(7, 7)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(8, 0)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(8, 4)));
+        assertTrue(plateau.caseIsSunStones(new PositionTuiles(8, 8)));
+	}
+	 @Test
+	 public void testCaseIsSunStonesFalse() {
+	 PlateauJeu plateau = new PlateauJeu();
+
+	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(3, 3)));
+	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(1, 2)));
+	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(4, 4)));
+	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(2, 5)));
+	   }
+	 
+	 @Test
+	    public void testPlacerTuileSuccess() {
+	        PlateauJeu plateau = new PlateauJeu();
+	        Tuile tuile = new Tuile("T1");
+	        PositionTuiles pos = new PositionTuiles(1, 1);
+
+	        boolean result = plateau.placerTuile(tuile, pos);
+
+	        assertTrue(result, "La tuile devrait être placée avec succès.");
+	    }
+
+	    @Test
+	    public void testPlacerTuilePositionDéjàOccupée() {
+	        PlateauJeu plateau = new PlateauJeu();
+	        Tuile tuile1 = new Tuile("T1");
+	        Tuile tuile2 = new Tuile("T2");
+	        PositionTuiles pos = new PositionTuiles(2, 2);
+
+	        plateau.placerTuile(tuile1, pos);
+	        boolean result = plateau.placerTuile(tuile2, pos);
+
+	        assertFalse(result, "La position est déjà occupée, la deuxième tuile ne doit pas être placée.");
+	    
+	}
+	
+	
 }
