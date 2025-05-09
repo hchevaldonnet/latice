@@ -10,7 +10,6 @@ public class Joueur {
 	
 	
 	public Joueur(String name, Rack rack, Pioche pioche, int score, int nbTuilesPosees) {
-		super();
 		this.name = name;
 		this.rack = rack;
 		this.pioche = pioche;

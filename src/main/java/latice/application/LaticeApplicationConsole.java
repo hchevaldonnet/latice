@@ -55,14 +55,15 @@ public class LaticeApplicationConsole {
 		Joueur joueur2 = new Joueur(GameSetup.ordreJoueur(nom1, nom2)[1], rackJoueur2, piocheJoueur2, 0, 0);
 		
 		
+		TexteConsole.afficherBienvenue(); //TODO remplacer par autre message de bienvenue fait au début de la SAE
+		TexteConsole.afficherMenu();
 		
 		//TODO modifier le code 
 		while (!quitter) {
 			
 			 //TODO permettre de changer de joueur chaque tour
 			
-			TexteConsole.afficherBienvenue(); //TODO remplacer par autre message de bienvenue fait au début de la SAE
-			TexteConsole.afficherMenu();
+			
 		
 			choix = SaisieConsole.saisieChoix();
 			
@@ -96,9 +97,10 @@ public class LaticeApplicationConsole {
 				quitter = true;
 				
 			}
-			scanner.close();
+		
 			
 		}
+		scanner.close();
 		
 		
 	}
