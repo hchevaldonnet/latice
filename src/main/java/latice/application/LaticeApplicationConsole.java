@@ -11,45 +11,30 @@ import latice.model.PositionTuiles;
 import latice.model.Rack;
 import latice.model.Symbole;
 import latice.model.Tuile;
+import latice.model.setup.GameSetup;
 import latice.ihm.*;
 
 public class LaticeApplicationConsole {
 
 	public static void main(String[] args) {
-		ArrayList<Tuile> tuiles = new ArrayList<>();
-		for (Couleur couleur : Couleur.values()) {
-			for (Symbole symbole : Symbole.values()) {
-				tuiles.add(new Tuile(couleur, symbole));
-				tuiles.add(new Tuile(couleur, symbole));
-			}
-		}
-		
-		Collections.shuffle(tuiles);
+		ArrayList<Tuile> tuiles = GameSetup.creerTuile();
 		
 		ArrayList<Tuile> piocheJoueur1List = new ArrayList<>();
 		ArrayList<Tuile> piocheJoueur2List = new ArrayList<>();
-		for (int i = 0; i< tuiles.size(); i++) {
-			if (i % 2 ==0) {
-				piocheJoueur1List.add(tuiles.get(i));
-			} else {
-				piocheJoueur2List.add(tuiles.get(i));
-			}
-		}
+		GameSetup.creerPiocheJoueur(tuiles, piocheJoueur1List);
+		GameSetup.creerPiocheJoueur(tuiles, piocheJoueur2List);
 		
 		Pioche piocheJoueur1 = new Pioche(piocheJoueur1List);
 		Pioche piocheJoueur2 = new Pioche(piocheJoueur2List);
 		
 		Rack rackJoueur1 = new Rack();
 		Rack rackJoueur2 = new Rack();
-		for (int i = 0; i< 5; i++) {
-			rackJoueur1.ajoutTuile(piocheJoueur1.piocher());
-			rackJoueur2.ajoutTuile(piocheJoueur2.piocher());
-		}
+		GameSetup.creerRack(piocheJoueur1, rackJoueur1);
+		GameSetup.creerRack(piocheJoueur2, rackJoueur2);
 		
-		System.out.println("J1 :");
-		System.out.println(rackJoueur1.afficherRack());
-		System.out.println("J2 :");
-		System.out.println(rackJoueur2.afficherRack());
+		
+		rackJoueur1.afficherRack("J1 :");
+		rackJoueur2.afficherRack("J2 :");
 		
 		Plateau plateau = new Plateau();
 		
@@ -83,8 +68,8 @@ public class LaticeApplicationConsole {
 			case 1:
 				
 				choixCoup = SaisieConsole.saisieTuiles();
-				ligne = SaisieConsole.saisieEntier("ligne");
-				colonne = SaisieConsole.saisieEntier("colonne");
+				ligne = SaisieConsole.saisieLigneColonne("ligne");
+				colonne = SaisieConsole.saisieLigneColonne("colonne");
 				
 			
 				PositionTuiles pos = new PositionTuiles(ligne, colonne);
@@ -115,4 +100,11 @@ public class LaticeApplicationConsole {
 		
 	}
 
+	
+
+	
+
+	
+
 }
+

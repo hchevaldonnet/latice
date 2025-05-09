@@ -2,6 +2,7 @@ package latice.test;
 
 import org.junit.jupiter.api.Test;
 
+import latice.model.Plateau;
 import latice.model.PositionTuiles;
 import latice.model.Tuile;
 
@@ -14,20 +15,20 @@ public class LaticeJeuxEssais {
 	
 	@Test
 	void TestcaseisMoonTrue() {
-		Plateau plateau = new PlateauJeu();
+		Plateau plateau = new Plateau();
 		PositionTuiles moonCase = new PositionTuiles(4,4);
 		AssertTrue(plateau.caseIsMoon(pos));
 	}
 	
 	@Test
 	void TestcaseisMoonFalse() {
-		Plateau plateau = new PlateauJeu();
+		Plateau plateau = new Plateau();
 		PositionTuiles moonCase = new PositionTuiles(2,4);
 		AssertFalse(plateau.caseIsMoon(pos));
 	
 	@Test
 	void TestcaseisSunStone() {
-        PlateauJeu plateau = new PlateauJeu();
+        Plateau plateau = new Plateau();
 
         assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 0)));
         assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 4)));
@@ -48,7 +49,7 @@ public class LaticeJeuxEssais {
 	}
 	 @Test
 	 public void testCaseIsSunStonesFalse() {
-	 PlateauJeu plateau = new PlateauJeu();
+	 Plateau plateau = new Plateau();
 
 	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(3, 3)));
 	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(1, 2)));
@@ -58,7 +59,7 @@ public class LaticeJeuxEssais {
 	 
 	 @Test
 	    public void testPlacerTuileSuccess() {
-	        PlateauJeu plateau = new PlateauJeu();
+	        Plateau plateau = new Plateau();
 	        Tuile tuile = new Tuile("T1");
 	        PositionTuiles pos = new PositionTuiles(1, 1);
 
