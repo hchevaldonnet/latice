@@ -59,7 +59,7 @@ public class LaticeJeuxEssais {
 	 
 	 @Test
 	    public void testPlacerTuileSuccess() {
-	        Plateau plateau = new Plateau();
+	        PlateauJeu plateau = new PlateauJeu();
 	        Tuile tuile = new Tuile("T1");
 	        PositionTuiles pos = new PositionTuiles(1, 1);
 
@@ -70,15 +70,15 @@ public class LaticeJeuxEssais {
 
 	    @Test
 	    public void testPlacerTuilePositionDéjàOccupée() {
-	        PlateauJeu plateau = new PlateauJeu();
-	        Tuile tuile1 = new Tuile("T1");
-	        Tuile tuile2 = new Tuile("T2");
+	        Plateau plateau = new Plateau();
+	        Tuile tuile1 = new Tuile("rouge","🌸");
+	        Tuile tuile2 = new Tuile("vert","🌸");
 	        PositionTuiles pos = new PositionTuiles(2, 2);
 
 	        plateau.placerTuile(tuile1, pos);
-	        boolean result = plateau.placerTuile(tuile2, pos);
+	        boolean resultat = plateau.placerTuile(tuile2, pos);
 
-	        assertFalse(result, "La position est déjà occupée, la deuxième tuile ne doit pas être placée.");
+	        assertFalse(resultat, "La position est déjà occupée, la deuxième tuile ne doit pas être placée.");
 	    
 	}
 	
