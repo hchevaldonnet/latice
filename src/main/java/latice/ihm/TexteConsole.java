@@ -1,5 +1,7 @@
 package latice.ihm;
 
+import latice.model.Joueur;
+
 public class TexteConsole {
 	
 	 public static void afficherBienvenue() {
@@ -48,6 +50,14 @@ public class TexteConsole {
 	    
 	    public static void notCaseMoonStone() {
 	    	System.out.println("Ce n'est pas la case lune");
+	    }
+	    
+	    public static void tourJoueur(Joueur joueur) {
+	    	System.out.println("C'est à " + joueur.getName());
+	    }
+	    
+	    public static void demanderNom() {
+	    	System.out.println("Veuillez entrer votre nom");
 	    }
 
 	    

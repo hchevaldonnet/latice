@@ -35,6 +35,18 @@ public class SaisieConsole {
 	    } while (entier < min || entier > max);
 	    return entier - 1; 
 	}
+	
+	public static int saisieChar() { //TODO à finaliser
+		char string;
+	    do {
+			if (scanner.hasNext()) {
+	            string = scanner.nextInt();
+	        } else {
+	            scanner.next();
+	        }
+	    
+	    return string; 
+	}
 
 	
 	

@@ -63,11 +63,15 @@ public class LaticeApplicationConsole {
 		
 		
 		
+		Joueur joueur1 = new Joueur();
+		Joueur joueur2 = new Joueur();
+		
+		
 		
 		//TODO modifier le code 
 		while (!quitter) {
 			
-			Joueur joueur = new Joueur();
+			 //TODO permettre de changer de joueur chaque tour
 			
 			TexteConsole.afficherBienvenue(); //TODO remplacer par autre message de bienvenue fait au début de la SAE
 			TexteConsole.afficherMenu();

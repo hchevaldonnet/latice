@@ -19,4 +19,9 @@ public class Joueur {
 	public void passerTour() {
 		//TODO
 	}
+	
+	public String getName() {
+		return this.name;
+	}
 }
+
