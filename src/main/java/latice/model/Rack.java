@@ -31,15 +31,15 @@ public class Rack {
 		//TODO
 	}
 	
-	public String afficherRack(String joueur) {
+	public String afficherRack(String message) {
 		String res = "";
 		
-		System.out.println("joueur");
+		System.out.print(message);
 		for (Tuile tuile : tuiles) {
 			res = res + tuile.toString();
 			res = res + " ";
 		}
-		return res;
+		return res + "\n";
 	}
 
 	public List<Tuile> getTuiles() {

@@ -33,8 +33,8 @@ public class LaticeApplicationConsole {
 		GameSetup.creerRack(piocheJoueur2, rackJoueur2);
 		
 		
-		rackJoueur1.afficherRack("J1 :");
-		rackJoueur2.afficherRack("J2 :");
+		System.out.println(rackJoueur1.afficherRack("J1 : "));
+		System.out.println(rackJoueur2.afficherRack("J2 : "));
 		
 		Plateau plateau = new Plateau();
 		
@@ -58,10 +58,17 @@ public class LaticeApplicationConsole {
 		TexteConsole.afficherBienvenue(); //TODO remplacer par autre message de bienvenue fait au début de la SAE
 		TexteConsole.afficherMenu();
 		
-		//TODO modifier le code 
+		
 		while (!quitter) {
 			
-			 //TODO permettre de changer de joueur chaque tour
+			Joueur joueur = joueur1;
+			
+			if (joueur.equals(joueur1)) {
+				System.out.println(rackJoueur1.afficherRack("C'est au tour du joueur 1, voici votre rack :\n"));
+			}
+			else {
+				System.out.println(rackJoueur2.afficherRack("C'est au tour du joueur 2, voici votre rack :\n"));
+			}
 			
 			
 		
@@ -92,10 +99,18 @@ public class LaticeApplicationConsole {
 				else {
 					TexteConsole.notCaseMoonStone();
 				}
+				break;
 				
 			default:
 				quitter = true;
 				
+				
+			}
+			if (joueur.equals(joueur1)) {
+				joueur = joueur2;
+			}
+			else {
+				joueur = joueur1;
 			}
 		
 			
