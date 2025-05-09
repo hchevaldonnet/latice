@@ -46,10 +46,13 @@ public class LaticeApplicationConsole {
 		int colonne = -1;
 		int choixCoup = -1;
 		
+		String nom1 = SaisieConsole.saisieChar();
+		String nom2 = SaisieConsole.saisieChar();
 		
+	
 		
-		Joueur joueur1 = new Joueur();
-		Joueur joueur2 = new Joueur();
+		Joueur joueur1 = new Joueur(GameSetup.ordreJoueur(nom1, nom2)[0], rackJoueur1, piocheJoueur1, 0, 0); 
+		Joueur joueur2 = new Joueur(GameSetup.ordreJoueur(nom1, nom2)[1], rackJoueur2, piocheJoueur2, 0, 0);
 		
 		
 		

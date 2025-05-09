@@ -23,7 +23,8 @@ public class Arbitre {
 	}
 	
 	public Joueur proclamerResultats() {
-		return new Joueur();
+		return null;
+		//return new Joueur();
 		//TODO
 	}
 }

@@ -7,6 +7,17 @@ public class Joueur {
 	private int score;
 	private int nbTuilesPosees;
 	
+	
+	
+	public Joueur(String name, Rack rack, Pioche pioche, int score, int nbTuilesPosees) {
+		super();
+		this.name = name;
+		this.rack = rack;
+		this.pioche = pioche;
+		this.score = score;
+		this.nbTuilesPosees = nbTuilesPosees;
+	}
+
 	public void jouerTuile(Tuile tuile, PositionTuiles position, Arbitre arbitre) {
 		//TODO
 	}
