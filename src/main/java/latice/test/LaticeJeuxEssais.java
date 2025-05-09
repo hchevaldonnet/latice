@@ -81,6 +81,38 @@ public class LaticeJeuxEssais {
 	        assertFalse(resultat, "La position est déjà occupée, la deuxième tuile ne doit pas être placée.");
 	    
 	}
+		   @Test
+	   public void testOrdrejoueurVrai() {
+		   
+	   }
+	   
+	   
+	    @Test
+	    public void testcaselune() {
+	    Plateau plateau = new Plateau();
+	    PositionTuiles pos = new PositionTuiles(4,4);
+		if (plateau.caseIsMoon(pos)) {
+			TexteConsole.caseMoonStone();
+		}
+		else {
+			TexteConsole.notCaseMoonStone();
+		boolean resultat = plateau.caseIsMoon(pos);
+		AssertTrue(resultat,"C'est une case lune");
+		}
+		}
+		@Test
+		public void testcasesoleil() {
+		Plateau plateau = new Plateau();
+		PositionTuiles pos = new PositionTuiles(4,0);
+		if (plateau.caseIsSunStones(pos)){
+			TexteConsole.caseSunStone();
+		}
+		else {
+			TexteConsole.notCaseSunStone();
+		boolean resultat = plateau.caseIsSunStones(pos);
+		AssertTrue(resultat);
+		}
+	}
 	
 	
 }
