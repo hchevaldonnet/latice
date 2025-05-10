@@ -11,7 +11,7 @@ public class Tuile {
 	
 	@Override
 	public String toString() {
-		return this.couleur.getcouleur() + this.symbole.getSymbole() + "\u001B[0m" + " ";
+		return this.couleur.getcouleur() + this.symbole.getSymbole() + "\u001B[0m ";
 	}	
 	
 }
