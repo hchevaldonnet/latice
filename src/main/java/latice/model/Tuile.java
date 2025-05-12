@@ -11,16 +11,16 @@ public class Tuile {
 	
 	@Override
 	public String toString() {
-<<<<<<< HEAD
-		return "Tuile avec la couleur " + this.couleur.getcouleur() + " et le symbole "+ this.symbole.getSymbole() + " ." ;
+
+		return this.couleur.getcouleur() +  this.symbole.getSymboleUnicode() + "\u001B[0m" ;
 	}
 
 	public String getImagePath() {
-		return this.symbole.getSymbole() +"_"+this.couleur.getcouleur()+".png";
-	}
-=======
-		return this.couleur.getcouleur() + this.symbole.getSymbole() + "\u001B[0m ";
+		return this.symbole.getSymboleTexte() +"_"+this.couleur.getcouleur()+".png";
+	
+
+		
 	}	
 	
->>>>>>> d22160ac6c0ff20802b2cacfff5f004d9083b369
+
 }

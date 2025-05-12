@@ -25,9 +25,8 @@ public class Plateau {
         
    
 	
-	public Tuile getTuile() {
-		return new Tuile(null, null);
-		//TODO
+	public Tuile getTuile(PositionTuiles pos) {
+		return cases.get(pos);
 	}
 	
 	public PositionTuiles getPosition() {
@@ -67,10 +66,7 @@ public class Plateau {
 	}
 	
 	public  boolean caseLibre( PositionTuiles pos) {
-		if (cases.containsValue(pos)) { 
-            return false;
-        }
-        return true;
+		return !cases.containsKey(pos);
        
 	}
 	
