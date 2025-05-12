@@ -10,6 +10,8 @@ public class Rack {
 		this.tuiles = new ArrayList<>();
 	}
 	
+
+
 	public void ajoutTuile(Tuile tuile) {
 		if (tuiles == null) {
 			System.out.println("Erreur la liste est null");

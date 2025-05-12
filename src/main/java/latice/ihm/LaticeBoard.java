@@ -1,5 +1,5 @@
 package latice.ihm;
-
+/*
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -216,3 +216,4 @@ public class LaticeBoard extends Application {
         launch(args);
     }
 }
+*/

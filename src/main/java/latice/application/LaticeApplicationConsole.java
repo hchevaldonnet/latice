@@ -27,8 +27,8 @@ public class LaticeApplicationConsole {
 		Pioche piocheJoueur1 = new Pioche(piocheJoueur1List);
 		Pioche piocheJoueur2 = new Pioche(piocheJoueur2List);
 		
-		Rack rackJoueur1 = new Rack();
-		Rack rackJoueur2 = new Rack();
+		Rack rackJoueur1 = new Rack(piocheJoueur1);
+		Rack rackJoueur2 = new Rack(piocheJoueur2);
 		GameSetup.creerRack(piocheJoueur1, rackJoueur1);
 		GameSetup.creerRack(piocheJoueur2, rackJoueur2);
 		
@@ -62,6 +62,10 @@ public class LaticeApplicationConsole {
 		while (!quitter) {
 			
 			Joueur joueur = joueur1;
+			
+			PlateauViewConsole pvc = new PlateauViewConsole();
+			
+			pvc.afficherPlateau(plateau);
 			
 			if (joueur.equals(joueur1)) {
 				System.out.println(rackJoueur1.afficherRack("C'est au tour du joueur 1, voici votre rack :\n"));
