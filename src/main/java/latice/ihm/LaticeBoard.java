@@ -14,6 +14,7 @@ import javafx.scene.effect.DropShadow;
 import java.util.*;
 
 import latice.model.Pioche;
+import latice.model.PositionTuiles;
 import latice.model.Rack;
 import latice.model.Tuile;
 import latice.model.Symbole;
@@ -34,6 +35,8 @@ public class LaticeBoard extends Application {
     private int indexTuileSelectionnee = -1;
     private boolean premierCoup = true;
 
+    private Map<PositionTuiles, Tuile> plateau = new HashMap<>();
+    
     private Label tourLabel;
     private Label[] tuilesRestantesLabel = new Label[2];
 
@@ -103,8 +106,11 @@ public class LaticeBoard extends Application {
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     if (tuileSelectionnee != null && !(boolean) tile.getUserData()) {
                     	if (premierCoup && (currentRow != 4 || currentCol != 4)) return;
+                    	
                         tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
                         tile.setUserData(true);
+                        
+                        plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
 
                         removeTileFromRack(joueurActuel, indexTuileSelectionnee);
                         premierCoup = false;
@@ -209,6 +215,10 @@ public class LaticeBoard extends Application {
         tourLabel.setText("Tour du Joueur " + (joueurActuel + 1));
         updateRack();
         updateTuilesRestantes();
+    }
+    
+    public Tuile getTuileAt(int x, int y) {
+    	return plateau.get(new PositionTuiles(x,y));
     }
 
 
