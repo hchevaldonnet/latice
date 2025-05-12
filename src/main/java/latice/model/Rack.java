@@ -31,18 +31,22 @@ public class Rack {
 		//TODO
 	}
 	
-	public String afficherRack() {
+	public String afficherRack(String message) {
 		String res = "";
+		
+		System.out.print(message);
 		for (Tuile tuile : tuiles) {
 			res = res + tuile.toString();
 			res = res + " ";
 		}
-		return res;
+		return res + "\n";
 	}
 
 	public List<Tuile> getTuiles() {
 		return tuiles;
 	}
+	
+	
 	
 	
 }

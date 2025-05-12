@@ -2,6 +2,7 @@ package latice.test;
 
 import org.junit.jupiter.api.Test;
 
+import latice.model.Plateau;
 import latice.model.PositionTuiles;
 import latice.model.Tuile;
 
@@ -14,20 +15,20 @@ public class LaticeJeuxEssais {
 	
 	@Test
 	void TestcaseisMoonTrue() {
-		Plateau plateau = new PlateauJeu();
+		Plateau plateau = new Plateau();
 		PositionTuiles moonCase = new PositionTuiles(4,4);
 		AssertTrue(plateau.caseIsMoon(pos));
 	}
 	
 	@Test
 	void TestcaseisMoonFalse() {
-		Plateau plateau = new PlateauJeu();
+		Plateau plateau = new Plateau();
 		PositionTuiles moonCase = new PositionTuiles(2,4);
 		AssertFalse(plateau.caseIsMoon(pos));
 	
 	@Test
 	void TestcaseisSunStone() {
-        PlateauJeu plateau = new PlateauJeu();
+        Plateau plateau = new Plateau();
 
         assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 0)));
         assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 4)));
@@ -48,7 +49,7 @@ public class LaticeJeuxEssais {
 	}
 	 @Test
 	 public void testCaseIsSunStonesFalse() {
-	 PlateauJeu plateau = new PlateauJeu();
+	 Plateau plateau = new Plateau();
 
 	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(3, 3)));
 	 assertFalse(plateau.caseIsSunStones(new PositionTuiles(1, 2)));
@@ -69,16 +70,48 @@ public class LaticeJeuxEssais {
 
 	    @Test
 	    public void testPlacerTuilePositionDéjàOccupée() {
-	        PlateauJeu plateau = new PlateauJeu();
-	        Tuile tuile1 = new Tuile("T1");
-	        Tuile tuile2 = new Tuile("T2");
+	        Plateau plateau = new Plateau();
+	        Tuile tuile1 = new Tuile("rouge","🌸");
+	        Tuile tuile2 = new Tuile("vert","🌸");
 	        PositionTuiles pos = new PositionTuiles(2, 2);
 
 	        plateau.placerTuile(tuile1, pos);
-	        boolean result = plateau.placerTuile(tuile2, pos);
+	        boolean resultat = plateau.placerTuile(tuile2, pos);
 
-	        assertFalse(result, "La position est déjà occupée, la deuxième tuile ne doit pas être placée.");
+	        assertFalse(resultat, "La position est déjà occupée, la deuxième tuile ne doit pas être placée.");
 	    
+	}
+		   @Test
+	   public void testOrdrejoueurVrai() {
+		   
+	   }
+	   
+	   
+	    @Test
+	    public void testcaselune() {
+	    Plateau plateau = new Plateau();
+	    PositionTuiles pos = new PositionTuiles(4,4);
+		if (plateau.caseIsMoon(pos)) {
+			TexteConsole.caseMoonStone();
+		}
+		else {
+			TexteConsole.notCaseMoonStone();
+		boolean resultat = plateau.caseIsMoon(pos);
+		AssertTrue(resultat,"C'est une case lune");
+		}
+		}
+		@Test
+		public void testcasesoleil() {
+		Plateau plateau = new Plateau();
+		PositionTuiles pos = new PositionTuiles(4,0);
+		if (plateau.caseIsSunStones(pos)){
+			TexteConsole.caseSunStone();
+		}
+		else {
+			TexteConsole.notCaseSunStone();
+		boolean resultat = plateau.caseIsSunStones(pos);
+		AssertTrue(resultat);
+		}
 	}
 	
 	

@@ -36,7 +36,7 @@ public class TexteConsole {
 	        System.out.print("Veuillez choisir une tuile entre 1 et 5 : ");
 	    }
 
-	    public static void caseSunStone() {
+	    public static void caseSunStone() { //TODO Metre des arguments String pour éviter la dupliactio,
 	        System.out.println("C'est une case soleil !");
 	    }
 	    

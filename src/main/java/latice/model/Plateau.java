@@ -1,27 +1,29 @@
 package latice.model;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+
+
 import java.util.List;
 
 public class Plateau {
 	
-	private Map<Tuile, PositionTuiles> cases;
+	private Map<PositionTuiles, Tuile > cases; 
 	
 	public Plateau() {
 		this.cases = new HashMap<>();
 	}
 	
-	public boolean placerTuile(Tuile tuile, PositionTuiles pos) {
-		if (cases.containsValue(pos)) {
-            return false;
+	public void placerTuile(Tuile tuile, PositionTuiles pos) {
+		if (caseLibre(pos)) { 
+			cases.put(pos,tuile) ;
         }
-        cases.put(tuile, pos);
-        return true;
-       }
+	}
+        
+   
 	
 	public Tuile getTuile() {
 		return new Tuile(null, null);
@@ -51,7 +53,7 @@ public class Plateau {
 				new PositionTuiles(8,0),
 				new PositionTuiles(8,4),
 				new PositionTuiles(8,8)
-				);
+				); // TODO faire une classe ou mieux une énum qui stocke les postions des cases soleil et lunes
 		
 		return listeDeCasesSoleils.contains(pos);
 		
@@ -64,5 +66,14 @@ public class Plateau {
 		
 	}
 	
+	public  boolean caseLibre( PositionTuiles pos) {
+		if (cases.containsValue(pos)) { 
+            return false;
+        }
+        return true;
+       
+	}
+	
 	
 }
+	
