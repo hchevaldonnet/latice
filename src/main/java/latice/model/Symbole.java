@@ -1,12 +1,12 @@
 package latice.model;
 
 public enum Symbole {
-	 FLEUR("🌸"),
-	 LEZARD("🦎"),
-	 PLUME("🪶"),
-	 OISEAU("🐦"),
-	 DAUPHIN("🐬"),
-	 TORTUE("🐢");
+	 FLEUR("fleur"),
+	 LEZARD("lezard"),
+	 PLUME("plume"),
+	 OISEAU("oiseau"),
+	 DAUPHIN("dauphin"),
+	 TORTUE("tortue");
 	
 	private final String symbole;
 	
