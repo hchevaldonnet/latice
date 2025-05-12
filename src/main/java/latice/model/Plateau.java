@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Plateau {
 	
-	private Map<Tuile, PositionTuiles> cases; //TODO changer pour Map<PositionTuiles, Tuile>
+	private Map<PositionTuiles, Tuile > cases; 
 	
 	public Plateau() {
 		this.cases = new HashMap<>();
@@ -19,7 +19,7 @@ public class Plateau {
 	
 	public void placerTuile(Tuile tuile, PositionTuiles pos) {
 		if (caseLibre(pos)) { 
-			cases.put(tuile, pos);
+			cases.put(pos,tuile) ;
         }
 	}
         
