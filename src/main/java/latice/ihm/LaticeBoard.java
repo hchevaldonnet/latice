@@ -122,30 +122,36 @@ public class LaticeBoard extends Application {
                     	boolean jouable = true;
                     	plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
                     	if (!premierCoup) {
+                    		jouable = false;
                     		if (plateau.containsKey(new PositionTuiles(currentRow + 1, currentCol))){
+                    			jouable = true;
                     			Tuile tuile_bas = getTuileAt(currentRow + 1, currentCol);
                     			if (tuile_bas.symbole != tuileSelectionnee.symbole && tuile_bas.couleur != tuileSelectionnee.couleur) {
                         			jouable = false;
                         		}
                     		}
                     		if (plateau.containsKey(new PositionTuiles(currentRow - 1, currentCol))){
+                    			jouable = true;
                     			Tuile tuile_haut = getTuileAt(currentRow - 1, currentCol);
                     			if (tuile_haut.symbole != tuileSelectionnee.symbole && tuile_haut.couleur != tuileSelectionnee.couleur) {
                         			jouable = false;
                         		}
                     		}
                     		if (plateau.containsKey(new PositionTuiles(currentRow, currentCol - 1))){
+                    			jouable = true;
                     			Tuile tuile_gauche = getTuileAt(currentRow, currentCol - 1);
                     			if (tuile_gauche.symbole != tuileSelectionnee.symbole && tuile_gauche.couleur != tuileSelectionnee.couleur) {
                         			jouable = false;
                         		}
                     		}
                     		if (plateau.containsKey(new PositionTuiles(currentRow, currentCol + 1))){
+                    			jouable = true;
                     			Tuile tuile_droite = getTuileAt(currentRow, currentCol + 1);
                     			if (tuile_droite.symbole != tuileSelectionnee.symbole && tuile_droite.couleur != tuileSelectionnee.couleur) {
                         			jouable = false;
                         		}
                     		}
+                    		
                     		
                     	}
                     	if (jouable) {
@@ -157,6 +163,8 @@ public class LaticeBoard extends Application {
 	                        removeTileFromRack(joueurActuel, indexTuileSelectionnee);
 	                        premierCoup = false;
 	                        changerDeTour();
+                    	} else {
+                    		plateau.remove(new PositionTuiles(currentRow, currentCol));
                     	}
                     }
                 });
