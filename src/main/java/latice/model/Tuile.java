@@ -16,10 +16,7 @@ public class Tuile {
 	}
 
 	public String getImagePath() {
-		return this.symbole.getSymboleTexte() +"_"+this.couleur.getcouleur()+".png";
-	
-
-		
+		return this.symbole.getSymboleTexte() +"_"+this.couleur.getcouleur()+".png";	
 	}	
 	
 
