@@ -119,15 +119,45 @@ public class LaticeBoard extends Application {
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     if (tuileSelectionnee != null && !(boolean) tile.getUserData()) {
                     	if (premierCoup && (currentRow != 4 || currentCol != 4)) return;
-                    	
-                        tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
-                        tile.setUserData(true);
-                        
-                        plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
-
-                        removeTileFromRack(joueurActuel, indexTuileSelectionnee);
-                        premierCoup = false;
-                        changerDeTour();
+                    	boolean jouable = true;
+                    	plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
+                    	if (!premierCoup) {
+                    		if (plateau.containsKey(new PositionTuiles(currentRow + 1, currentCol))){
+                    			Tuile tuile_bas = getTuileAt(currentRow + 1, currentCol);
+                    			if (tuile_bas.symbole != tuileSelectionnee.symbole && tuile_bas.couleur != tuileSelectionnee.couleur) {
+                        			jouable = false;
+                        		}
+                    		}
+                    		if (plateau.containsKey(new PositionTuiles(currentRow - 1, currentCol))){
+                    			Tuile tuile_haut = getTuileAt(currentRow - 1, currentCol);
+                    			if (tuile_haut.symbole != tuileSelectionnee.symbole && tuile_haut.couleur != tuileSelectionnee.couleur) {
+                        			jouable = false;
+                        		}
+                    		}
+                    		if (plateau.containsKey(new PositionTuiles(currentRow, currentCol - 1))){
+                    			Tuile tuile_gauche = getTuileAt(currentRow, currentCol - 1);
+                    			if (tuile_gauche.symbole != tuileSelectionnee.symbole && tuile_gauche.couleur != tuileSelectionnee.couleur) {
+                        			jouable = false;
+                        		}
+                    		}
+                    		if (plateau.containsKey(new PositionTuiles(currentRow, currentCol + 1))){
+                    			Tuile tuile_droite = getTuileAt(currentRow, currentCol + 1);
+                    			if (tuile_droite.symbole != tuileSelectionnee.symbole && tuile_droite.couleur != tuileSelectionnee.couleur) {
+                        			jouable = false;
+                        		}
+                    		}
+                    		
+                    	}
+                    	if (jouable) {
+	                        tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
+	                        tile.setUserData(true);
+	                        
+	                        plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
+	
+	                        removeTileFromRack(joueurActuel, indexTuileSelectionnee);
+	                        premierCoup = false;
+	                        changerDeTour();
+                    	}
                     }
                 });
                 
