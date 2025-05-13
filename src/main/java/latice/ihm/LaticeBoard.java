@@ -35,7 +35,7 @@ public class LaticeBoard extends Application {
     private int indexTuileSelectionnee = -1;
     private boolean premierCoup = true;
     private Map<PositionTuiles, Tuile> plateau = new HashMap<>();
-
+    
     private Label tourLabel;
     private Label[] tuilesRestantesLabel = new Label[NB_JOUEURS];
 
@@ -119,6 +119,7 @@ public class LaticeBoard extends Application {
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     if (tuileSelectionnee != null && !(boolean) tile.getUserData()) {
                     	if (premierCoup && (currentRow != 4 || currentCol != 4)) return;
+                    	
                         tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
                         tile.setUserData(true);
                         
@@ -249,8 +250,9 @@ public class LaticeBoard extends Application {
         updateTuilesRestantes();
     }
     
-    public Tuile getTuilAt(int x, int y) {
-    	return plateau.get(new PositionTuiles(x, y));
+
+    public Tuile getTuileAt(int x, int y) {
+    	return plateau.get(new PositionTuiles(x,y));
     }
 
     public static void main(String[] args) {
