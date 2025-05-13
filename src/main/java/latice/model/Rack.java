@@ -18,9 +18,9 @@ public class Rack {
 		}
 	}
 	
-	public void remplir(Pioche pioche) {
-		while (tuiles.size() < 5 && pioche.taille() >0) {
-			Tuile tuile = pioche.piocher();
+	public void remplir(Pioche pioche, int joueurIndex) {
+		while (tuiles.size() < 5 && pioche.taille(joueurIndex) >0) {
+			Tuile tuile = pioche.piocher(joueurIndex);
 			if (tuile != null) {
 				tuiles.add(tuile);
 			}
@@ -45,6 +45,12 @@ public class Rack {
 	public List<Tuile> getTuiles() {
 		return tuiles;
 	}
+	
+    public void retirerTuile(int index) {
+        if (index >= 0 && index < tuiles.size()) {
+            tuiles.remove(index);
+        }
+    }
 	
 	
 	
