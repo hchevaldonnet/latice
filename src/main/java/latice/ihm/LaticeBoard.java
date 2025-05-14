@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-
+import latice.model.Arbitre;
 import latice.model.Pioche;
 import latice.model.PositionTuiles;
 import latice.model.Rack;
@@ -29,6 +29,7 @@ public class LaticeBoard extends Application {
     private Rack[] racks = new Rack[NB_JOUEURS];
     private Pioche pioches = new Pioche(NB_JOUEURS);
     private HBox[] racksHbox = new HBox[NB_JOUEURS];
+    private Arbitre arbitre = new Arbitre(NB_JOUEURS);
     private int joueurActuel = 0;
 
     private Tuile tuileSelectionnee = null;
@@ -38,6 +39,9 @@ public class LaticeBoard extends Application {
     
     private Label tourLabel;
     private Label[] tuilesRestantesLabel = new Label[NB_JOUEURS];
+    
+    private Label[] pointsLabels = new Label[NB_JOUEURS];
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -57,6 +61,7 @@ public class LaticeBoard extends Application {
         for (int i = 0; i < NB_JOUEURS; i++) {
             tuilesRestantesLabel[i] = new Label();
             tuilesRestantesLabel[i].setText("Tuiles restantes Joueur " + (i + 1) + ": 0");
+            pointsLabels[i] = new Label("Points Joueur " + (i + 1) + ": 0");
         }
 
         // Création racks et pioches pour les deux joueurs
@@ -71,7 +76,7 @@ public class LaticeBoard extends Application {
         infoZone.getChildren().add(tourLabel);
         for (int i = 0; i < NB_JOUEURS; i++) {
             HBox playerBox = new HBox(10);
-            playerBox.getChildren().addAll(tuilesRestantesLabel[i], racksHbox[i]);
+            playerBox.getChildren().addAll(pointsLabels[i], tuilesRestantesLabel[i], racksHbox[i]);
             infoZone.getChildren().add(playerBox);
         }
 
@@ -110,62 +115,32 @@ public class LaticeBoard extends Application {
                 tile.setFitHeight(TILE_SIZE);
                 tile.setUserData(false); // vide
                 
-                if (isSunTile(row, col)) {
+                PositionTuiles position = new PositionTuiles(row, col);
+
+                if (position.isSunTile(row, col)) {
                     tile.setImage(new Image(BASE_PATH + "soleil.png"));
-                } else if (isMoonTile(row, col)) {
+                } else if (position.isMoonTile(row, col)) {
                     tile.setImage(new Image(BASE_PATH + "lune.png"));
                 }
 
+
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     if (tuileSelectionnee != null && !(boolean) tile.getUserData()) {
-                    	if (premierCoup && (currentRow != 4 || currentCol != 4)) return;
-                    	boolean jouable = true;
-                    	plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
-                    	if (!premierCoup) {
-                    		jouable = false;
-                    		if (plateau.containsKey(new PositionTuiles(currentRow + 1, currentCol))){
-                    			jouable = true;
-                    			Tuile tuile_bas = getTuileAt(currentRow + 1, currentCol);
-                    			if (tuile_bas.symbole != tuileSelectionnee.symbole && tuile_bas.couleur != tuileSelectionnee.couleur) {
-                        			jouable = false;
-                        		}
-                    		}
-                    		if (plateau.containsKey(new PositionTuiles(currentRow - 1, currentCol))){
-                    			jouable = true;
-                    			Tuile tuile_haut = getTuileAt(currentRow - 1, currentCol);
-                    			if (tuile_haut.symbole != tuileSelectionnee.symbole && tuile_haut.couleur != tuileSelectionnee.couleur) {
-                        			jouable = false;
-                        		}
-                    		}
-                    		if (plateau.containsKey(new PositionTuiles(currentRow, currentCol - 1))){
-                    			jouable = true;
-                    			Tuile tuile_gauche = getTuileAt(currentRow, currentCol - 1);
-                    			if (tuile_gauche.symbole != tuileSelectionnee.symbole && tuile_gauche.couleur != tuileSelectionnee.couleur) {
-                        			jouable = false;
-                        		}
-                    		}
-                    		if (plateau.containsKey(new PositionTuiles(currentRow, currentCol + 1))){
-                    			jouable = true;
-                    			Tuile tuile_droite = getTuileAt(currentRow, currentCol + 1);
-                    			if (tuile_droite.symbole != tuileSelectionnee.symbole && tuile_droite.couleur != tuileSelectionnee.couleur) {
-                        			jouable = false;
-                        		}
-                    		}
-                    		
-                    		
-                    	}
-                    	if (jouable) {
-	                        tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
-	                        tile.setUserData(true);
-	                        
-	                        plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
-	
-	                        removeTileFromRack(joueurActuel, indexTuileSelectionnee);
-	                        premierCoup = false;
-	                        changerDeTour();
-                    	} else {
-                    		plateau.remove(new PositionTuiles(currentRow, currentCol));
-                    	}
+                        int correspondances = arbitre.verifierCoup(currentRow, currentCol, 
+                                                                                   tuileSelectionnee, plateau, premierCoup, joueurActuel);
+                        
+                        if (correspondances != -1) {
+                            tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
+                            tile.setUserData(true);
+                            
+                            plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
+                            removeTileFromRack(joueurActuel, indexTuileSelectionnee);
+                            premierCoup = false;
+                            updatePoints();
+                            changerDeTour();
+                        } else {
+                            System.out.println("Coup invalide !");
+                        }
                     }
                 });
                 
@@ -174,19 +149,6 @@ public class LaticeBoard extends Application {
             }
         }
         return grid;
-    }
-    
-    private boolean isSunTile(int row, int col) {
-        return (row == 0 && col == 0) || (row == 0 && col == 8) || (row == 0 && col == 4) ||
-               (row == 1 && col == 1) || (row == 1 && col == 7) || (row == 2 && col == 2) ||
-               (row == 2 && col == 6) || (row == 4 && col == 0) || (row == 4 && col == 8) ||
-               (row == 6 && col == 2) || (row == 6 && col == 6) || (row == 7 && col == 1) || 
-               (row == 7 && col == 7) || (row == 8 && col == 0) || (row == 8 && col == 4) || 
-               (row == 8 && col == 8);
-    }
-
-    private boolean isMoonTile(int row, int col) {
-        return (row == 4 && col == 4);
     }
 
     private void updateRack() {
@@ -286,6 +248,13 @@ public class LaticeBoard extends Application {
         tourLabel.setText("Tour du Joueur " + (joueurActuel + 1));
         updateRack();
         updateTuilesRestantes();
+    }
+    
+    private void updatePoints() {
+        for (int i = 0; i < NB_JOUEURS; i++) {
+            System.out.println(arbitre.getPoints(i)); // Affiche les points dans la console pour chaque joueur
+            pointsLabels[i].setText("Points Joueur " + (i + 1) + ": " + arbitre.pointsJoueur[i]);
+        }
     }
     
 
