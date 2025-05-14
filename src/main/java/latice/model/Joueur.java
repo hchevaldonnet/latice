@@ -17,6 +17,22 @@ public class Joueur {
 		this.nbTuilesPosees = nbTuilesPosees;
 	}
 
+	public Rack getRack() {
+		return rack;
+	}
+
+	public void setRack(Rack rack) {
+		this.rack = rack;
+	}
+
+	public Pioche getPioche() {
+		return pioche;
+	}
+
+	public void setPioche(Pioche pioche) {
+		this.pioche = pioche;
+	}
+
 	public void jouerTuile(Tuile tuile, PositionTuiles position, Arbitre arbitre) {
 		//TODO
 	}

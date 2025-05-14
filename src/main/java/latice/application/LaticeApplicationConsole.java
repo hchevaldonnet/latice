@@ -1,36 +1,26 @@
 package latice.application;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
-import latice.model.Couleur;
 import latice.model.Joueur;
 import latice.model.Pioche;
 import latice.model.Plateau;
 import latice.model.PositionTuiles;
 import latice.model.Rack;
-import latice.model.Symbole;
-import latice.model.Tuile;
 import latice.model.setup.GameSetup;
 import latice.ihm.*;
 
 public class LaticeApplicationConsole {
+	
 
 	public static void main(String[] args) {
-		ArrayList<Tuile> tuiles = GameSetup.creerTuile();
 		
-		ArrayList<Tuile> piocheJoueur1List = new ArrayList<>();
-		ArrayList<Tuile> piocheJoueur2List = new ArrayList<>();
-		GameSetup.creerPiocheJoueur(tuiles, piocheJoueur1List);
-		GameSetup.creerPiocheJoueur(tuiles, piocheJoueur2List);
-		
-		Pioche piocheJoueur1 = new Pioche(piocheJoueur1List);
-		Pioche piocheJoueur2 = new Pioche(piocheJoueur2List);
-		
-		Rack rackJoueur1 = new Rack(piocheJoueur1);
-		Rack rackJoueur2 = new Rack(piocheJoueur2);
-		GameSetup.creerRack(piocheJoueur1, rackJoueur1);
-		GameSetup.creerRack(piocheJoueur2, rackJoueur2);
+        Pioche piocheJoueur1 = new Pioche(1);
+        Pioche piocheJoueur2 = new Pioche(1);
+
+        Rack rackJoueur1 = new Rack(piocheJoueur1);
+        rackJoueur1.remplir(piocheJoueur1, 0);
+        Rack rackJoueur2 = new Rack(piocheJoueur2);
+        rackJoueur2.remplir(piocheJoueur2, 0);
 		
 		
 		System.out.println(rackJoueur1.afficherRack("J1 : "));
