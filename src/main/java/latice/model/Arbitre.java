@@ -3,13 +3,12 @@ package latice.model;
 import java.util.Map;
 
 public class Arbitre {
-    public int[] pointsJoueur;    // Les points sont illimitées
+    public int[] pointsJoueur;  // Les points sont illimitées
 
     public Arbitre(int nombreJoueurs) {
         pointsJoueur = new int[nombreJoueurs];
     }
 	
- // Nouvelle signature de la méthode estCoupValide qui renvoie le nombre de correspondances (0 à 4)
     public int verifierCoup(int currentRow, int currentCol, Tuile tuileSelectionnee, 
                                             Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueurActuel) {
         if (premierCoup && (currentRow != 4 || currentCol != 4)) {
@@ -22,7 +21,6 @@ public class Arbitre {
         if (!premierCoup) {
             jouable = false;
 
-            // Vérifie la tuile en dessous
             if (plateau.containsKey(new PositionTuiles(currentRow + 1, currentCol))) {
                 jouable = true;
                 Tuile tuileBas = plateau.get(new PositionTuiles(currentRow + 1, currentCol));
@@ -30,7 +28,6 @@ public class Arbitre {
                 correspondances++;
             }
 
-            // Vérifie la tuile au-dessus
             if (plateau.containsKey(new PositionTuiles(currentRow - 1, currentCol))) {
                 jouable = true;
                 Tuile tuileHaut = plateau.get(new PositionTuiles(currentRow - 1, currentCol));
@@ -38,7 +35,6 @@ public class Arbitre {
                 correspondances++;
             }
 
-            // Vérifie la tuile à gauche
             if (plateau.containsKey(new PositionTuiles(currentRow, currentCol - 1))) {
                 jouable = true;
                 Tuile tuileGauche = plateau.get(new PositionTuiles(currentRow, currentCol - 1));
@@ -46,7 +42,6 @@ public class Arbitre {
                 correspondances++;
             }
 
-            // Vérifie la tuile à droite
             if (plateau.containsKey(new PositionTuiles(currentRow, currentCol + 1))) {
                 jouable = true;
                 Tuile tuileDroite = plateau.get(new PositionTuiles(currentRow, currentCol + 1));
@@ -57,14 +52,12 @@ public class Arbitre {
 
         if (jouable) {
             calculerPoints(correspondances, new PositionTuiles(currentRow, currentCol), joueurActuel);
-            return correspondances; // Retourne le nombre de correspondances
+            return correspondances;
         }
 
-        return -1; // Coup non jouable
+        return -1;
     }
 
-
-     // Vérifie si deux tuiles sont compatibles (même symbole ou même couleur)
      private boolean sontCompatibles(Tuile tuile1, Tuile tuile2) {
          return tuile1.symbole == tuile2.symbole || tuile1.couleur == tuile2.couleur;
      }
@@ -84,24 +77,35 @@ public class Arbitre {
     	        }
     	    }
 
-
-     // Méthode pour obtenir les points des joueurs (affichable dans l'interface)
      public String getPoints(int joueur) {
          return "Joueur " + (joueur + 1) + " Points : " + pointsJoueur[joueur];
      }
-	
-	public void finDeTour() {
-		//TODO
-	}
-	
-	public boolean finDePartie() {
-		return true;
-		//TODO
-	}
-	
-	public Joueur proclamerResultats() {
-		return null;
-		//return new Joueur();
-		//TODO
-	}
+     
+     public boolean finDePartie(Rack[] racks, Pioche pioche) {
+    	    // La partie se termine quand tous les racks sont vides et que la pioche est vide pour tous
+    	    for (int i = 0; i < racks.length; i++) {
+    	        if (!racks[i].getTuiles().isEmpty() || !pioche.estVide(i)) {
+    	            return false;
+    	        }
+    	    }
+    	    return true;
+    	}
+     
+     public void distribuerTuiles(Joueur[] joueurs) {
+    	    for (int i = 0; i < joueurs.length; i++) {
+    	        Rack rack = joueurs[i].getRack();
+    	        Pioche pioche = joueurs[i].getPioche();
+    	        while (rack.getTuiles().size() < 5 && pioche.taille(i) > 0) {
+    	            Tuile tuile = pioche.piocher(i);
+    	            if (tuile != null) {
+    	                rack.ajoutTuile(tuile);
+    	            }
+    	        }
+    	    }
+    	}
+     
+     public int getScore(int joueurActuel) {
+    	    return pointsJoueur[joueurActuel];
+    	}
+
 }

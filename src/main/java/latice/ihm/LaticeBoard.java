@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,13 +12,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import latice.model.Arbitre;
-import latice.model.Pioche;
-import latice.model.PositionTuiles;
-import latice.model.Rack;
-import latice.model.Tuile;
+import latice.model.*;
 
 public class LaticeBoard extends Application {
 
@@ -25,84 +22,108 @@ public class LaticeBoard extends Application {
     private static final int TILE_SIZE = 50;
     private static final String BASE_PATH = "/latice/ihm/view/plateau_photo/";
     private static final int NB_JOUEURS = 2;
+    private boolean tourSupplementaireActif = false;
 
     private Rack[] racks = new Rack[NB_JOUEURS];
     private Pioche pioches = new Pioche(NB_JOUEURS);
     private HBox[] racksHbox = new HBox[NB_JOUEURS];
     private Arbitre arbitre = new Arbitre(NB_JOUEURS);
+    private Joueur[] joueurs = new Joueur[NB_JOUEURS];
     private int joueurActuel = 0;
 
     private Tuile tuileSelectionnee = null;
     private int indexTuileSelectionnee = -1;
     private boolean premierCoup = true;
     private Map<PositionTuiles, Tuile> plateau = new HashMap<>();
-    
+
     private Label tourLabel;
     private Label[] tuilesRestantesLabel = new Label[NB_JOUEURS];
-    
     private Label[] pointsLabels = new Label[NB_JOUEURS];
-
 
     @Override
     public void start(Stage primaryStage) {
-        VBox root = new VBox(10);
-
-
-        // Plateau
+        BorderPane root = new BorderPane();
         GridPane board = createBoard();
+        root.setCenter(board);
 
-        // Zone info + racks
-        VBox infoZone = new VBox(5);
+        VBox sidePanel = new VBox(10);
+        sidePanel.setPadding(new Insets(15));
         tourLabel = new Label("Tour du Joueur 1");
-        
-        racks = new Rack[NB_JOUEURS];
-        racksHbox = new HBox[NB_JOUEURS];
-              
+        tourLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px");
+
         for (int i = 0; i < NB_JOUEURS; i++) {
+            racks[i] = new Rack(pioches);
+            racksHbox[i] = new HBox(5);
             tuilesRestantesLabel[i] = new Label();
-            tuilesRestantesLabel[i].setText("Tuiles restantes Joueur " + (i + 1) + ": 0");
             pointsLabels[i] = new Label("Points Joueur " + (i + 1) + ": 0");
+            joueurs[i] = new Joueur("Joueur " + (i + 1), racks[i], pioches, 0, 0);
         }
 
-        // Création racks et pioches pour les deux joueurs
-        pioches = new Pioche(NB_JOUEURS);
-        distributionTuiles(NB_JOUEURS);
+        arbitre.distribuerTuiles(joueurs);
         updateRack();
         updateTuilesRestantes();
 
-        root.getChildren().addAll(board, infoZone);
-
-     // Ajouter les éléments pour chaque joueur
-        infoZone.getChildren().add(tourLabel);
+        VBox rackBox = new VBox(10);
+        rackBox.setPadding(new Insets(10));
         for (int i = 0; i < NB_JOUEURS; i++) {
-            HBox playerBox = new HBox(10);
+            VBox playerBox = new VBox(5);
             playerBox.getChildren().addAll(pointsLabels[i], tuilesRestantesLabel[i], racksHbox[i]);
-            infoZone.getChildren().add(playerBox);
+            rackBox.getChildren().add(playerBox);
         }
 
+        VBox actionsBox = new VBox(10);
+        actionsBox.setPadding(new Insets(10));
+        Button btnPasserTour = new Button("Passer le tour");
+        Button btnEchangerRack = new Button("Échanger le rack");
+        Button btnTourSupplementaire = new Button("Acheter un tour supplémentaire (-2 pts)");
+
+        btnPasserTour.setOnAction(e -> {
+            showAlert("Tour passé.");
+            changerDeTour();
+        });
+
+        btnEchangerRack.setOnAction(e -> {
+            boolean possible = !joueurs[joueurActuel].getPioche().estVide(joueurActuel);
+            if (possible) {
+                joueurs[joueurActuel].jouerActionSpeciale(joueurActuel, ActionSpeciale.ECHANGER_RACK,
+                        joueurs[joueurActuel].getRack(), joueurs[joueurActuel].getPioche(), arbitre);
+                updateRack();
+                changerDeTour();
+                showAlert("Rack échangé !");
+            } else {
+                showAlert("Impossible d’échanger, la pioche est vide.");
+            }
+        });
+
+        btnTourSupplementaire.setOnAction(e -> {
+            boolean success = joueurs[joueurActuel].jouerActionSpeciale(joueurActuel, ActionSpeciale.ACTION_SUPPLEMENTAIRE,
+                    joueurs[joueurActuel].getRack(), joueurs[joueurActuel].getPioche(), arbitre);
+            if (success) {
+            	tourSupplementaireActif = true;
+                updatePoints();
+                showAlert("Tour supplémentaire accordé !");
+            } else {
+                showAlert("Pas assez de points !");
+            }
+        });
+
+        actionsBox.getChildren().addAll(tourLabel, btnPasserTour, btnEchangerRack, btnTourSupplementaire);
+        sidePanel.getChildren().addAll(actionsBox, rackBox);
+        root.setRight(sidePanel);
+
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Latice Game " + NB_JOUEURS + " Joueurs");
+        primaryStage.setTitle("Latice Game");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
-    private void distributionTuiles(int nombreJoueurs) {
-        // On s'assure que chaque joueur reçoit un nombre correct de tuiles en fonction du nombre de joueurs
-        int tuilesParJoueur = 72 / nombreJoueurs;  // Chaque joueur reçoit une portion égale des tuiles
 
-        for (int i = 0; i < nombreJoueurs; i++) {
-            racks[i] = new Rack(pioches);  // Associe un rack à chaque joueur
-            racksHbox[i] = new HBox(5);
-            
-            // Distribution des tuiles à chaque joueur
-            for (int j = 0; j < tuilesParJoueur; j++) {  // On distribue le bon nombre de tuiles par joueur
-                Tuile tuile = pioches.piocher(i);  // Pioche une tuile spécifique pour le joueur
-                racks[i].ajoutTuile(tuile);  // Ajoute la tuile au rack du joueur
-            }
-        }
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Arbitre");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
-
-
 
     private GridPane createBoard() {
         GridPane grid = new GridPane();
@@ -113,38 +134,28 @@ public class LaticeBoard extends Application {
                 ImageView tile = new ImageView(new Image(BASE_PATH + "ocean.png"));
                 tile.setFitWidth(TILE_SIZE);
                 tile.setFitHeight(TILE_SIZE);
-                tile.setUserData(false); // vide
-                
+                tile.setUserData(false);
+
                 PositionTuiles position = new PositionTuiles(row, col);
-
-                if (position.isSunTile(row, col)) {
-                    tile.setImage(new Image(BASE_PATH + "soleil.png"));
-                } else if (position.isMoonTile(row, col)) {
-                    tile.setImage(new Image(BASE_PATH + "lune.png"));
-                }
-
+                if (position.isSunTile(row, col)) tile.setImage(new Image(BASE_PATH + "soleil.png"));
+                else if (position.isMoonTile(row, col)) tile.setImage(new Image(BASE_PATH + "lune.png"));
 
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     if (tuileSelectionnee != null && !(boolean) tile.getUserData()) {
-                        int correspondances = arbitre.verifierCoup(currentRow, currentCol, 
-                                                                                   tuileSelectionnee, plateau, premierCoup, joueurActuel);
-                        
-                        if (correspondances != -1) {
+                        int result = arbitre.verifierCoup(currentRow, currentCol, tuileSelectionnee, plateau, premierCoup, joueurActuel);
+                        if (result != -1) {
                             tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
                             tile.setUserData(true);
-                            
                             plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
                             removeTileFromRack(joueurActuel, indexTuileSelectionnee);
                             premierCoup = false;
                             updatePoints();
                             changerDeTour();
                         } else {
-                            System.out.println("Coup invalide !");
+                            showAlert("Coup invalide !");
                         }
                     }
                 });
-                
-
                 grid.add(tile, col, row);
             }
         }
@@ -152,114 +163,93 @@ public class LaticeBoard extends Application {
     }
 
     private void updateRack() {
-        for (int j = 0; j < racks.length; j++) {
-            racksHbox[j].getChildren().clear(); // Efface les tuiles précédemment affichées dans le rack
-
-            if (j != joueurActuel) continue; // Ne montre que le rack du joueur actuel
-
-            // Limiter l'affichage à 5 tuiles dans le rack
-            int nbTuilesAafficher = Math.min(racks[j].getTuiles().size(), 5);
-
-            for (int i = 0; i < nbTuilesAafficher; i++) {  // Limité à 5 tuiles
+        for (int j = 0; j < NB_JOUEURS; j++) {
+        	final int joueur = j;
+            racksHbox[j].getChildren().clear();
+            if (joueur != joueurActuel) continue;
+            for (int i = 0; i < racks[j].getTuiles().size(); i++) {
                 Tuile tuile = racks[j].getTuiles().get(i);
                 String imagePath = BASE_PATH + tuile.getImagePath();
+                ImageView tileView = new ImageView(new Image(imagePath));
+                tileView.setFitWidth(TILE_SIZE);
+                tileView.setFitHeight(TILE_SIZE);
 
-                try {
-                    ImageView tileView = new ImageView(new Image(imagePath));
-                    tileView.setFitWidth(TILE_SIZE);
-                    tileView.setFitHeight(TILE_SIZE);
+                final int index = i;
+                tileView.setOnMouseClicked(event -> {
+                    tuileSelectionnee = tuile;
+                    indexTuileSelectionnee = index;
+                    highlightSelectedTile(joueur, index);
+                });
 
-                    final int index = i;
-                    final int joueur = j;
-
-                    // Ajouter un événement pour la sélection de la tuile
-                    tileView.setOnMouseClicked(event -> {
-                        if (joueur == joueurActuel) {
-                            tuileSelectionnee = tuile;
-                            indexTuileSelectionnee = index;
-                            highlightSelectedTile(joueurActuel, index);
-                        }
-                    });
-
-                    racksHbox[j].getChildren().add(tileView);
-                } catch (Exception e) {
-                    racksHbox[j].getChildren().add(new Label("Image manquante"));
-                }
+                racksHbox[j].getChildren().add(tileView);
             }
         }
     }
-
 
     private void highlightSelectedTile(int joueur, int selectedIndex) {
         for (int i = 0; i < racksHbox[joueur].getChildren().size(); i++) {
             ImageView tuileView = (ImageView) racksHbox[joueur].getChildren().get(i);
-            if (i == selectedIndex) {
-                DropShadow borderGlow = new DropShadow();
-                borderGlow.setColor(Color.BLUE);
-                borderGlow.setOffsetX(0f);
-                borderGlow.setOffsetY(0f);
-                borderGlow.setWidth(30);
-                borderGlow.setHeight(30);
-                tuileView.setEffect(borderGlow);
-            } else {
-                tuileView.setEffect(null);
-            }
+            tuileView.setEffect(i == selectedIndex ? new DropShadow(20, Color.BLUE) : null);
         }
     }
-    
-    private void updateTuilesRestantes() {
-        if (tuilesRestantesLabel[0] == null) return;
-
-        // Mise à jour du nombre de tuiles restantes dans le rack pour chaque joueur
-        for (int i = 0; i < racks.length; i++) {
-            int nbTuiles = racks[i].getTuiles().size();  // Compte les tuiles dans le rack du joueur
-            tuilesRestantesLabel[i].setText("Tuiles restantes Joueur " + (i + 1) + ": " + nbTuiles);
-        }
-    }
-
-
-
 
     private void removeTileFromRack(int joueur, int index) {
-        // Vérifie que l'indice est valide pour le joueur spécifié
-        if (joueur >= 0 && joueur < racks.length && index >= 0 && index < racks[joueur].getTuiles().size()) {
-            // Retirer la tuile du rack du joueur
+        if (index >= 0 && index < racks[joueur].getTuiles().size()) {
             racks[joueur].getTuiles().remove(index);
-
-            // Si la pioche du joueur n'est pas vide, ajouter une nouvelle tuile au rack
             if (!pioches.estVide(joueur)) {
-                Tuile nouvelleTuile = pioches.piocher(joueur); // Pioche une tuile pour le joueur
-                racks[joueur].ajoutTuile(nouvelleTuile); // Ajoute la tuile au rack du joueur
+                Tuile nouvelle = pioches.piocher(joueur);
+                if (nouvelle != null) racks[joueur].ajoutTuile(nouvelle);
             }
-
-            // Réinitialiser la tuile sélectionnée après l'action
             tuileSelectionnee = null;
             indexTuileSelectionnee = -1;
-
-            // Mettre à jour l'affichage du rack et des tuiles restantes
             updateRack();
             updateTuilesRestantes();
         }
     }
 
-
     private void changerDeTour() {
-        joueurActuel = (joueurActuel + 1) % racks.length;  // Passage au joueur suivant, en fonction du nombre de joueurs
+        if (tourSupplementaireActif) {
+            tourSupplementaireActif = false;
+            showAlert("Vous avez joué votre tour supplémentaire.");
+        } else {
+            joueurActuel = (joueurActuel + 1) % NB_JOUEURS;
+        }
         tourLabel.setText("Tour du Joueur " + (joueurActuel + 1));
         updateRack();
         updateTuilesRestantes();
+        if (arbitre.finDePartie(racks, pioches)) proclamerResultats();
     }
-    
-    private void updatePoints() {
+
+    private void updateTuilesRestantes() {
         for (int i = 0; i < NB_JOUEURS; i++) {
-            System.out.println(arbitre.getPoints(i)); // Affiche les points dans la console pour chaque joueur
-            pointsLabels[i].setText("Points Joueur " + (i + 1) + ": " + arbitre.pointsJoueur[i]);
+        	int tuilesRestantes = pioches.taille(joueurActuel);
+            tuilesRestantesLabel[i].setText("Tuiles restantes Joueur " + (i + 1) + ": " + tuilesRestantes);
         }
     }
-    
 
-    public Tuile getTuileAt(int x, int y) {
-    	return plateau.get(new PositionTuiles(x,y));
+    private void updatePoints() {
+        for (int i = 0; i < NB_JOUEURS; i++) {
+            pointsLabels[i].setText(arbitre.getPoints(i));
+        }
+    }
+
+    private void proclamerResultats() {
+        StringBuilder resultats = new StringBuilder("Fin de la partie !\n");
+        int meilleurScore = -1, gagnant = -1;
+        for (int i = 0; i < NB_JOUEURS; i++) {
+            int score = arbitre.getScore(i);
+            resultats.append("Joueur ").append(i + 1).append(" : ").append(score).append(" points\n");
+            if (score > meilleurScore) {
+                meilleurScore = score;
+                gagnant = i;
+            }
+        }
+        resultats.append("\nLe gagnant est : Joueur ").append(gagnant + 1).append(" !");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Résultat Final");
+        alert.setHeaderText("La partie est terminée");
+        alert.setContentText(resultats.toString());
+        alert.showAndWait();
     }
 
     public static void main(String[] args) {

@@ -10,8 +10,6 @@ public class Rack {
 		this.tuiles = new ArrayList<>();
 	}
 	
-
-
 	public void ajoutTuile(Tuile tuile) {
 		if (tuiles == null) {
 			System.out.println("Erreur la liste est null");
@@ -27,10 +25,6 @@ public class Rack {
 				tuiles.add(tuile);
 			}
 		}
-	}
-	
-	public void echangerTout(Pioche pioche) {
-		//TODO
 	}
 	
 	public String afficherRack(String message) {
@@ -53,8 +47,8 @@ public class Rack {
             tuiles.remove(index);
         }
     }
-	
-	
-	
-	
+    
+    public void vider() {
+        tuiles.clear();
+    }	
 }

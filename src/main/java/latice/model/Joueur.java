@@ -1,5 +1,8 @@
 package latice.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Joueur {
 	private String name;
 	private Rack rack;
@@ -9,7 +12,7 @@ public class Joueur {
 	
 	
 	
-	public Joueur(String name, Rack rack, Pioche pioche, int score, int nbTuilesPosees) {
+	public Joueur(String string, Rack rack, Pioche pioche, int score, int nbTuilesPosees) {
 		this.name = name;
 		this.rack = rack;
 		this.pioche = pioche;
@@ -33,21 +36,37 @@ public class Joueur {
 		this.pioche = pioche;
 	}
 
-	public void jouerTuile(Tuile tuile, PositionTuiles position, Arbitre arbitre) {
-		//TODO
-	}
-	
-	public boolean acheterAction() {
-		return true;
-		//TODO
-	}
-	
-	public void passerTour() {
-		//TODO
-	}
-	
-	public String getName() {
-		return this.name;
+    public boolean jouerActionSpeciale(int joueurActuel, ActionSpeciale action, Rack rack, Pioche pioche, Arbitre arbitre) {
+	    switch (action) {
+	        case ACTION_SUPPLEMENTAIRE:
+	            if (arbitre.getScore(joueurActuel) >= 2) {
+	                arbitre.pointsJoueur[joueurActuel] -= 2;
+	                return true;
+	            }
+	            return false;
+
+	        case PASSER_TOUR:
+	            // Ne fait rien de particulier ici
+	            return false;
+
+	        case ECHANGER_RACK:
+	            if (!pioche.estVide(joueurActuel)) {
+	                List<Tuile> anciennesTuiles = new ArrayList<>(rack.getTuiles());
+	                rack.vider();
+	                for (int i = 0; i < anciennesTuiles.size(); i++) {
+	                    Tuile nouvelle = pioche.piocher(joueurActuel);
+	                    if (nouvelle != null) {
+	                        rack.ajoutTuile(nouvelle);
+	                    }
+	                }
+	                pioche.ajouterTout(anciennesTuiles, joueurActuel);
+	                return false;
+	            }
+	            return false;
+
+	        default:
+	            return false;
+	    }
 	}
 }
 
