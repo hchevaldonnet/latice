@@ -82,14 +82,23 @@ public class Arbitre {
      }
      
      public boolean finDePartie(Rack[] racks, Pioche pioche) {
-    	    // La partie se termine quand tous les racks sont vides et que la pioche est vide pour tous
     	    for (int i = 0; i < racks.length; i++) {
-    	        if (!racks[i].getTuiles().isEmpty() || !pioche.estVide(i)) {
-    	            return false;
+    	        if (racks[i].getTuiles().isEmpty()) {
+    	            return true;
     	        }
     	    }
-    	    return true;
+    	    return false;
     	}
+
+    	public int getGagnant(Rack[] racks) {
+    	    for (int i = 0; i < racks.length; i++) {
+    	        if (racks[i].getTuiles().isEmpty()) {
+    	            return i;
+    	        }
+    	    }
+    	    return -1;
+    	}
+
      
      public void distribuerTuiles(Joueur[] joueurs) {
     	    for (int i = 0; i < joueurs.length; i++) {

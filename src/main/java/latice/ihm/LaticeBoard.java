@@ -2,6 +2,7 @@ package latice.ihm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -45,19 +46,55 @@ public class LaticeBoard extends Application {
         BorderPane root = new BorderPane();
         GridPane board = createBoard();
         root.setCenter(board);
+        
+        String[] nomsJoueurs = new String[NB_JOUEURS];
+        for (int i = 0; i < NB_JOUEURS; i++) {
+            boolean nomValide = false;
+            while (!nomValide) {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Nom du Joueur");
+                dialog.setHeaderText("Entrez le nom du Joueur " + (i + 1));
+                dialog.setContentText("Nom:");
+
+                String nomEntre = dialog.showAndWait().orElse(null);
+
+                if (nomEntre != null) {
+                    nomEntre = nomEntre.trim();
+                    if (!nomEntre.isEmpty()) {
+                        nomsJoueurs[i] = nomEntre;
+                        nomValide = true;
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erreur");
+                        alert.setHeaderText("Nom invalide");
+                        alert.setContentText("Le nom ne peut pas être vide !");
+                        alert.showAndWait();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText("Nom requis");
+                    alert.setContentText("Vous devez entrer un nom pour continuer.");
+                    alert.showAndWait();
+                }
+            }
+        }
 
         VBox sidePanel = new VBox(10);
         sidePanel.setPadding(new Insets(15));
-        tourLabel = new Label("Tour du Joueur 1");
-        tourLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px");
-
+        tourLabel = new Label();
+        joueurActuel = new Random().nextInt(NB_JOUEURS);
+        
         for (int i = 0; i < NB_JOUEURS; i++) {
             racks[i] = new Rack(pioches);
             racksHbox[i] = new HBox(5);
             tuilesRestantesLabel[i] = new Label();
-            pointsLabels[i] = new Label("Points Joueur " + (i + 1) + ": 0");
-            joueurs[i] = new Joueur("Joueur " + (i + 1), racks[i], pioches, 0, 0);
+            pointsLabels[i] = new Label("Points " + nomsJoueurs[i] + " : 0");
+            joueurs[i] = new Joueur(nomsJoueurs[i], racks[i], pioches);
         }
+        
+        tourLabel.setText("Tour de " + joueurs[joueurActuel].getName());
+        tourLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px");
 
         arbitre.distribuerTuiles(joueurs);
         updateRack();
@@ -214,18 +251,26 @@ public class LaticeBoard extends Application {
         } else {
             joueurActuel = (joueurActuel + 1) % NB_JOUEURS;
         }
-        tourLabel.setText("Tour du Joueur " + (joueurActuel + 1));
+
+        if (arbitre.finDePartie(racks, pioches)) {
+            int gagnant = arbitre.getGagnant(racks);
+            proclamerResultats(gagnant);
+            return; // Stoppe ici, ne continue pas le tour
+        }
+
+        tourLabel.setText("Tour de " + joueurs[joueurActuel].getName());
         updateRack();
         updateTuilesRestantes();
-        if (arbitre.finDePartie(racks, pioches)) proclamerResultats();
     }
+
 
     private void updateTuilesRestantes() {
         for (int i = 0; i < NB_JOUEURS; i++) {
-        	int tuilesRestantes = pioches.taille(joueurActuel);
-            tuilesRestantesLabel[i].setText("Tuiles restantes Joueur " + (i + 1) + ": " + tuilesRestantes);
+            int tuilesRestantes = pioches.taille(i);
+            tuilesRestantesLabel[i].setText("Tuiles restantes " + joueurs[i].getName() + " : " + tuilesRestantes);
         }
     }
+
 
     private void updatePoints() {
         for (int i = 0; i < NB_JOUEURS; i++) {
@@ -233,24 +278,30 @@ public class LaticeBoard extends Application {
         }
     }
 
-    private void proclamerResultats() {
+    private void proclamerResultats(int gagnant) {
         StringBuilder resultats = new StringBuilder("Fin de la partie !\n");
-        int meilleurScore = -1, gagnant = -1;
         for (int i = 0; i < NB_JOUEURS; i++) {
-            int score = arbitre.getScore(i);
-            resultats.append("Joueur ").append(i + 1).append(" : ").append(score).append(" points\n");
-            if (score > meilleurScore) {
-                meilleurScore = score;
-                gagnant = i;
-            }
+            resultats.append(joueurs[i].getName())
+                     .append(" : ")
+                     .append(arbitre.getScore(i))
+                     .append(" points\n");
         }
-        resultats.append("\nLe gagnant est : Joueur ").append(gagnant + 1).append(" !");
+        resultats.append("\nLe gagnant est : ").append(joueurs[gagnant].getName()).append(" !");
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Résultat Final");
-        alert.setHeaderText("La partie est terminée");
+        alert.setHeaderText("Un joueur a posé toutes ses tuiles !");
         alert.setContentText(resultats.toString());
-        alert.showAndWait();
+
+        alert.setOnHidden(e -> {
+            Stage stage = (Stage) tourLabel.getScene().getWindow();
+            stage.close();
+        });
+
+        alert.show();
     }
+
+
 
     public static void main(String[] args) {
         launch(args);

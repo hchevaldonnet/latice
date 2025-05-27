@@ -7,17 +7,13 @@ public class Joueur {
 	private String name;
 	private Rack rack;
 	private Pioche pioche;
-	private int score;
-	private int nbTuilesPosees;
 	
 	
 	
-	public Joueur(String string, Rack rack, Pioche pioche, int score, int nbTuilesPosees) {
+	public Joueur(String name, Rack rack, Pioche pioche) {
 		this.name = name;
 		this.rack = rack;
 		this.pioche = pioche;
-		this.score = score;
-		this.nbTuilesPosees = nbTuilesPosees;
 	}
 
 	public Rack getRack() {
@@ -68,5 +64,10 @@ public class Joueur {
 	            return false;
 	    }
 	}
+
+    public String getName() {
+        return name;
+    }
+
 }
 
