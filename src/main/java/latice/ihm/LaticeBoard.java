@@ -113,6 +113,10 @@ public class LaticeBoard extends Application {
         Button btnPasserTour = new Button("Passer le tour");
         Button btnEchangerRack = new Button("Échanger le rack");
         Button btnTourSupplementaire = new Button("Acheter un tour supplémentaire (-2 pts)");
+        
+        btnPasserTour.setPrefWidth(300);
+        btnEchangerRack.setPrefWidth(300);
+        btnTourSupplementaire.setPrefWidth(300);
 
         btnPasserTour.setOnAction(e -> {
             showAlert("Tour passé.");
@@ -151,6 +155,7 @@ public class LaticeBoard extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("Latice Game");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
@@ -274,7 +279,8 @@ public class LaticeBoard extends Application {
 
     private void updatePoints() {
         for (int i = 0; i < NB_JOUEURS; i++) {
-            pointsLabels[i].setText(arbitre.getPoints(i));
+            int score = arbitre.getScore(i);
+            pointsLabels[i].setText("Points " + joueurs[i].getName() + " : " + score);
         }
     }
 

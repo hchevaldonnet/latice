@@ -9,8 +9,7 @@ public class Arbitre {
         pointsJoueur = new int[nombreJoueurs];
     }
 	
-    public int verifierCoup(int currentRow, int currentCol, Tuile tuileSelectionnee, 
-                                            Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueurActuel) {
+    public int verifierCoup(int currentRow, int currentCol, Tuile tuileSelectionnee, Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueurActuel) {
         if (premierCoup && (currentRow != 4 || currentCol != 4)) {
             return -1; // Coup invalide car ce n'est pas au centre
         }
@@ -76,10 +75,6 @@ public class Arbitre {
     	    	pointsJoueur[joueurActuel] += 1;
     	        }
     	    }
-
-     public String getPoints(int joueur) {
-         return "Joueur " + (joueur + 1) + " Points : " + pointsJoueur[joueur];
-     }
      
      public boolean finDePartie(Rack[] racks, Pioche pioche) {
     	    for (int i = 0; i < racks.length; i++) {
