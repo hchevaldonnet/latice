@@ -14,19 +14,19 @@ public class Plateau {
 	private Map<PositionTuiles, Tuile > cases; 
 	
 	public Plateau() {
-		this.cases = new HashMap<>();
+		this.setCases(new HashMap<>());
 	}
 	
 	public void placerTuile(Tuile tuile, PositionTuiles pos) {
 		if (caseLibre(pos)) { 
-			cases.put(pos,tuile) ;
+			getCases().put(pos,tuile) ;
         }
 	}
         
    
 	
 	public Tuile getTuile(PositionTuiles pos) {
-		return cases.get(pos);
+		return getCases().get(pos);
 	}
 	
 	public PositionTuiles getPosition() {
@@ -66,8 +66,16 @@ public class Plateau {
 	}
 	
 	public  boolean caseLibre( PositionTuiles pos) {
-		return !cases.containsKey(pos);
+		return !getCases().containsKey(pos);
        
+	}
+
+	public Map<PositionTuiles, Tuile > getCases() {
+		return cases;
+	}
+
+	public void setCases(Map<PositionTuiles, Tuile > cases) {
+		this.cases = cases;
 	}
 	
 	
