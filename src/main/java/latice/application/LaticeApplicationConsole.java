@@ -24,6 +24,7 @@ public class LaticeApplicationConsole {
         Pioche pioche = new Pioche(2);
         Arbitre arbitre = new Arbitre(2);
         boolean premierCoup = true;
+        boolean afficherIndices = false;
 
         Rack rackJoueur1 = new Rack(pioche);
         rackJoueur1.remplir(pioche, 0);
@@ -41,6 +42,11 @@ public class LaticeApplicationConsole {
         System.out.println(ANSI_HIGHLIGHT + "          LATICE GAME            " + ANSI_RESET);
         System.out.println(ANSI_HIGHLIGHT + "==================================" + ANSI_RESET);
         System.out.println();
+        
+        // Demander si les joueurs veulent voir les indices des lignes et colonnes
+        System.out.println("Voulez-vous afficher les indices des lignes et colonnes? (O/N)");
+        String reponse = scanner.nextLine().trim().toUpperCase();
+        afficherIndices = reponse.equals("O") || reponse.equals("OUI");
         
         System.out.println(ANSI_PLAYER1 + "Joueur 1 :" + ANSI_RESET);
         String nom1 = SaisieConsole.saisieChar();
@@ -88,7 +94,13 @@ public class LaticeApplicationConsole {
             // Afficher le plateau
             System.out.println(ANSI_HIGHLIGHT + "PLATEAU DE JEU:" + ANSI_RESET);
             PlateauViewConsole pvc = new PlateauViewConsole();
-            pvc.afficherPlateau(plateau);
+            
+            if (afficherIndices) {
+                afficherPlateauAvecIndices(plateau);
+            } else {
+                pvc.afficherPlateau(plateau);
+            }
+            
             System.out.println();
             
             // Afficher le rack du joueur courant
@@ -141,20 +153,36 @@ public class LaticeApplicationConsole {
                             
                             // Points gagnés
                             if (resultat > 0) {
-                                System.out.println(ANSI_HIGHLIGHT + "Points gagnés: " + resultat + ANSI_RESET);
-                            }
-                            
-                            // Vérifier les cases spéciales
-                            if (plateau.caseIsSunStones(pos)) {
-                                TexteConsole.caseSunStone();
-                            } else {
-                                TexteConsole.notCaseSunStone();
-                            }
-                            
-                            if (plateau.caseIsMoon(pos)) {
-                                TexteConsole.caseMoonStone();
-                            } else {
-                                TexteConsole.notCaseMoonStone();
+                                System.out.println(ANSI_HIGHLIGHT + "Correspondances: " + resultat + ANSI_RESET);
+                                int pointsGagnes = 0;
+                                
+                                if (resultat == 2) {
+                                    pointsGagnes = 1;
+                                    System.out.println(ANSI_HIGHLIGHT + "Double! +1 point" + ANSI_RESET);
+                                } else if (resultat == 3) {
+                                    pointsGagnes = 2;
+                                    System.out.println(ANSI_HIGHLIGHT + "Trefoil! +2 points" + ANSI_RESET);
+                                } else if (resultat == 4) {
+                                    pointsGagnes = 4;
+                                    System.out.println(ANSI_HIGHLIGHT + "Latice! +4 points" + ANSI_RESET);
+                                }
+                                
+                                // Vérifier les cases spéciales
+                                if (plateau.caseIsSunStones(pos)) {
+                                    TexteConsole.caseSunStone();
+                                    System.out.println(ANSI_HIGHLIGHT + "Bonus soleil: +1 point" + ANSI_RESET);
+                                    pointsGagnes += 1;
+                                } else {
+                                    TexteConsole.notCaseSunStone();
+                                }
+                                
+                                if (plateau.caseIsMoon(pos)) {
+                                    TexteConsole.caseMoonStone();
+                                } else {
+                                    TexteConsole.notCaseMoonStone();
+                                }
+                                
+                                System.out.println(ANSI_HIGHLIGHT + "Total des points gagnés: " + pointsGagnes + ANSI_RESET);
                             }
                             
                             premierCoup = false;
@@ -246,6 +274,33 @@ public class LaticeApplicationConsole {
         scanner.close();
     }
     
+    // Nouvelle méthode pour afficher le plateau avec les indices
+    private static void afficherPlateauAvecIndices(Plateau plateau) {
+        // Print column indices with better alignment
+        System.out.print("    "); // Space for alignment
+        for (int i = 1; i <= 8; i++) {
+            System.out.print(i + "   "); // Added one more space for better alignment
+        }
+        System.out.println();
+        
+        // Print row indices and board cells
+        for (int x = 0; x < 8; x++) {
+            System.out.print((x + 1) + "  "); // Adjusted space after row number
+            for (int y = 0; y < 8; y++) {
+                System.out.print("[");
+                if (plateau.caseLibre(new PositionTuiles(x, y))) {
+                    System.out.print("  ");
+                } else {
+                    Tuile tuile = plateau.getTuile(new PositionTuiles(x, y));
+                    System.out.print(tuile.toString());
+                }
+                System.out.print("]");
+            }
+            System.out.println();
+        }
+    }
+
+    
     // Helper method to clear the screen
     private static void clearScreen() {
         System.out.print("\033[H\033[2J");
@@ -260,6 +315,7 @@ public class LaticeApplicationConsole {
         scanner.nextLine();
     }
 }
+
 
 
 
