@@ -18,9 +18,10 @@ public class SaisieConsole {
 	}
 	
 	public static int saisieChoix() {
-		TexteConsole.demanderAction();
-		return saisieEntierBorne( 1, 5) + 1;// TODO changer paramètres en fonction du menu
+	    TexteConsole.demanderAction();
+	    return saisieEntierBorne(1, 5); 
 	}
+
 	
 	
 	

@@ -9,11 +9,12 @@ public class TexteConsole {
 	    }
 
 	 public static void afficherMenu() {
-	        System.out.println("1. Démarrer une partie");
-	        System.out.println("2. Afficher les règles");
-	        System.out.println("3. Quitter\n");
-	        //TODO compléter le menu avec des options
-	    }
+		    System.out.println("1. Placer une tuile");
+		    System.out.println("2. Piocher une nouvelle main");
+		    System.out.println("3. Passer son tour");
+		    System.out.println("4. Afficher les règles");
+		    System.out.println("5. Quitter\n");
+		}
 
 	    public static void afficherRegles() {
 	        System.out.println("Voici les règles du jeu : ...");

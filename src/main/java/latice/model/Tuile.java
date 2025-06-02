@@ -12,7 +12,7 @@ public class Tuile {
 	@Override
 	public String toString() {
 
-		return this.couleur.getcouleur() +  this.symbole.getSymboleUnicode() + "\u001B[0m" ;
+		 return this.couleur.getAnsiCode() + this.symbole.getSymboleUnicode() + "\u001B[0m";
 	}
 
 	public String getImagePath() {
