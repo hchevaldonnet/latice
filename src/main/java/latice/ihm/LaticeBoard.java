@@ -97,8 +97,8 @@ public class LaticeBoard extends Application {
         tourLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px");
 
         arbitre.distribuerTuiles(joueurs);
-        updateRack();
-        updateTuilesRestantes();
+        majRack();
+        majTuilesRestantes();
 
         VBox rackBox = new VBox(10);
         rackBox.setPadding(new Insets(10));
@@ -119,7 +119,7 @@ public class LaticeBoard extends Application {
         btnTourSupplementaire.setPrefWidth(300);
 
         btnPasserTour.setOnAction(e -> {
-            showAlert("Tour passé.");
+            montrerAlert("Tour passé.");
             changerDeTour();
         });
 
@@ -128,11 +128,11 @@ public class LaticeBoard extends Application {
             if (possible) {
                 joueurs[joueurActuel].jouerActionSpeciale(joueurActuel, ActionSpeciale.ECHANGER_RACK,
                         joueurs[joueurActuel].getRack(), joueurs[joueurActuel].getPioche(), arbitre);
-                updateRack();
+                majRack();
                 changerDeTour();
-                showAlert("Rack échangé !");
+                montrerAlert("Rack échangé !");
             } else {
-                showAlert("Impossible d’échanger, la pioche est vide.");
+                montrerAlert("Impossible d’échanger, la pioche est vide.");
             }
         });
 
@@ -141,10 +141,10 @@ public class LaticeBoard extends Application {
                     joueurs[joueurActuel].getRack(), joueurs[joueurActuel].getPioche(), arbitre);
             if (success) {
             	tourSupplementaireActif = true;
-                updatePoints();
-                showAlert("Tour supplémentaire accordé !");
+                majPoints();
+                montrerAlert("Tour supplémentaire accordé !");
             } else {
-                showAlert("Pas assez de points !");
+                montrerAlert("Pas assez de points !");
             }
         });
 
@@ -159,7 +159,7 @@ public class LaticeBoard extends Application {
         primaryStage.show();
     }
 
-    private void showAlert(String msg) {
+    private void montrerAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Arbitre");
         alert.setHeaderText(null);
@@ -168,43 +168,43 @@ public class LaticeBoard extends Application {
     }
 
     private GridPane createBoard() {
-        GridPane grid = new GridPane();
-        for (int row = 0; row < SIZE; row++) {
+        GridPane grille = new GridPane();
+        for (int ligne = 0; ligne < SIZE; ligne++) {
             for (int col = 0; col < SIZE; col++) {
-                final int currentRow = row;
-                final int currentCol = col;
+                final int ligneCourante = ligne;
+                final int colCourante = col;
                 ImageView tile = new ImageView(new Image(BASE_PATH + "ocean.png"));
                 tile.setFitWidth(TILE_SIZE);
                 tile.setFitHeight(TILE_SIZE);
                 tile.setUserData(false);
 
-                PositionTuiles position = new PositionTuiles(row, col);
-                if (position.isSunTile(row, col)) tile.setImage(new Image(BASE_PATH + "soleil.png"));
-                else if (position.isMoonTile(row, col)) tile.setImage(new Image(BASE_PATH + "lune.png"));
+                PositionTuiles position = new PositionTuiles(ligne, col);
+                if (position.estUneCaseSoleil(ligne, col)) tile.setImage(new Image(BASE_PATH + "soleil.png"));
+                else if (position.estUneCaseLune(ligne, col)) tile.setImage(new Image(BASE_PATH + "lune.png"));
 
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     if (tuileSelectionnee != null && !(boolean) tile.getUserData()) {
-                        int result = arbitre.verifierCoup(currentRow, currentCol, tuileSelectionnee, plateau, premierCoup, joueurActuel);
-                        if (result != -1) {
+                        int resultat = arbitre.verifierCoup(ligneCourante, colCourante, tuileSelectionnee, plateau, premierCoup, joueurActuel);
+                        if (resultat != -1) {
                             tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
                             tile.setUserData(true);
-                            plateau.put(new PositionTuiles(currentRow, currentCol), tuileSelectionnee);
-                            removeTileFromRack(joueurActuel, indexTuileSelectionnee);
+                            plateau.put(new PositionTuiles(ligneCourante, colCourante), tuileSelectionnee);
+                            retirerTuileDuRack(joueurActuel, indexTuileSelectionnee);
                             premierCoup = false;
-                            updatePoints();
+                            majPoints();
                             changerDeTour();
                         } else {
-                            showAlert("Coup invalide !");
+                            montrerAlert("Coup invalide !");
                         }
                     }
                 });
-                grid.add(tile, col, row);
+                grille.add(tile, col, ligne);
             }
         }
-        return grid;
+        return grille;
     }
 
-    private void updateRack() {
+    private void majRack() {
         for (int j = 0; j < NB_JOUEURS; j++) {
         	final int joueur = j;
             racksHbox[j].getChildren().clear();
@@ -212,30 +212,30 @@ public class LaticeBoard extends Application {
             for (int i = 0; i < racks[j].getTuiles().size(); i++) {
                 Tuile tuile = racks[j].getTuiles().get(i);
                 String imagePath = BASE_PATH + tuile.getImagePath();
-                ImageView tileView = new ImageView(new Image(imagePath));
-                tileView.setFitWidth(TILE_SIZE);
-                tileView.setFitHeight(TILE_SIZE);
+                ImageView tileVue = new ImageView(new Image(imagePath));
+                tileVue.setFitWidth(TILE_SIZE);
+                tileVue.setFitHeight(TILE_SIZE);
 
                 final int index = i;
-                tileView.setOnMouseClicked(event -> {
+                tileVue.setOnMouseClicked(event -> {
                     tuileSelectionnee = tuile;
                     indexTuileSelectionnee = index;
-                    highlightSelectedTile(joueur, index);
+                    tuileBrillante(joueur, index);
                 });
 
-                racksHbox[j].getChildren().add(tileView);
+                racksHbox[j].getChildren().add(tileVue);
             }
         }
     }
 
-    private void highlightSelectedTile(int joueur, int selectedIndex) {
+    private void tuileBrillante(int joueur, int selectedIndex) {
         for (int i = 0; i < racksHbox[joueur].getChildren().size(); i++) {
             ImageView tuileView = (ImageView) racksHbox[joueur].getChildren().get(i);
             tuileView.setEffect(i == selectedIndex ? new DropShadow(20, Color.BLUE) : null);
         }
     }
 
-    private void removeTileFromRack(int joueur, int index) {
+    private void retirerTuileDuRack(int joueur, int index) {
         if (index >= 0 && index < racks[joueur].getTuiles().size()) {
             racks[joueur].getTuiles().remove(index);
             if (!pioches.estVide(joueur)) {
@@ -244,15 +244,15 @@ public class LaticeBoard extends Application {
             }
             tuileSelectionnee = null;
             indexTuileSelectionnee = -1;
-            updateRack();
-            updateTuilesRestantes();
+            majRack();
+            majTuilesRestantes();
         }
     }
 
     private void changerDeTour() {
         if (tourSupplementaireActif) {
             tourSupplementaireActif = false;
-            showAlert("Vous avez joué votre tour supplémentaire.");
+            montrerAlert("Vous avez joué votre tour supplémentaire.");
         } else {
             joueurActuel = (joueurActuel + 1) % NB_JOUEURS;
         }
@@ -264,12 +264,12 @@ public class LaticeBoard extends Application {
         }
 
         tourLabel.setText("Tour de " + joueurs[joueurActuel].getName());
-        updateRack();
-        updateTuilesRestantes();
+        majRack();
+        majTuilesRestantes();
     }
 
 
-    private void updateTuilesRestantes() {
+    private void majTuilesRestantes() {
         for (int i = 0; i < NB_JOUEURS; i++) {
             int tuilesRestantes = pioches.taille(i);
             tuilesRestantesLabel[i].setText("Tuiles restantes " + joueurs[i].getName() + " : " + tuilesRestantes);
@@ -277,7 +277,7 @@ public class LaticeBoard extends Application {
     }
 
 
-    private void updatePoints() {
+    private void majPoints() {
         for (int i = 0; i < NB_JOUEURS; i++) {
             int score = arbitre.getScore(i);
             pointsLabels[i].setText("Points " + joueurs[i].getName() + " : " + score);

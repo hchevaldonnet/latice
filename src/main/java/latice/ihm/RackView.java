@@ -7,3 +7,4 @@ public interface RackView {
 	public void afficherRack(Rack rack);
 
 }
+//Sert a rien

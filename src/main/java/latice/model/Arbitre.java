@@ -9,8 +9,8 @@ public class Arbitre {
         pointsJoueur = new int[nombreJoueurs];
     }
 	
-    public int verifierCoup(int currentRow, int currentCol, Tuile tuileSelectionnee, Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueurActuel) {
-        if (premierCoup && (currentRow != 4 || currentCol != 4)) {
+    public int verifierCoup(int ligne, int colonne, Tuile tuileSelectionnee, Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueurActuel) {
+        if (premierCoup && (ligne != 4 || colonne != 4)) {
             return -1; // Coup invalide car ce n'est pas au centre
         }
 
@@ -20,37 +20,37 @@ public class Arbitre {
         if (!premierCoup) {
             jouable = false;
 
-            if (plateau.containsKey(new PositionTuiles(currentRow + 1, currentCol))) {
+            if (plateau.containsKey(new PositionTuiles(ligne + 1, colonne))) {
                 jouable = true;
-                Tuile tuileBas = plateau.get(new PositionTuiles(currentRow + 1, currentCol));
+                Tuile tuileBas = plateau.get(new PositionTuiles(ligne + 1, colonne));
                 if (!sontCompatibles(tuileSelectionnee, tuileBas)) return -1;
                 correspondances++;
             }
 
-            if (plateau.containsKey(new PositionTuiles(currentRow - 1, currentCol))) {
+            if (plateau.containsKey(new PositionTuiles(ligne - 1, colonne))) {
                 jouable = true;
-                Tuile tuileHaut = plateau.get(new PositionTuiles(currentRow - 1, currentCol));
+                Tuile tuileHaut = plateau.get(new PositionTuiles(ligne - 1, colonne));
                 if (!sontCompatibles(tuileSelectionnee, tuileHaut)) return -1;
                 correspondances++;
             }
 
-            if (plateau.containsKey(new PositionTuiles(currentRow, currentCol - 1))) {
+            if (plateau.containsKey(new PositionTuiles(ligne, colonne - 1))) {
                 jouable = true;
-                Tuile tuileGauche = plateau.get(new PositionTuiles(currentRow, currentCol - 1));
+                Tuile tuileGauche = plateau.get(new PositionTuiles(ligne, colonne - 1));
                 if (!sontCompatibles(tuileSelectionnee, tuileGauche)) return -1;
                 correspondances++;
             }
 
-            if (plateau.containsKey(new PositionTuiles(currentRow, currentCol + 1))) {
+            if (plateau.containsKey(new PositionTuiles(ligne, colonne + 1))) {
                 jouable = true;
-                Tuile tuileDroite = plateau.get(new PositionTuiles(currentRow, currentCol + 1));
+                Tuile tuileDroite = plateau.get(new PositionTuiles(ligne, colonne + 1));
                 if (!sontCompatibles(tuileSelectionnee, tuileDroite)) return -1;
                 correspondances++;
             }
         }
 
         if (jouable) {
-            calculerPoints(correspondances, new PositionTuiles(currentRow, currentCol), joueurActuel);
+            calculerPoints(correspondances, new PositionTuiles(ligne, colonne), joueurActuel);
             return correspondances;
         }
 
@@ -71,7 +71,7 @@ public class Arbitre {
     	            }
 
     	    // Bonus pour une case soleil
-    	    if (position.isSunTile(position.getX(), position.getY())) {
+    	    if (position.estUneCaseSoleil(position.getX(), position.getY())) {
     	    	pointsJoueur[joueurActuel] += 1;
     	        }
     	    }

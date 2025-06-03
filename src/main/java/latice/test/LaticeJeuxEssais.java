@@ -2,6 +2,7 @@ package latice.test;
 
 import org.junit.jupiter.api.Test;
 
+import latice.ihm.TexteConsole;
 import latice.model.Plateau;
 import latice.model.PositionTuiles;
 import latice.model.Tuile;
@@ -97,7 +98,7 @@ public class LaticeJeuxEssais {
 		else {
 			TexteConsole.notCaseMoonStone();
 		boolean resultat = plateau.caseIsMoon(pos);
-		AssertTrue(resultat,"C'est une case lune");
+		assertTrue(resultat,"C'est une case lune");
 		}
 		}
 		@Test
@@ -110,7 +111,7 @@ public class LaticeJeuxEssais {
 		else {
 			TexteConsole.notCaseSunStone();
 		boolean resultat = plateau.caseIsSunStones(pos);
-		AssertTrue(resultat);
+		assertTrue(resultat);
 		}
 	}
 	
