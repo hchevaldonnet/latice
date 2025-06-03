@@ -1,6 +1,8 @@
 package latice.application;
 
 import java.util.Scanner;
+
+import latice.model.ActionSpeciale;
 import latice.model.Arbitre;
 import latice.model.Joueur;
 import latice.model.Pioche;
@@ -34,6 +36,7 @@ public class LaticeApplicationConsole {
         Plateau plateau = new Plateau();
         
         boolean quitter = false;
+        boolean tourSupplementaireActif = false;
         Scanner scanner = new Scanner(System.in);
         
         // Clear screen and show title
@@ -93,13 +96,10 @@ public class LaticeApplicationConsole {
             
             // Afficher le plateau
             System.out.println(ANSI_HIGHLIGHT + "PLATEAU DE JEU:" + ANSI_RESET);
-            PlateauViewConsole pvc = new PlateauViewConsole();
+            PlateauView plateauView = new PlateauViewConsole();
             
-            if (afficherIndices) {
-                afficherPlateauAvecIndices(plateau);
-            } else {
-                pvc.afficherPlateau(plateau);
-            }
+            PlateauViewConsole plateauViewConsole = (PlateauViewConsole) plateauView;
+            plateauViewConsole.afficherPlateau(plateau, afficherIndices);
             
             System.out.println();
             
@@ -151,20 +151,20 @@ public class LaticeApplicationConsole {
                             System.out.println();
                             System.out.println(currentPlayerColor + "Tuile placée avec succès!" + ANSI_RESET);
                             
-                            // Points gagnés
+                         // Points gagnés
                             if (resultat > 0) {
                                 System.out.println(ANSI_HIGHLIGHT + "Correspondances: " + resultat + ANSI_RESET);
-                                int pointsGagnes = 0;
+                                float pointsGagnes = 0;
                                 
                                 if (resultat == 2) {
-                                    pointsGagnes = 1;
-                                    System.out.println(ANSI_HIGHLIGHT + "Double! +1 point" + ANSI_RESET);
+                                    pointsGagnes = 0.5f;
+                                    System.out.println(ANSI_HIGHLIGHT + "Double! +0.5 point" + ANSI_RESET);
                                 } else if (resultat == 3) {
-                                    pointsGagnes = 2;
-                                    System.out.println(ANSI_HIGHLIGHT + "Trefoil! +2 points" + ANSI_RESET);
+                                    pointsGagnes = 1;
+                                    System.out.println(ANSI_HIGHLIGHT + "Trefoil! +1 point" + ANSI_RESET);
                                 } else if (resultat == 4) {
-                                    pointsGagnes = 4;
-                                    System.out.println(ANSI_HIGHLIGHT + "Latice! +4 points" + ANSI_RESET);
+                                    pointsGagnes = 2;
+                                    System.out.println(ANSI_HIGHLIGHT + "Latice! +2 points" + ANSI_RESET);
                                 }
                                 
                                 // Vérifier les cases spéciales
@@ -183,7 +183,18 @@ public class LaticeApplicationConsole {
                                 }
                                 
                                 System.out.println(ANSI_HIGHLIGHT + "Total des points gagnés: " + pointsGagnes + ANSI_RESET);
+                                
+                                // Convert to integer for adding to the score
+                                int pointsToAdd = Math.round(pointsGagnes);
+                                arbitre.ajouterPoints(joueurIndex, pointsToAdd);
+                                
+                                // Handle rule: if more than 3 points in one turn, discard extra points
+                                if (pointsToAdd > 3) {
+                                    System.out.println(ANSI_HIGHLIGHT + "Maximum de 3 points par tour! Points en excès perdus." + ANSI_RESET);
+                                    arbitre.ajouterPoints(joueurIndex, 3 - pointsToAdd); // Adjust to max 3 points
+                                }
                             }
+
                             
                             premierCoup = false;
                             
@@ -191,7 +202,13 @@ public class LaticeApplicationConsole {
                             waitForEnter();
                             
                             // Changer de joueur
-                            joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
+                            if (tourSupplementaireActif) {
+                                tourSupplementaireActif = false;
+                                System.out.println(ANSI_HIGHLIGHT + "Vous jouez votre tour supplémentaire." + ANSI_RESET);
+                            } else {
+                                joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
+                            }
+
                         } else {
                             System.out.println();
                             if (premierCoup) {
@@ -238,7 +255,29 @@ public class LaticeApplicationConsole {
                     waitForEnter();
                     break;
                     
-                case 5: // Quitter la partie
+                
+                case 5:
+                	System.out.println();
+                    // Appeler la méthode existante du joueur pour acheter un tour supplémentaire
+                    boolean achatReussi = joueurCourant.jouerActionSpeciale(
+                        (joueurCourant == joueur1) ? 0 : 1,  // index du joueur actuel
+                        ActionSpeciale.ACTION_SUPPLEMENTAIRE,
+                        joueurCourant.getRack(),
+                        joueurCourant.getPioche(),
+                        arbitre
+                    );
+                    
+                    if (achatReussi) {
+                        System.out.println(currentPlayerColor + "Tour supplémentaire acheté avec succès (-2 points)." + ANSI_RESET);
+                        tourSupplementaireActif = true;
+                    } else {
+                        System.out.println(ANSI_HIGHLIGHT + "Vous n'avez pas assez de points pour acheter un tour supplémentaire." + ANSI_RESET);
+                    }
+                    waitForEnter();
+                    break;
+                	
+                
+                case 6: // Quitter la partie
                     System.out.println();
                     System.out.println(ANSI_HIGHLIGHT + "Merci d'avoir joué !" + ANSI_RESET);
                     quitter = true;
@@ -274,32 +313,6 @@ public class LaticeApplicationConsole {
         scanner.close();
     }
     
-    // Nouvelle méthode pour afficher le plateau avec les indices
-    private static void afficherPlateauAvecIndices(Plateau plateau) {
-        // Print column indices with better alignment
-        System.out.print("    "); // Space for alignment
-        for (int i = 1; i <= 8; i++) {
-            System.out.print(i + "   "); // Added one more space for better alignment
-        }
-        System.out.println();
-        
-        // Print row indices and board cells
-        for (int x = 0; x < 8; x++) {
-            System.out.print((x + 1) + "  "); // Adjusted space after row number
-            for (int y = 0; y < 8; y++) {
-                System.out.print("[");
-                if (plateau.caseLibre(new PositionTuiles(x, y))) {
-                    System.out.print("  ");
-                } else {
-                    Tuile tuile = plateau.getTuile(new PositionTuiles(x, y));
-                    System.out.print(tuile.toString());
-                }
-                System.out.print("]");
-            }
-            System.out.println();
-        }
-    }
-
     
     // Helper method to clear the screen
     private static void clearScreen() {

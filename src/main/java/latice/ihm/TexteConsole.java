@@ -8,12 +8,13 @@ public class TexteConsole {
 	        System.out.println("Bienvenue dans le jeu de cartes Latice !");
 	    }
 
-	 public static void afficherMenu() {
-		    System.out.println("1. Placer une tuile");
+	 public static void afficherMenu() { 
+		 	System.out.println("1. Placer une tuile");
 		    System.out.println("2. Piocher une nouvelle main");
 		    System.out.println("3. Passer son tour");
 		    System.out.println("4. Afficher les règles");
-		    System.out.println("5. Quitter\n");
+		    System.out.println("5. Acheter un tour supplémentaire (-2 points)");
+		    System.out.println("6. Quitter\n");
 		}
 
 	    public static void afficherRegles() {

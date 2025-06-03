@@ -36,7 +36,7 @@ public class Joueur {
 	    switch (action) {
 	        case ACTION_SUPPLEMENTAIRE:
 	            if (arbitre.getScore(joueurActuel) >= 2) {
-	                arbitre.pointsJoueur[joueurActuel] -= 2;
+	                arbitre.getPointsJoueur()[joueurActuel] -= 2;
 	                return true;
 	            }
 	            return false;

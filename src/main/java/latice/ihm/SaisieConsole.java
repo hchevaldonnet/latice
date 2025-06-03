@@ -19,10 +19,8 @@ public class SaisieConsole {
 	
 	public static int saisieChoix() {
 	    TexteConsole.demanderAction();
-	    return saisieEntierBorne(1, 5); 
+	    return saisieEntierBorne(1, 6); // Modifié pour accepter l'option 6
 	}
-
-	
 	
 	
 	public static int saisieEntierBorne(int min, int max) {

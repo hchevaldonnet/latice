@@ -14,6 +14,7 @@ public class PlateauViewJavaFX implements PlateauView {
     
     private GridPane gridPane;
     private static final int CELL_SIZE = 60;
+    private static final int GRID_SIZE = 9; // Changed from 8 to 9
     
     public PlateauViewJavaFX() {
         this.gridPane = new GridPane();
@@ -26,9 +27,9 @@ public class PlateauViewJavaFX implements PlateauView {
     public void afficherPlateau(Plateau plateau) {
         gridPane.getChildren().clear();
         
-        // Création de la grille 8x8
-        for (int ligne = 0; ligne < 8; ligne++) {
-            for (int colonne = 0; colonne < 8; colonne++) {
+        // Création de la grille 9x9
+        for (int ligne = 0; ligne < GRID_SIZE; ligne++) {
+            for (int colonne = 0; colonne < GRID_SIZE; colonne++) {
                 StackPane cell = createCell(ligne, colonne, plateau);
                 gridPane.add(cell, colonne, ligne);
             }
@@ -71,6 +72,22 @@ public class PlateauViewJavaFX implements PlateauView {
             cell.getChildren().add(symboleText);
         }
         
+        // Optional: Add row and column indices for better usability
+        if (ligne == GRID_SIZE - 1 || colonne == GRID_SIZE - 1) {
+            Text indexText = new Text();
+            if (ligne == GRID_SIZE - 1) {
+                indexText.setText(Integer.toString(colonne + 1));
+                indexText.setTranslateY(CELL_SIZE / 2 + 15);
+            }
+            if (colonne == GRID_SIZE - 1) {
+                indexText.setText(Integer.toString(ligne + 1));
+                indexText.setTranslateX(CELL_SIZE / 2 + 15);
+            }
+            indexText.setStyle("-fx-font-size: 10px;");
+            indexText.setFill(Color.DARKGRAY);
+            cell.getChildren().add(indexText);
+        }
+        
         return cell;
     }
     
@@ -78,3 +95,4 @@ public class PlateauViewJavaFX implements PlateauView {
         return gridPane;
     }
 }
+
