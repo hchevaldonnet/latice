@@ -19,9 +19,9 @@ import latice.model.*;
 
 public class LaticeBoard extends Application {
 
-    private static final int SIZE = 9;
-    private static final int TILE_SIZE = 50;
-    private static final String BASE_PATH = "/latice/ihm/view/plateau_photo/";
+    private static final int TAILLE = 9;
+    private static final int TUILE_TAILLE = 50;
+    private static final String CHEMIN_IMAGE = "/latice/ihm/view/plateau_photo/";
     private static final int NB_JOUEURS = 2;
     private boolean tourSupplementaireActif = false;
 
@@ -80,8 +80,8 @@ public class LaticeBoard extends Application {
             }
         }
 
-        VBox sidePanel = new VBox(10);
-        sidePanel.setPadding(new Insets(15));
+        VBox vboxADroite = new VBox(10);
+        vboxADroite.setPadding(new Insets(15));
         tourLabel = new Label();
         joueurActuel = new Random().nextInt(NB_JOUEURS);
         
@@ -149,8 +149,8 @@ public class LaticeBoard extends Application {
         });
 
         actionsBox.getChildren().addAll(tourLabel, btnPasserTour, btnEchangerRack, btnTourSupplementaire);
-        sidePanel.getChildren().addAll(actionsBox, rackBox);
-        root.setRight(sidePanel);
+        vboxADroite.getChildren().addAll(actionsBox, rackBox);
+        root.setRight(vboxADroite);
 
         Scene scene = new Scene(root);
         primaryStage.setTitle("Latice Game");
@@ -169,24 +169,24 @@ public class LaticeBoard extends Application {
 
     private GridPane createBoard() {
         GridPane grille = new GridPane();
-        for (int ligne = 0; ligne < SIZE; ligne++) {
-            for (int col = 0; col < SIZE; col++) {
+        for (int ligne = 0; ligne < TAILLE; ligne++) {
+            for (int col = 0; col < TAILLE; col++) {
                 final int ligneCourante = ligne;
                 final int colCourante = col;
-                ImageView tile = new ImageView(new Image(BASE_PATH + "ocean.png"));
-                tile.setFitWidth(TILE_SIZE);
-                tile.setFitHeight(TILE_SIZE);
+                ImageView tile = new ImageView(new Image(CHEMIN_IMAGE + "ocean.png"));
+                tile.setFitWidth(TUILE_TAILLE);
+                tile.setFitHeight(TUILE_TAILLE);
                 tile.setUserData(false);
 
                 PositionTuiles position = new PositionTuiles(ligne, col);
-                if (position.estUneCaseSoleil(ligne, col)) tile.setImage(new Image(BASE_PATH + "soleil.png"));
-                else if (position.estUneCaseLune(ligne, col)) tile.setImage(new Image(BASE_PATH + "lune.png"));
+                if (position.estUneCaseSoleil(ligne, col)) tile.setImage(new Image(CHEMIN_IMAGE + "soleil.png"));
+                else if (position.estUneCaseLune(ligne, col)) tile.setImage(new Image(CHEMIN_IMAGE + "lune.png"));
 
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     if (tuileSelectionnee != null && !(boolean) tile.getUserData()) {
                         int resultat = arbitre.verifierCoup(ligneCourante, colCourante, tuileSelectionnee, plateau, premierCoup, joueurActuel);
                         if (resultat != -1) {
-                            tile.setImage(new Image(BASE_PATH + tuileSelectionnee.getImagePath()));
+                            tile.setImage(new Image(CHEMIN_IMAGE + tuileSelectionnee.getImagePath()));
                             tile.setUserData(true);
                             plateau.put(new PositionTuiles(ligneCourante, colCourante), tuileSelectionnee);
                             retirerTuileDuRack(joueurActuel, indexTuileSelectionnee);
@@ -211,10 +211,10 @@ public class LaticeBoard extends Application {
             if (joueur != joueurActuel) continue;
             for (int i = 0; i < racks[j].getTuiles().size(); i++) {
                 Tuile tuile = racks[j].getTuiles().get(i);
-                String imagePath = BASE_PATH + tuile.getImagePath();
+                String imagePath = CHEMIN_IMAGE + tuile.getImagePath();
                 ImageView tileVue = new ImageView(new Image(imagePath));
-                tileVue.setFitWidth(TILE_SIZE);
-                tileVue.setFitHeight(TILE_SIZE);
+                tileVue.setFitWidth(TUILE_TAILLE);
+                tileVue.setFitHeight(TUILE_TAILLE);
 
                 final int index = i;
                 tileVue.setOnMouseClicked(event -> {
