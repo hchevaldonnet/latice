@@ -19,16 +19,16 @@ public class PositionTuiles {
 		return y;
 	}
 	
-    public boolean isSunTile(int row, int col) {
-        return (row == 0 && col == 0) || (row == 0 && col == 8) || (row == 0 && col == 4) ||
-               (row == 1 && col == 1) || (row == 1 && col == 7) || (row == 2 && col == 2) ||
-               (row == 2 && col == 6) || (row == 4 && col == 0) || (row == 4 && col == 8) ||
-               (row == 6 && col == 2) || (row == 6 && col == 6) || (row == 7 && col == 1) || 
-               (row == 7 && col == 7) || (row == 8 && col == 0) || (row == 8 && col == 4) || 
-               (row == 8 && col == 8);
+    public boolean estUneCaseSoleil(int ligne, int col) {
+        return (ligne == 0 && col == 0) || (ligne == 0 && col == 8) || (ligne == 0 && col == 4) ||
+               (ligne == 1 && col == 1) || (ligne == 1 && col == 7) || (ligne == 2 && col == 2) ||
+               (ligne == 2 && col == 6) || (ligne == 4 && col == 0) || (ligne == 4 && col == 8) ||
+               (ligne == 6 && col == 2) || (ligne == 6 && col == 6) || (ligne == 7 && col == 1) || 
+               (ligne == 7 && col == 7) || (ligne == 8 && col == 0) || (ligne == 8 && col == 4) || 
+               (ligne == 8 && col == 8);
     }
 
-    public boolean isMoonTile(int row, int col) {
+    public boolean estUneCaseLune(int row, int col) {
         return (row == 4 && col == 4);
     }
 	
