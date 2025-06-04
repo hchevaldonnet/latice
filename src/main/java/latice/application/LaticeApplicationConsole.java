@@ -40,19 +40,16 @@ public class LaticeApplicationConsole {
         Scanner scanner = new Scanner(System.in);
         
         // Clear screen and show title
-        clearScreen();
-        System.out.println(HIGHLIGHT + "==================================" + RESET);
-        System.out.println(HIGHLIGHT + "          LATICE GAME            " + RESET);
-        System.out.println(HIGHLIGHT + "==================================" + RESET);
-        System.out.println();
+        TexteConsole.clearScreen();
+        TexteConsole.afficherTitre();
         
         // Demander si les joueurs veulent voir les indices des lignes et colonnes
         System.out.println("Voulez-vous afficher les indices des lignes et colonnes? (O/N)");
         String reponse = scanner.nextLine().trim().toUpperCase();
-        afficherIndices = reponse.equals("O") || reponse.equals("OUI");
+        afficherIndices = reponse.equals("O") || reponse.equals("OUI"); //TODO s'assurer que le joueur saisit O ou N
         
-        System.out.println(PLAYER1 + "Joueur 1 :" + RESET);
-        String nom1 = SaisieConsole.saisieChar();
+        System.out.println(PLAYER1 + "Joueur 1 :" + RESET); // Remplacer par la méthode formatPlayer1 dans TexteConsole
+        String nom1 = SaisieConsole.saisieChar(); 
         System.out.println();
         System.out.println(PLAYER2 + "Joueur 2 :" + RESET);
         String nom2 = SaisieConsole.saisieChar();
@@ -80,7 +77,7 @@ public class LaticeApplicationConsole {
         
         while (!quitter) {
             // Clear screen at the start of each turn
-            clearScreen();
+            TexteConsole.clearScreen();
             
             // Display game state info
             System.out.println(HIGHLIGHT + "==================================" + RESET);
@@ -199,7 +196,7 @@ public class LaticeApplicationConsole {
                             premierCoup = false;
                             
                             // Pause for readability
-                            waitForEnter();
+                            TexteConsole.waitForEnter();
                             
                             // Changer de joueur
                             if (tourSupplementaireActif) {
@@ -214,15 +211,12 @@ public class LaticeApplicationConsole {
                             if (premierCoup) {
                                 System.out.println(HIGHLIGHT + "Le premier coup doit être joué au centre (position 5,5). Veuillez réessayer." + RESET);
                             } else {
-                                System.out.println(HIGHLIGHT + "Placement impossible selon les règles du jeu. Veuillez réessayer." + RESET);
-                                System.out.println(HIGHLIGHT + "Rappel: La tuile doit correspondre à au moins une tuile adjacente (même couleur ou même symbole)." + RESET);
+                                TexteConsole.placementImpossible();
                             }
-                            waitForEnter();
+                            TexteConsole.waitForEnter();
                         }
                     } else {
-                        System.out.println();
-                        System.out.println(HIGHLIGHT + "Tuile invalide. Veuillez réessayer." + RESET);
-                        waitForEnter();
+                        TexteConsole.tuileInvalide();
                     }
                     break;
                     
@@ -234,16 +228,15 @@ public class LaticeApplicationConsole {
                     joueurCourant.getRack().remplir(pioche, idxJoueur);
                     
                     System.out.println(currentPlayerColor + "Vous avez pioché une nouvelle main." + RESET);
-                    waitForEnter();
+                    TexteConsole.waitForEnter();
                     
                     // Changer de joueur
                     joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
                     break;
                     
                 case 3: // Passer son tour
-                    System.out.println();
-                    System.out.println(currentPlayerColor + joueurCourant.getName() + " passe son tour." + RESET);
-                    waitForEnter();
+                	TexteConsole.passerTour(joueurCourant, currentPlayerColor);
+                    TexteConsole.waitForEnter();
                     
                     // Changer de joueur
                     joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
@@ -252,7 +245,7 @@ public class LaticeApplicationConsole {
                 case 4: // Règles du jeu
                     System.out.println();
                     TexteConsole.afficherRegles();
-                    waitForEnter();
+                    TexteConsole.waitForEnter();
                     break;
                     
                 
@@ -273,59 +266,33 @@ public class LaticeApplicationConsole {
                     } else {
                         System.out.println(HIGHLIGHT + "Vous n'avez pas assez de points pour acheter un tour supplémentaire." + RESET);
                     }
-                    waitForEnter();
+                    TexteConsole.waitForEnter();
                     break;
                 	
                 
                 case 6: // Quitter la partie
-                    System.out.println();
-                    System.out.println(HIGHLIGHT + "Merci d'avoir joué !" + RESET);
+                	TexteConsole.remerciement();
                     quitter = true;
                     break;
                     
                 default:
                     TexteConsole.afficherErreurSaisie();
-                    waitForEnter();
+                    TexteConsole.waitForEnter();
                     break;
             }
             
             // Vérifier la fin de partie
             if (arbitre.finDePartie(new Rack[]{rackJoueur1, rackJoueur2}, pioche)) {
-                clearScreen();
+            	TexteConsole.clearScreen();
                 int gagnant = arbitre.getGagnant(new Rack[]{rackJoueur1, rackJoueur2});
                 String gagnantNom = (gagnant == 0) ? joueur1.getName() : joueur2.getName();
                 String gagnantColor = (gagnant == 0) ? colorJ1 : colorJ2;
-                
-                System.out.println(HIGHLIGHT + "==================================" + RESET);
-                System.out.println(HIGHLIGHT + "         FIN DE PARTIE           " + RESET);
-                System.out.println(HIGHLIGHT + "==================================" + RESET);
-                System.out.println();
-                System.out.println("Scores finaux:");
-                System.out.println(colorJ1 + joueur1.getName() + ": " + arbitre.getScore(0) + " points" + RESET);
-                System.out.println(colorJ2 + joueur2.getName() + ": " + arbitre.getScore(1) + " points" + RESET);
-                System.out.println();
-                System.out.println(HIGHLIGHT + "Le gagnant est: " + gagnantColor + gagnantNom + RESET);
-                
+                TexteConsole.finPartie(arbitre, joueur1, joueur2, colorJ1, colorJ2, gagnantNom, gagnantColor);
                 quitter = true;
             }
         }
         
         scanner.close();
-    }
-    
-    
-    // Helper method to clear the screen
-    private static void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
-    
-    // Helper method to wait for user to press Enter
-    private static void waitForEnter() {
-        System.out.println();
-        System.out.println(HIGHLIGHT + "Appuyez sur Entrée pour continuer..." + RESET);
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
     }
 }
 

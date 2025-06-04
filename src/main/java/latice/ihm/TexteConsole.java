@@ -1,8 +1,27 @@
 package latice.ihm;
 
+import java.util.Scanner;
+
+import latice.model.Arbitre;
 import latice.model.Joueur;
 
 public class TexteConsole {
+	
+	public static final String RESET = "\u001B[0m";
+    public static final String PLAYER1 = "\u001B[34m"; // Blue for player 1
+    public static final String PLAYER2 = "\u001B[35m"; // Purple for player 2
+    public static final String HIGHLIGHT = "\u001B[1;33m"; // Bold yellow for highlights
+    
+    
+    public static final String BLACK = "\u001B[30m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String WHITE = "\u001B[37m";  // C'est un blanc clair, souvent utilisé comme "gris"
+    public static final String CYAN = "\u001B[36m";
+
+    // Styles
+    public static final String BOLD = "\u001B[1m";    // Texte en gras
 	
 	 public static void afficherBienvenue() {
 	        System.out.println("Bienvenue dans le jeu de cartes Latice !");
@@ -19,13 +38,8 @@ public class TexteConsole {
 
 	 public static void afficherRegles() {
 		 	// Codes ANSI pour les couleurs et le style
-		    final String RESET = "\u001B[0m";   //TODO ajouter les couleurs qui sont dans le main ici et les regrouper dans une énumération
-		    final String BLACK = "\u001B[30m";
-		    final String RED = "\u001B[31m";
-		    final String GREEN = "\u001B[32m";
-		    final String YELLOW = "\u001B[33m";
-		    final String WHITE = "\u001B[37m";  
-		    final String CYAN = "\u001B[36m";
+		     //TODO ajouter les couleurs qui sont dans le main ici et les regrouper dans une énumération
+		    
 
 		    // Styles
 		    final String BOLD = "\u001B[1m";    // Texte en gras 
@@ -127,8 +141,74 @@ public class TexteConsole {
 	    public static void demanderNom() {
 	    	System.out.println("Veuillez entrer votre nom");
 	    }
-
 	    
+	    public static String formatHighlight(String text) {
+	        return HIGHLIGHT + text + RESET;
+	    }
+	    
+	    public static String formatPlayer1(String text) {
+	        return PLAYER1 + text + RESET;
+	    }
+	    
+	    public static String formatPlayer2(String text) {
+	        return PLAYER2 + text + RESET;
+	    }
+	    
+	    // Helper method to clear the screen
+	    public static void clearScreen() {
+	        System.out.print("\033[H\033[2J");
+	        System.out.flush();
+	    }
+	    
+	 // Helper method to wait for user to press Enter
+	    public static void waitForEnter() {
+	        System.out.println();
+	        System.out.println(HIGHLIGHT + "Appuyez sur Entrée pour continuer..." + RESET);
+	        Scanner scanner = new Scanner(System.in);
+	        scanner.nextLine();
+	    }
+	    
+	    public static void afficherTitre() {
+			System.out.println(HIGHLIGHT + "==================================" + RESET);
+	        System.out.println(HIGHLIGHT + "          LATICE GAME            " + RESET);
+	        System.out.println(HIGHLIGHT + "==================================" + RESET);
+	        System.out.println();
+		}
+	    
+	    public static void tuileInvalide() {
+			System.out.println();
+			System.out.println(HIGHLIGHT + "Tuile invalide. Veuillez réessayer." + RESET);
+			waitForEnter();
+		}
+	    
+	    public static void finPartie(Arbitre arbitre, Joueur joueur1, Joueur joueur2, String colorJ1, String colorJ2,
+				String gagnantNom, String gagnantColor) {
+			System.out.println(HIGHLIGHT + "==================================" + RESET);
+			System.out.println(HIGHLIGHT + "         FIN DE PARTIE           " + RESET);
+			System.out.println(HIGHLIGHT + "==================================" + RESET);
+			System.out.println();
+			System.out.println("Scores finaux:");
+			System.out.println(colorJ1 + joueur1.getName() + ": " + arbitre.getScore(0) + " points" + RESET);
+			System.out.println(colorJ2 + joueur2.getName() + ": " + arbitre.getScore(1) + " points" + RESET);
+			System.out.println();
+			System.out.println(HIGHLIGHT + "Le gagnant est: " + gagnantColor + gagnantNom + RESET);
+		}
+	    
+	    public static void remerciement() {
+			System.out.println();
+			System.out.println(HIGHLIGHT + "Merci d'avoir joué !" + RESET);
+		}
+	    
+	    public static void passerTour(Joueur joueurCourant, String currentPlayerColor) {
+			System.out.println();
+			System.out.println(currentPlayerColor + joueurCourant.getName() + " passe son tour." + RESET);
+		}
+	    
+	    public static void placementImpossible() {
+			System.out.println(HIGHLIGHT + "Placement impossible selon les règles du jeu. Veuillez réessayer." + RESET);
+			System.out.println(HIGHLIGHT + "Rappel: La tuile doit correspondre à au moins une tuile adjacente (même couleur ou même symbole)." + RESET);
+		}
+	    	    
 }
 
 
