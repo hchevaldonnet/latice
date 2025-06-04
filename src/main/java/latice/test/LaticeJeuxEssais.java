@@ -1,14 +1,14 @@
 package latice.test;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.Test;
 
 import latice.ihm.TexteConsole;
 import latice.model.Plateau;
 import latice.model.PositionTuiles;
 import latice.model.Tuile;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Disabled;
 
 
 public class LaticeJeuxEssais {
