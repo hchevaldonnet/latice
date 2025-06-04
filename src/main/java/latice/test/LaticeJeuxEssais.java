@@ -17,14 +17,14 @@ public class LaticeJeuxEssais {
 	@Test
 	void TestcaseisMoonTrue() {
 		Plateau plateau = new Plateau();
-		PositionTuiles moonCase = new PositionTuiles(4,4);
+		PositionTuiles pos = new PositionTuiles(4,4);
 		AssertTrue(plateau.caseIsMoon(pos));
 	}
 	
 	@Test
 	void TestcaseisMoonFalse() {
 		Plateau plateau = new Plateau();
-		PositionTuiles moonCase = new PositionTuiles(2,4);
+		PositionTuiles pos = new PositionTuiles(2,4);
 		AssertFalse(plateau.caseIsMoon(pos));
 	
 	@Test
@@ -82,11 +82,16 @@ public class LaticeJeuxEssais {
 	        assertFalse(resultat, "La position est déjà occupée, la deuxième tuile ne doit pas être placée.");
 	    
 	}
-		   @Test
+	   @Test
 	   public void testOrdrejoueurVrai() {
-		   
+		//TODO   
 	   }
-	   
+		@Test
+		public void CreerGererPioche() {
+			//TODO
+		}
+		@Test
+		public void Pioches
 	   
 	    @Test
 	    public void testcaselune() {
@@ -113,6 +118,8 @@ public class LaticeJeuxEssais {
 		boolean resultat = plateau.caseIsSunStones(pos);
 		assertTrue(resultat);
 		}
+		
+		
 	}
 	
 	
