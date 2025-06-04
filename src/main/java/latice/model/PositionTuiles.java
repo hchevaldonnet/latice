@@ -19,7 +19,7 @@ public class PositionTuiles {
 		return y;
 	}
 	
-    public boolean estUneCaseSoleil(int ligne, int col) {
+    public static boolean estUneCaseSoleil(int ligne, int col) {
         return (ligne == 0 && col == 0) || (ligne == 0 && col == 8) || (ligne == 0 && col == 4) ||
                (ligne == 1 && col == 1) || (ligne == 1 && col == 7) || (ligne == 2 && col == 2) ||
                (ligne == 2 && col == 6) || (ligne == 4 && col == 0) || (ligne == 4 && col == 8) ||

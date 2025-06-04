@@ -1,5 +1,7 @@
 package latice.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Arbitre {
@@ -84,6 +86,24 @@ public class Arbitre {
 
         return correspondances;
     }
+    
+    public void calculerPointsAprèsCoup(int currentRow, int currentCol, int correspondances, int joueurActuel) {
+        int points = 0;
+
+        if (correspondances == 2) {
+            points = 1;
+        } else if (correspondances == 3) {
+            points = 2;
+        } else if (correspondances == 4) {
+            points = 4;
+        }
+
+        if (PositionTuiles.estUneCaseSoleil(currentRow, currentCol)) {
+            points += 1;
+        }
+
+        ajouterPoints(joueurActuel, points);
+    }
 
     /**
      * Vérifie si deux tuiles sont compatibles (même couleur ou même symbole)
@@ -95,47 +115,34 @@ public class Arbitre {
     /**
      * Vérifie si la partie est terminée
      */
-    public boolean finDePartie(Rack[] racks, Pioche pioche) {
-        // Vérifier si un joueur a vidé son rack
-        for (int i = 0; i < racks.length; i++) {
-            if (racks[i].getTuiles().isEmpty()) {
-                return true;
-            }
-        }
-        
-        // Vérifier si toutes les pioches sont vides et aucun coup n'est possible
-        boolean piochesVides = true;
-        for (int i = 0; i < racks.length; i++) {
-            if (!pioche.estVide(i)) {
-                piochesVides = false;
-                break;
-            }
-        }
-        
-        return piochesVides; // Si toutes les pioches sont vides, fin de partie
+    public boolean finDePartie(Rack[] racks, int totalTours, int maxTours) {
+        return totalTours >= maxTours;
     }
 
     /**
-     * Retourne l'indice du joueur gagnant
+     * Retourne la liste des indices des joueurs ayant le moins de tuiles restantes (rack + pioche).
      */
-    public int getGagnant(Rack[] racks) {
-        // Vérifier si un joueur a vidé son rack
-        for (int i = 0; i < racks.length; i++) {
-            if (racks[i].getTuiles().isEmpty()) {
-                return i;
+    public List<Integer> getGagnants(Joueur[] joueurs) {
+        List<Integer> gagnants = new ArrayList<>();
+        int minTuilesRestantes = Integer.MAX_VALUE;
+
+        for (int i = 0; i < joueurs.length; i++) {
+            int rackSize = joueurs[i].getRack().getTuiles().size();
+            int piocheSize = joueurs[i].getPioche().taille(i);
+            int totalRestantes = rackSize + piocheSize;
+
+            if (totalRestantes < minTuilesRestantes) {
+                gagnants.clear();
+                gagnants.add(i);
+                minTuilesRestantes = totalRestantes;
+            } else if (totalRestantes == minTuilesRestantes) {
+                gagnants.add(i);
             }
         }
-        
-        // Si aucun joueur n'a vidé son rack, le gagnant est celui avec le plus de points
-        int gagnant = 0;
-        for (int i = 1; i < getPointsJoueur().length; i++) {
-            if (getPointsJoueur()[i] > getPointsJoueur()[gagnant]) {
-                gagnant = i;
-            }
-        }
-        
-        return gagnant;
+
+        return gagnants;
     }
+
 
     /**
      * Distribue les tuiles aux joueurs
