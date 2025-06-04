@@ -9,7 +9,6 @@ public class Joueur {
 	private Pioche pioche;
 	
 	
-	
 	public Joueur(String name, Rack rack, Pioche pioche) {
 		this.name = name;
 		this.rack = rack;
