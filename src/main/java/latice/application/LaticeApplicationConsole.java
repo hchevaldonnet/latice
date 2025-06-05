@@ -223,19 +223,30 @@ public class LaticeApplicationConsole {
                     }
                     break;
                     
-                case 2: // Piocher une nouvelle main
+                case 2: // Piocher une nouvelle main (-1 point)
                     System.out.println();
-                    joueurCourant.getRack().vider();
                     
+                    // Vérifier si le joueur a au moins 1 point à dépenser
                     int idxJoueur = (joueurCourant == joueur1) ? 0 : 1;
-                    joueurCourant.getRack().remplir(pioche, idxJoueur);
+                    if (arbitre.getScore(idxJoueur) < 1) {
+                        System.out.println(TexteConsole.HIGHLIGHT + "Vous n'avez pas assez de points pour piocher une nouvelle main (coût: 1 point)." + TexteConsole.RESET);
+                    } else {
+                        // Déduire 1 point du score
+                        arbitre.ajouterPoints(idxJoueur, -1);
+                        
+                        // Vider le rack actuel et le remplir avec de nouvelles tuiles
+                        joueurCourant.getRack().vider();
+                        joueurCourant.getRack().remplir(pioche, idxJoueur);
+                        
+                        System.out.println(currentPlayerColor + "Vous avez pioché une nouvelle main (-1 point)." + TexteConsole.RESET);
+                    }
                     
-                    System.out.println(currentPlayerColor + "Vous avez pioché une nouvelle main." + TexteConsole.RESET);
                     TexteConsole.waitForEnter();
                     
                     // Changer de joueur
                     joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
                     break;
+
                     
                 case 3: // Passer son tour
                 	TexteConsole.passerTour(joueurCourant, currentPlayerColor);

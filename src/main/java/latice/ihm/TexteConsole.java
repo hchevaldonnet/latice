@@ -37,7 +37,7 @@ public class TexteConsole {
 
 	 public static void afficherMenu() { 
 		 	System.out.println("1. Placer une tuile");
-		    System.out.println("2. Piocher une nouvelle main");
+		    System.out.println("2. Piocher une nouvelle main (-1 point)");
 		    System.out.println("3. Passer son tour");
 		    System.out.println("4. Afficher les règles");
 		    System.out.println("5. Acheter un tour supplémentaire (-2 points)");
