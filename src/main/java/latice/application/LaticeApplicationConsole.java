@@ -16,6 +16,7 @@ import latice.ihm.*;
 
 public class LaticeApplicationConsole {
     
+	//TODO: réduire le nombre de commentaires au strict essentiel pour toutes les classes.
 
     public static void main(String[] args) {
         // Créer une pioche pour 2 joueurs
