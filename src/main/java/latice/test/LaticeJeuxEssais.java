@@ -13,7 +13,9 @@ import javafx.stage.Stage;
 import latice.ihm.PlateauViewConsole;
 import latice.ihm.PlateauViewJavaFX;
 import latice.ihm.RackViewConsole;
+import latice.ihm.TexteConsole;
 import latice.model.*;
+import latice.model.setup.GameSetup;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -22,27 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LaticeJeuxEssais {
 	
-	
-	@Test
-	void TestcaseisMoonTrue() {
-		Plateau plateau = new Plateau();
-		PositionTuiles pos = new PositionTuiles(4,4);
-		AssertTrue(plateau.caseIsMoon(pos));
-	}
-	
-	@Test
-	void TestcaseisMoonFalse() {
-		Plateau plateau = new Plateau();
-		PositionTuiles pos = new PositionTuiles(2,4);
-		AssertFalse(plateau.caseIsMoon(pos));
-	
-	@Test
-	void TestcaseisSunStone() {
-        Plateau plateau = new Plateau();
-        PositionTuiles moonCase = new PositionTuiles(4, 4);
-        assertTrue(plateau.caseIsMoon(moonCase), "La position (4,4) devrait être une case lune");
-    }
-    
+		
     @Test
     public void testCaseIsMoonFalse() {
         Plateau plateau = new Plateau();
@@ -267,46 +249,28 @@ public class LaticeJeuxEssais {
 	}
 	   @Test
 	   public void testOrdrejoueurVrai() {
-		//TODO   
+		   //TODO
+	   }
+	   @Test 
+	   public void testOrdrejoueurFaux() {
+		   //TODO
 	   }
 		@Test
 		public void CreerGererPioche() {
 			//TODO
 		}
-		@Test
-		public void Pioches
-	   
-	    @Test
-	    public void testcaselune() {
-	    Plateau plateau = new Plateau();
-	    PositionTuiles pos = new PositionTuiles(4,4);
-		if (plateau.caseIsMoon(pos)) {
-			TexteConsole.caseMoonStone();
-		}
-		else {
-			TexteConsole.notCaseMoonStone();
-		boolean resultat = plateau.caseIsMoon(pos);
-		assertTrue(resultat,"C'est une case lune");
-		}
-		}
-		@Test
-		public void testcasesoleil() {
-		Plateau plateau = new Plateau();
-		PositionTuiles pos = new PositionTuiles(4,0);
-		if (plateau.caseIsSunStones(pos)){
-			TexteConsole.caseSunStone();
-		}
-		else {
-			TexteConsole.notCaseSunStone();
-		boolean resultat = plateau.caseIsSunStones(pos);
-		assertTrue(resultat);
-		}
 		
-		
-	}
+		@Test
+		public void PiochesTailleTuile() {
+			Pioche pioche = new Pioche(2);
+	        int tailleJoueur1 = pioche.taille(0);
+	        int tailleJoueur2 = pioche.taille(1);
+	        assertEquals(36, tailleJoueur1, "Joueur 1 doit avoir 36 tuiles");
+	        assertEquals(36, tailleJoueur2, "Joueur doit avoir 36 tuiles");
+	        assertEquals(tailleJoueur1, tailleJoueur2, "Les deux joueurs doivent avoir le même nombre de tuiles");
+		}
 	
 	
-    
     // V5 - Tests de placement de tuiles via l'interface graphique
     // Tests unitaires pour contrôler le placement des tuiles
     
@@ -426,4 +390,18 @@ public class LaticeJeuxEssais {
         // Vérifier le nombre de correspondances (devrait être 4 pour un Latice)
         assertEquals(4, resultat, "Placer une tuile avec 4 correspondances devrait être un Latice");
     }
+    @Test
+    public void testPlacementTuileDiagonale(){
+        Plateau plateau = new Plateau();
+        Arbitre arbitre = new Arbitre(2);
+        
+        Tuile tuileCentre = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
+        plateau.placerTuile(tuileCentre, new PositionTuiles(4, 4));
+        
+        
+        Tuile tuileDiagonale = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
+        int resultat = arbitre.verifierCoup(3, 5, tuileDiagonale, plateau.getCases(), false, 0);
+        assertEquals(-1, resultat, "Une tuile diagonale ne doit pas être acceptée");
+    }
+    
 }
