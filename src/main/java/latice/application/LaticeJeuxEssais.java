@@ -42,17 +42,17 @@ public class LaticeJeuxEssais {
         
         // Vérification de l'égalité des pioches
         if (tailleJoueur1 == tailleJoueur2) {
-            System.out.println(TexteConsole.formatHighlight("✓ OK: Les deux pioches ont la même taille"));
+            TexteConsole.formatHighlight("✓ OK: Les deux pioches ont la même taille");
         } else {
-            System.out.println(TexteConsole.formatHighlight("✗ ERREUR: Les pioches n'ont pas la même taille"));
+            TexteConsole.formatHighlight("✗ ERREUR: Les pioches n'ont pas la même taille");
         }
         
         // Vérification du nombre total (36 tuiles par joueur attendues)
         int tailleAttendue = 36; // 72 tuiles / 2 joueurs
         if (tailleJoueur1 == tailleAttendue) {
-            System.out.println(TexteConsole.formatHighlight("✓ OK: Chaque pioche contient le nombre correct de tuiles (" + tailleAttendue + ")"));
+            TexteConsole.formatHighlight("✓ OK: Chaque pioche contient le nombre correct de tuiles (" + tailleAttendue + ")");
         } else {
-            System.out.println(TexteConsole.formatHighlight("✗ ERREUR: Les pioches n'ont pas le nombre correct de tuiles"));
+            TexteConsole.formatHighlight("✗ ERREUR: Les pioches n'ont pas le nombre correct de tuiles");
         }
     }
     
@@ -80,9 +80,9 @@ public class LaticeJeuxEssais {
         
         // Vérification que les racks contiennent bien 5 tuiles
         if (rackJoueur1.getTuiles().size() == 5 && rackJoueur2.getTuiles().size() == 5) {
-            System.out.println(TexteConsole.formatHighlight("✓ OK: Les deux racks contiennent 5 tuiles chacun"));
+           TexteConsole.formatHighlight("✓ OK: Les deux racks contiennent 5 tuiles chacun");
         } else {
-            System.out.println(TexteConsole.formatHighlight("✗ ERREUR: Les racks ne contiennent pas 5 tuiles chacun"));
+           TexteConsole.formatHighlight("✗ ERREUR: Les racks ne contiennent pas 5 tuiles chacun");
         }
         
         // Affichage des tuiles de chaque rack
