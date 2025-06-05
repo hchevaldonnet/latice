@@ -331,4 +331,19 @@ public class LaticeJeuxEssais {
         assertEquals(-1, resultat, "Une tuile diagonale ne doit pas être acceptée");
     }
     
+    @Test
+    public void testFindePartie() {
+    	 int nbJoueurs = 2;
+         int maxTours = 10;
+         Arbitre arbitre = new Arbitre(nbJoueurs);
+         Rack[] racks = new Rack[nbJoueurs];
+         for (int i = 0; i < nbJoueurs; i++) {
+             racks[i] = new Rack(new Pioche(nbJoueurs));
+         }
+         assertFalse(arbitre.finDePartie(racks, 5, maxTours), "Le jeu ne doit pas être terminé en 5 tours");
+         assertTrue(arbitre.finDePartie(racks, 10, maxTours), "Le jeu devrait être terminé à 10 tours");
+         assertTrue(arbitre.finDePartie(racks, 11, maxTours), "Le jeu devrait être terminé si le nombre de tours est supérieur au maximum");
+     }
+   
+
 }
