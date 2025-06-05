@@ -8,6 +8,7 @@ import latice.model.Arbitre;
 import latice.model.Joueur;
 import latice.model.Pioche;
 import latice.model.Plateau;
+import latice.model.PositionCaseSoleil;
 import latice.model.PositionTuiles;
 import latice.model.Rack;
 import latice.model.Tuile;
@@ -166,7 +167,7 @@ public class LaticeApplicationConsole {
                                 }
                                 
                                 // Vérifier les cases spéciales
-                                if (plateau.caseIsSunStones(pos)) {
+                                if (PositionCaseSoleil.estUneCaseSoleil(pos.getX(), pos.getY())) {
                                     TexteConsole.caseSunStone();
                                     System.out.println(TexteConsole.HIGHLIGHT + "Bonus soleil: +1 point" + TexteConsole.HIGHLIGHT);
                                     pointsGagnes += 1;
@@ -174,7 +175,7 @@ public class LaticeApplicationConsole {
                                     TexteConsole.notCaseSunStone();
                                 }
                                 
-                                if (plateau.caseIsMoon(pos)) {
+                                if (pos.estUneCaseLune(pos.getX(), pos.getY())) {
                                     TexteConsole.caseMoonStone();
                                 } else {
                                     TexteConsole.notCaseMoonStone();

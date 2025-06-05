@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import latice.model.Plateau;
+import latice.model.PositionCaseSoleil;
 import latice.model.PositionTuiles;
 import latice.model.Tuile;
 
@@ -42,9 +43,9 @@ public class PlateauViewJavaFX implements PlateauView {
         
         // Déterminer la couleur de fond de la case
         PositionTuiles position = new PositionTuiles(ligne, colonne);
-        if (plateau.caseIsMoon(position)) {
+        if (position.estUneCaseLune(ligne, colonne)) {
             rectangle.setFill(Color.SILVER);
-        } else if (plateau.caseIsSunStones(position)) {
+        } else if (PositionCaseSoleil.estUneCaseSoleil(position.getX(), position.getY())) {
             rectangle.setFill(Color.GOLD);
         } else {
             rectangle.setFill(Color.LIGHTBLUE);

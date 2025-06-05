@@ -192,7 +192,7 @@ public class LaticeBoard extends Application {
                 tuile.setUserData(false);
 
                 PositionTuiles position = new PositionTuiles(ligne, col);
-                if (PositionTuiles.estUneCaseSoleil(ligne, col)) tuile.setImage(new Image(CHEMIN_IMAGE + "soleil.png"));
+                if (PositionCaseSoleil.estUneCaseSoleil(ligne, col)) tuile.setImage(new Image(CHEMIN_IMAGE + "soleil.png"));
                 else if (position.estUneCaseLune(ligne, col)) tuile.setImage(new Image(CHEMIN_IMAGE + "lune.png"));
 
                 tuile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
