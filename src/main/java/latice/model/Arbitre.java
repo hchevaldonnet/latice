@@ -98,7 +98,7 @@ public class Arbitre {
             points = 4;
         }
 
-        if (PositionTuiles.estUneCaseSoleil(currentRow, currentCol)) {
+        if (PositionCaseSoleil.estUneCaseSoleil(currentRow, currentCol)) {
             points += 1;
         }
 

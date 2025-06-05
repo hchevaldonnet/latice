@@ -3,8 +3,8 @@ package latice.model;
 import java.util.Objects;
 
 public class PositionTuiles {
-	private int x; //Lignes
-	private int y; //Colonnes
+	private int x;
+	private int y; 
 	
 	public PositionTuiles(int x, int y) {
 		this.x = x;
@@ -18,15 +18,6 @@ public class PositionTuiles {
 	public int getY() {
 		return y;
 	}
-	
-    public static boolean estUneCaseSoleil(int ligne, int col) {
-        return (ligne == 0 && col == 0) || (ligne == 0 && col == 8) || (ligne == 0 && col == 4) ||
-               (ligne == 1 && col == 1) || (ligne == 1 && col == 7) || (ligne == 2 && col == 2) ||
-               (ligne == 2 && col == 6) || (ligne == 4 && col == 0) || (ligne == 4 && col == 8) ||
-               (ligne == 6 && col == 2) || (ligne == 6 && col == 6) || (ligne == 7 && col == 1) || 
-               (ligne == 7 && col == 7) || (ligne == 8 && col == 0) || (ligne == 8 && col == 4) || 
-               (ligne == 8 && col == 8);
-    }
 
     public boolean estUneCaseLune(int row, int col) {
         return (row == 4 && col == 4);

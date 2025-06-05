@@ -1,67 +1,42 @@
 package latice.test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-
 import latice.ihm.PlateauViewConsole;
-import latice.ihm.PlateauViewJavaFX;
 import latice.ihm.RackViewConsole;
-import latice.ihm.TexteConsole;
 import latice.model.*;
-import latice.model.setup.GameSetup;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class LaticeJeuxEssais {
 	
 		
     @Test
     public void testCaseIsMoonFalse() {
-        Plateau plateau = new Plateau();
         PositionTuiles notMoonCase = new PositionTuiles(2, 4);
-        assertFalse(plateau.caseIsMoon(notMoonCase), "La position (2,4) ne devrait pas être une case lune");
+        assertFalse(notMoonCase.estUneCaseLune(notMoonCase.getX(), notMoonCase.getY()), 
+                "La position (2,4) ne devrait pas être une case lune");
     }
     
     @Test
     public void testCaseIsSunStone() {
-        Plateau plateau = new Plateau();
-
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 0)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 4)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(0, 8)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(1, 1)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(1, 7)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(2, 2)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(2, 6)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(4, 0)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(4, 8)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(6, 2)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(6, 6)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(7, 1)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(7, 7)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(8, 0)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(8, 4)));
-        assertTrue(plateau.caseIsSunStones(new PositionTuiles(8, 8)));
+        for (PositionCaseSoleil position : PositionCaseSoleil.values()) {
+            assertTrue(PositionCaseSoleil.estUneCaseSoleil(position.getX(), position.getY()),
+                    "La position (" + position.getX() + "," + position.getY() + ") devrait être une case soleil");
+        }
     }
+
     
     @Test
     public void testCaseIsSunStonesFalse() {
-        Plateau plateau = new Plateau();
-
-        assertFalse(plateau.caseIsSunStones(new PositionTuiles(3, 3)));
-        assertFalse(plateau.caseIsSunStones(new PositionTuiles(1, 2)));
-        assertFalse(plateau.caseIsSunStones(new PositionTuiles(4, 4)));
-        assertFalse(plateau.caseIsSunStones(new PositionTuiles(2, 5)));
+    	assertFalse(PositionCaseSoleil.estUneCaseSoleil(3, 3),
+                "La position (3,3) ne devrait pas être une case soleil");
+        assertFalse(PositionCaseSoleil.estUneCaseSoleil(1, 2),
+                "La position (1,2) ne devrait pas être une case soleil");
+        assertFalse(PositionCaseSoleil.estUneCaseSoleil(4, 4),
+                "La position (4,4) ne devrait pas être une case soleil");
+        assertFalse(PositionCaseSoleil.estUneCaseSoleil(2, 5),
+                "La position (2,5) ne devrait pas être une case soleil");
     }
     
     @Test
@@ -262,15 +237,13 @@ public class LaticeJeuxEssais {
     
     @Test
     public void testPlacementTuileCasesSpeciales() {
-        // Test de placement sur cases spéciales (lune, soleil)
-        Plateau plateau = new Plateau();
-        
-        // Vérifier que les cases spéciales sont bien détectées
-        PositionTuiles posLune = new PositionTuiles(4, 4);
-        assertTrue(plateau.caseIsMoon(posLune), "La position (4,4) devrait être une case lune");
+    	PositionTuiles posLune = new PositionTuiles(4, 4);
+        assertTrue(posLune.estUneCaseLune(posLune.getX(), posLune.getY()), 
+                "La position (4,4) devrait être une case lune");
         
         PositionTuiles posSoleil = new PositionTuiles(0, 0);
-        assertTrue(plateau.caseIsSunStones(posSoleil), "La position (0,0) devrait être une case soleil");
+        assertTrue(PositionCaseSoleil.estUneCaseSoleil(posSoleil.getX(), posSoleil.getY()), 
+                "La position (0,0) devrait être une case soleil");
     }
     
     @Test
