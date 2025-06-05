@@ -7,7 +7,7 @@ public class Plateau {
 	
 	private Map<PositionTuiles, Tuile > cases; 
 	
-	public Plateau() {
+	public Plateau(Map<PositionTuiles, Tuile> plateau) {
 		this.setCases(new HashMap<>());
 	}
 	

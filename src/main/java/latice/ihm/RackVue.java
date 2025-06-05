@@ -2,7 +2,7 @@ package latice.ihm;
 
 import latice.model.Rack;
 
-public interface RackView {
+public interface RackVue {
 	
 	public void afficherRack(Rack rack);
 }

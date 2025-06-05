@@ -12,7 +12,7 @@ import latice.model.PositionCaseSoleil;
 import latice.model.PositionTuiles;
 import latice.model.Rack;
 import latice.model.Tuile;
-import latice.model.setup.GameSetup;
+import latice.model.setup.PreparerJeu;
 import latice.ihm.*;
 
 public class LaticeApplicationConsole {
@@ -35,7 +35,7 @@ public class LaticeApplicationConsole {
         Rack rackJoueur2 = new Rack(pioche);
         rackJoueur2.remplir(pioche, 1);
         
-        Plateau plateau = new Plateau();
+        Plateau plateau = new Plateau(null);
         
         boolean quitter = false;
         boolean tourSupplementaireActif = false;
@@ -67,7 +67,7 @@ public class LaticeApplicationConsole {
         System.out.println();
         
         // Détermine aléatoirement l'ordre des joueurs
-        String[] ordreJoueurs = GameSetup.ordreJoueur(nom1, nom2);
+        String[] ordreJoueurs = PreparerJeu.ordreJoueur(nom1, nom2);
         Joueur joueur1 = new Joueur(ordreJoueurs[0], rackJoueur1, pioche); 
         Joueur joueur2 = new Joueur(ordreJoueurs[1], rackJoueur2, pioche);
         
@@ -96,9 +96,9 @@ public class LaticeApplicationConsole {
             
             // Afficher le plateau
             System.out.println(TexteConsole.HIGHLIGHT + "PLATEAU DE JEU:" + TexteConsole.RESET);
-            PlateauView plateauView = new PlateauViewConsole();
+            PlateauVue plateauView = new PlateauVueConsole();
             
-            PlateauViewConsole plateauViewConsole = (PlateauViewConsole) plateauView;
+            PlateauVueConsole plateauViewConsole = (PlateauVueConsole) plateauView;
             plateauViewConsole.afficherPlateau(plateau, afficherIndices);
             
             System.out.println();

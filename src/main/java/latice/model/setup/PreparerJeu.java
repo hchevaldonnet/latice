@@ -2,7 +2,7 @@ package latice.model.setup;
 
 import java.util.Random;
 
-public class GameSetup {
+public class PreparerJeu {
 	
 	public static String[]  ordreJoueur(String nom1, String nom2){
 		

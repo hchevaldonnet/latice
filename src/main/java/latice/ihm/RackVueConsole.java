@@ -3,7 +3,7 @@ package latice.ihm;
 import latice.model.Rack;
 import latice.model.Tuile;
 
-public class RackViewConsole implements RackView {
+public class RackVueConsole implements RackVue {
     
     @Override
     public void afficherRack(Rack rack) {

@@ -8,25 +8,18 @@ import java.util.Random;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import latice.model.*;
 
-public class LaticeBoard extends Application {
-	
-    private static final int TAILLE = 9;
-    private static final int TUILE_TAILLE = 50;
-    private static final String CHEMIN_IMAGE = "/latice/ihm/view/plateau_photo/";
+public class LaticePlateau extends Application {
+
     private static final int NB_JOUEURS = 2;
-    private int totalTours = 0;
     private final int MAX_TOURS = 20;
-    private boolean tourSupplementaireActif = false;
 
     private Rack[] racks = new Rack[NB_JOUEURS];
     private Pioche pioches = new Pioche(NB_JOUEURS);
@@ -38,29 +31,37 @@ public class LaticeBoard extends Application {
     private Tuile tuileSelectionnee = null;
     private int indexTuileSelectionnee = -1;
     private boolean premierCoup = true;
+
     private Map<PositionTuiles, Tuile> plateau = new HashMap<>();
+    private int totalTours = 0;
+    private boolean tourSupplementaireActif = false;
 
     private Label tourLabel;
     private Label labelToursRestants;
     private Label[] tuilesRestantesLabel = new Label[NB_JOUEURS];
     private Label[] pointsLabels = new Label[NB_JOUEURS];
 
+    private PlateauVueJavaFX plateauVue;
+
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
-        GridPane board = createBoard();
-        root.setCenter(board);
-        
+
+        plateauVue = new PlateauVueJavaFX(this);
+        GridPane plateau = plateauVue.createBoard();
+        root.setCenter(plateau);
+
+        // Saisie noms joueurs
         String[] nomsJoueurs = new String[NB_JOUEURS];
         for (int i = 0; i < NB_JOUEURS; i++) {
             boolean nomValide = false;
             while (!nomValide) {
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Nom du Joueur");
-                dialog.setHeaderText("Entrez le nom du Joueur " + (i + 1));
-                dialog.setContentText("Nom:");
+                TextInputDialog dialogue = new TextInputDialog();
+                dialogue.setTitle("Nom du Joueur");
+                dialogue.setHeaderText("Entrez le nom du Joueur " + (i + 1));
+                dialogue.setContentText("Nom:");
 
-                String nomEntre = dialog.showAndWait().orElse(null);
+                String nomEntre = dialogue.showAndWait().orElse(null);
 
                 if (nomEntre != null) {
                     nomEntre = nomEntre.trim();
@@ -68,30 +69,24 @@ public class LaticeBoard extends Application {
                         nomsJoueurs[i] = nomEntre;
                         nomValide = true;
                     } else {
-                        Alert alerte = new Alert(Alert.AlertType.ERROR);
-                        alerte.setTitle("Erreur");
-                        alerte.setHeaderText("Nom invalide");
-                        alerte.setContentText("Le nom ne peut pas être vide !");
-                        alerte.showAndWait();
+                    	montrerAlerte("Le nom ne peut pas être vide !");
                     }
                 } else {
-                    Alert alerte = new Alert(Alert.AlertType.ERROR);
-                    alerte.setTitle("Erreur");
-                    alerte.setHeaderText("Nom requis");
-                    alerte.setContentText("Vous devez entrer un nom pour continuer.");
-                    alerte.showAndWait();
+                	montrerAlerte("Vous devez entrer un nom pour continuer.");
                 }
             }
         }
 
         VBox vboxADroite = new VBox(10);
         vboxADroite.setPadding(new Insets(15));
+
         tourLabel = new Label();
-        joueurActuel = new Random().nextInt(NB_JOUEURS);
         labelToursRestants = new Label();
         labelToursRestants.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        joueurActuel = new Random().nextInt(NB_JOUEURS);
         majLabelTours();
-        
+
         for (int i = 0; i < NB_JOUEURS; i++) {
             racks[i] = new Rack(pioches);
             racksHbox[i] = new HBox(5);
@@ -99,7 +94,7 @@ public class LaticeBoard extends Application {
             pointsLabels[i] = new Label("Points " + nomsJoueurs[i] + " : 0");
             joueurs[i] = new Joueur(nomsJoueurs[i], racks[i], pioches);
         }
-        
+
         tourLabel.setText("Tour de " + joueurs[joueurActuel].getName());
         tourLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px");
 
@@ -110,42 +105,42 @@ public class LaticeBoard extends Application {
         VBox rackBox = new VBox(10);
         rackBox.setPadding(new Insets(10));
         for (int i = 0; i < NB_JOUEURS; i++) {
-            VBox playerBox = new VBox(5);
-            playerBox.getChildren().addAll(pointsLabels[i], tuilesRestantesLabel[i], racksHbox[i]);
-            rackBox.getChildren().add(playerBox);
+            VBox joueurBox = new VBox(5);
+            joueurBox.getChildren().addAll(pointsLabels[i], tuilesRestantesLabel[i], racksHbox[i]);
+            rackBox.getChildren().add(joueurBox);
         }
 
         VBox actionsBox = new VBox(10);
         actionsBox.setPadding(new Insets(10));
         Button btnPasserTour = new Button("Passer le tour");
-        Button btnEchangerRack = new Button("Échanger le rack (1 pt)");
+        Button btnEchangerRack = new Button("Échanger le rack (-1 pt)");
         Button btnTourSupplementaire = new Button("Acheter un tour supplémentaire (-2 pts)");
-        
+
         btnPasserTour.setPrefWidth(300);
         btnEchangerRack.setPrefWidth(300);
         btnTourSupplementaire.setPrefWidth(300);
 
         btnPasserTour.setOnAction(e -> {
-            montrerAlert("Tour passé.");
+            montrerAlerte("Tour passé.");
             changerDeTour();
         });
 
         btnEchangerRack.setOnAction(e -> {
             boolean possible = joueurs[joueurActuel].jouerActionSpeciale(
-                joueurActuel,
-                ActionSpeciale.ECHANGER_RACK,
-                joueurs[joueurActuel].getRack(),
-                joueurs[joueurActuel].getPioche(),
-                arbitre
+                    joueurActuel,
+                    ActionSpeciale.ECHANGER_RACK,
+                    joueurs[joueurActuel].getRack(),
+                    joueurs[joueurActuel].getPioche(),
+                    arbitre
             );
 
             if (possible) {
                 majRack();
                 majPoints();
                 changerDeTour();
-                montrerAlert("Rack échangé avec succès (-1 point) !");
+                montrerAlerte("Rack échangé avec succès (-1 point) !");
             } else {
-                montrerAlert("Impossible d’échanger le rack (pioche vide ou pas assez de points).");
+                montrerAlerte("Impossible d’échanger le rack (pioche vide ou pas assez de points).");
             }
         });
 
@@ -153,11 +148,11 @@ public class LaticeBoard extends Application {
             boolean possible = joueurs[joueurActuel].jouerActionSpeciale(joueurActuel, ActionSpeciale.ACTION_SUPPLEMENTAIRE,
                     joueurs[joueurActuel].getRack(), joueurs[joueurActuel].getPioche(), arbitre);
             if (possible) {
-            	tourSupplementaireActif = true;
+                tourSupplementaireActif = true;
                 majPoints();
-                montrerAlert("Tour supplémentaire accordé !");
+                montrerAlerte("Tour supplémentaire accordé !");
             } else {
-                montrerAlert("Pas assez de points !");
+                montrerAlerte("Pas assez de points !");
             }
         });
 
@@ -172,63 +167,36 @@ public class LaticeBoard extends Application {
         primaryStage.show();
     }
 
-    private void montrerAlert(String msg) {
-        Alert alerte = new Alert(Alert.AlertType.INFORMATION);
-        alerte.setTitle("Arbitre");
-        alerte.setHeaderText(null);
-        alerte.setContentText(msg);
-        alerte.showAndWait();
-    }
-
-    private GridPane createBoard() {
-        GridPane grille = new GridPane();
-        for (int ligne = 0; ligne < TAILLE; ligne++) {
-            for (int col = 0; col < TAILLE; col++) {
-                final int ligneCourante = ligne;
-                final int colCourante = col;
-                ImageView tuile = new ImageView(new Image(CHEMIN_IMAGE + "ocean.png"));
-                tuile.setFitWidth(TUILE_TAILLE);
-                tuile.setFitHeight(TUILE_TAILLE);
-                tuile.setUserData(false);
-
-                PositionTuiles position = new PositionTuiles(ligne, col);
-                if (PositionCaseSoleil.estUneCaseSoleil(ligne, col)) tuile.setImage(new Image(CHEMIN_IMAGE + "soleil.png"));
-                else if (position.estUneCaseLune(ligne, col)) tuile.setImage(new Image(CHEMIN_IMAGE + "lune.png"));
-
-                tuile.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    if (tuileSelectionnee != null && !(boolean) tuile.getUserData()) {
-                        int resultat = arbitre.verifierCoup(ligneCourante, colCourante, tuileSelectionnee, plateau, premierCoup, joueurActuel);
-                        if (resultat != -1) {
-                            tuile.setImage(new Image(CHEMIN_IMAGE + tuileSelectionnee.getImagePath()));
-                            tuile.setUserData(true);
-                            plateau.put(new PositionTuiles(ligneCourante, colCourante), tuileSelectionnee);
-                            arbitre.calculerPointsAprèsCoup(ligneCourante, colCourante, resultat, joueurActuel);
-                            retirerTuileDuRack(joueurActuel, indexTuileSelectionnee);
-                            premierCoup = false;
-                            majPoints();
-                            changerDeTour();
-                        } else {
-                            montrerAlert("Coup invalide !");
-                        }
-                    }
-                });
-                grille.add(tuile, col, ligne);
+    public void gererClicTuile(int ligne, int col, ImageView tuileView) {
+        if (tuileSelectionnee != null && !(boolean) tuileView.getUserData()) {
+            int resultat = arbitre.verifierCoup(ligne, col, tuileSelectionnee, plateau, premierCoup, joueurActuel);
+            if (resultat != -1) {
+                tuileView.setImage(new javafx.scene.image.Image(PlateauVueJavaFX.CHEMIN_IMAGE + tuileSelectionnee.getImagePath()));
+                tuileView.setUserData(true);
+                plateau.put(new PositionTuiles(ligne, col), tuileSelectionnee);
+                arbitre.calculerPointsAprèsCoup(ligne, col, resultat, joueurActuel);
+                retirerTuileDuRack(joueurActuel, indexTuileSelectionnee);
+                premierCoup = false;
+                majPoints();
+                changerDeTour();
+                plateauVue.afficherPlateau(new Plateau(plateau)); // rafraîchissement visuel
+            } else {
+                montrerAlerte("Coup invalide !");
             }
         }
-        return grille;
     }
 
     private void majRack() {
         for (int j = 0; j < NB_JOUEURS; j++) {
-        	final int joueur = j;
+            final int joueur = j;
             racksHbox[j].getChildren().clear();
             if (joueur != joueurActuel) continue;
             for (int i = 0; i < racks[j].getTuiles().size(); i++) {
                 Tuile tuile = racks[j].getTuiles().get(i);
-                String cheminImage = CHEMIN_IMAGE + tuile.getImagePath();
-                ImageView tileVue = new ImageView(new Image(cheminImage));
-                tileVue.setFitWidth(TUILE_TAILLE);
-                tileVue.setFitHeight(TUILE_TAILLE);
+                String cheminImage = PlateauVueJavaFX.CHEMIN_IMAGE + tuile.getImagePath();
+                ImageView tileVue = new ImageView(new javafx.scene.image.Image(cheminImage));
+                tileVue.setFitWidth(PlateauVueJavaFX.TUILE_TAILLE);
+                tileVue.setFitHeight(PlateauVueJavaFX.TUILE_TAILLE);
 
                 final int index = i;
                 tileVue.setOnMouseClicked(event -> {
@@ -240,11 +208,6 @@ public class LaticeBoard extends Application {
                 racksHbox[j].getChildren().add(tileVue);
             }
         }
-    }
-    
-    private void majLabelTours() {
-        int toursRestants = MAX_TOURS - totalTours;
-        labelToursRestants.setText("Tours restants : " + toursRestants + " / " + MAX_TOURS);
     }
 
     private void tuileBrillante(int joueur, int selectedIndex) {
@@ -271,7 +234,7 @@ public class LaticeBoard extends Application {
     private void changerDeTour() {
         if (tourSupplementaireActif) {
             tourSupplementaireActif = false;
-            montrerAlert("Vous avez joué votre tour supplémentaire.");
+            montrerAlerte("Vous avez joué votre tour supplémentaire.");
         } else {
             joueurActuel = (joueurActuel + 1) % NB_JOUEURS;
             totalTours++;
@@ -279,8 +242,8 @@ public class LaticeBoard extends Application {
         }
 
         if (arbitre.finDePartie(racks, totalTours, MAX_TOURS)) {
-        	List<Integer> gagnants = arbitre.getGagnants(joueurs);
-        	proclamerResultats(gagnants);
+            List<Integer> gagnants = arbitre.getGagnants(joueurs);
+            proclamerResultats(gagnants);
             return; // Stoppe ici, ne continue pas le tour
         }
 
@@ -289,6 +252,10 @@ public class LaticeBoard extends Application {
         majTuilesRestantes();
     }
 
+    private void majLabelTours() {
+        int toursRestants = MAX_TOURS - totalTours;
+        labelToursRestants.setText("Tours restants : " + toursRestants + " / " + MAX_TOURS);
+    }
 
     private void majTuilesRestantes() {
         for (int i = 0; i < NB_JOUEURS; i++) {
@@ -297,11 +264,9 @@ public class LaticeBoard extends Application {
         }
     }
 
-
     private void majPoints() {
         for (int i = 0; i < NB_JOUEURS; i++) {
-            int score = arbitre.getScore(i);
-            pointsLabels[i].setText("Points " + joueurs[i].getName() + " : " + score);
+            pointsLabels[i].setText("Points " + joueurs[i].getName() + " : " + arbitre.getScore(i));
         }
     }
 
@@ -354,9 +319,15 @@ public class LaticeBoard extends Application {
 
         alerte.show();
     }
+    private void montrerAlerte(String message) {
+        Alert alerte = new Alert(Alert.AlertType.INFORMATION);
+        alerte.setTitle("Latice");
+        alerte.setHeaderText(null);
+        alerte.setContentText(message);
+        alerte.showAndWait();
+    }
 
-    
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }

@@ -2,7 +2,7 @@ package latice.ihm;
 
 import latice.model.Plateau;
 
-public interface PlateauView {
+public interface PlateauVue {
 	
 	void afficherPlateau(Plateau plateau);
 	

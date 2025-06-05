@@ -3,10 +3,10 @@ package latice.test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import latice.ihm.PlateauViewConsole;
-import latice.ihm.RackViewConsole;
+import latice.ihm.PlateauVueConsole;
+import latice.ihm.RackVueConsole;
 import latice.model.*;
-import latice.model.setup.GameSetup;
+import latice.model.setup.PreparerJeu;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -85,7 +85,7 @@ public class LaticeJeuxEssais {
             plateau.placerTuile(new Tuile(Couleur.BLEU, Symbole.LEZARD), new PositionTuiles(4, 5));
             
             // Afficher le plateau avec la vue console
-            PlateauViewConsole plateauView = new PlateauViewConsole();
+            PlateauVueConsole plateauView = new PlateauVueConsole();
             plateauView.afficherPlateau(plateau);
             
             // Vérifier que la sortie contient des caractères attendus
@@ -108,7 +108,7 @@ public class LaticeJeuxEssais {
         
         try {
             Plateau plateau = new Plateau();
-            PlateauViewConsole plateauView = new PlateauViewConsole();
+            PlateauVueConsole plateauView = new PlateauVueConsole();
             
             // Afficher avec indices
             plateauView.afficherPlateau(plateau, true);
@@ -138,7 +138,7 @@ public class LaticeJeuxEssais {
             rack.ajoutTuile(new Tuile(Couleur.BLEU, Symbole.OISEAU));
             
             // Afficher le rack
-            RackViewConsole rackView = new RackViewConsole();
+            RackVueConsole rackView = new RackVueConsole();
             rackView.afficherRack(rack);
             
             String output = outContent.toString();
@@ -161,7 +161,7 @@ public class LaticeJeuxEssais {
         boolean trouve = false;
 
         for (int i = 0; i < 100; i++) {
-            String[] ordre = GameSetup.ordreJoueur(nom1, nom2);
+            String[] ordre = PreparerJeu.ordreJoueur(nom1, nom2);
             if (ordre[0].equals(nom1)) {
                 trouve = true;
                 break;
@@ -178,7 +178,7 @@ public class LaticeJeuxEssais {
         boolean trouve = false;
 
         for (int i = 0; i < 100; i++) {
-            String[] ordre = GameSetup.ordreJoueur(nom1, nom2);
+            String[] ordre = PreparerJeu.ordreJoueur(nom1, nom2);
             if (ordre[0].equals(nom2)) {
                 trouve = true;
                 break;

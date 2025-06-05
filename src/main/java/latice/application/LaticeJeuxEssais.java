@@ -97,7 +97,7 @@ public class LaticeJeuxEssais {
     private static void testPlacementTuiles() {
         System.out.println("\n--- Test de placement des tuiles ---");
         
-        Plateau plateau = new Plateau();
+        Plateau plateau = new Plateau(null);
         
         // Création de tuiles pour le test
         Tuile tuile1 = new Tuile(Couleur.ROUGE, Symbole.FLEUR);

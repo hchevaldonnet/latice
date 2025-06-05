@@ -9,12 +9,12 @@ import javafx.scene.text.Text;
 import latice.model.Rack;
 import latice.model.Tuile;
 
-public class RackViewFX implements RackView {
+public class RackVueFX implements RackVue {
     
     private HBox rackContainer;
     private static final int TILE_SIZE = 50;
     
-    public RackViewFX() {
+    public RackVueFX() {
         this.rackContainer = new HBox(5);
         this.rackContainer.setPadding(new Insets(10));
     }

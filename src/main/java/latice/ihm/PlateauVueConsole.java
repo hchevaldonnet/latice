@@ -4,7 +4,7 @@ import latice.model.Plateau;
 import latice.model.PositionTuiles;
 import latice.model.Tuile;
 
-public class PlateauViewConsole implements PlateauView {
+public class PlateauVueConsole implements PlateauVue {
     private static final int GRID_SIZE = 9;
     
     @Override
