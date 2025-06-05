@@ -7,6 +7,8 @@ import latice.model.Joueur;
 
 public class TexteConsole {
 	
+	// TODO Mettre les attributs en private 
+	
 	public static final String RESET = "\u001B[0m";
     public static final String PLAYER1 = "\u001B[34m"; // Blue for player 1
     public static final String PLAYER2 = "\u001B[35m"; // Purple for player 2
@@ -22,14 +24,20 @@ public class TexteConsole {
 
     // Styles
     public static final String BOLD = "\u001B[1m";    // Texte en gras
+    
+    // Séparateurs pour l'affichage
+    public static final String SEPARATEURFORT = "==================================";
+    public static final String SEPARATEURFIN = "───────────────────────────────────────────────────────────────────";
+    public static final String SEPARATEURDECALE = "  ────────────────────────────────────────────────────────────";
 	
 	 public static void afficherBienvenue() {
 	        System.out.println("Bienvenue dans le jeu de cartes Latice !");
+	        sautDeLigne();
 	    }
 
 	 public static void afficherMenu() { 
 		 	System.out.println("1. Placer une tuile");
-		    System.out.println("2. Piocher une nouvelle main");
+		    System.out.println("2. Piocher une nouvelle main (-1 point)");
 		    System.out.println("3. Passer son tour");
 		    System.out.println("4. Afficher les règles");
 		    System.out.println("5. Acheter un tour supplémentaire (-2 points)");
@@ -81,13 +89,13 @@ public class TexteConsole {
 	        System.out.println("\n");
 
 	        System.out.println(YELLOW + BOLD + "3. CALCUL DES POINTS" + RESET);
-	        System.out.println(CYAN + "  ────────────────────────────────────────────────────────────" + RESET);
+	        System.out.println(CYAN + SEPARATEURDECALE + RESET);
 	        System.out.println(YELLOW + BOLD + "  Correspondances " + RED + BOLD + "    Points Normaux " + GREEN + BOLD + "    Case Solaire (+1 pt)" + RESET);
-	        System.out.println(CYAN + "  ────────────────────────────────────────────────────────────" + RESET);
+	        System.out.println(CYAN + SEPARATEURDECALE + RESET);
 	        System.out.println(WHITE + "  2 côtés              " + RED + "0,5 pt             " + GREEN + "1,5 pt" + RESET);
 	        System.out.println(WHITE + "  3 côtés              " + RED + "1 pt               " + GREEN + "2 pts" + RESET);
 	        System.out.println(WHITE + "  4 côtés              " + RED + "2 pts              " + GREEN + "3 pts" + RESET);
-	        System.out.println(CYAN + "  ────────────────────────────────────────────────────────────" + RESET);
+	        System.out.println(CYAN + SEPARATEURDECALE + RESET);
 	        System.out.println("\n");
 
 	        System.out.println(YELLOW + BOLD + "4. FIN DE LA PARTIE" + RESET);
@@ -96,9 +104,9 @@ public class TexteConsole {
 	        System.out.println(WHITE + "  - Points Excédents : Les points excédant 3 sont perdus en fin de tour." + RESET);
 	        System.out.println("\n");
 
-	        System.out.println(GREEN + "───────────────────────────────────────────────────────────────────" + RESET);
+	        System.out.println(GREEN + SEPARATEURFIN + RESET);
 	        System.out.println(GREEN + "           Amusez-vous bien et bonne chance !" + RESET);
-	        System.out.println(GREEN + "───────────────────────────────────────────────────────────────────" + RESET);
+	        System.out.println(GREEN + SEPARATEURFIN + RESET);
 	    }
 
 	    public static void afficherErreurSaisie() {
@@ -142,25 +150,21 @@ public class TexteConsole {
 	    	System.out.println("Veuillez entrer votre nom");
 	    }
 	    
-	    public static String formatHighlight(String text) {
-	        return HIGHLIGHT + text + RESET;
+	    public static void formatHighlight(String text) {
+	    	System.out.println(HIGHLIGHT + text + RESET);
 	    }
 	    
-	    public static String formatPlayer1(String text) {
-	        return PLAYER1 + text + RESET;
+	    public static void formatPlayer(String couleur,String text) {
+	    	System.out.println(couleur + text + RESET);
 	    }
 	    
-	    public static String formatPlayer2(String text) {
-	        return PLAYER2 + text + RESET;
-	    }
 	    
-	    // Helper method to clear the screen
 	    public static void clearScreen() {
 	        System.out.print("\033[H\033[2J");
 	        System.out.flush();
 	    }
 	    
-	 // Helper method to wait for user to press Enter
+	 
 	    public static void waitForEnter() {
 	        System.out.println();
 	        System.out.println(HIGHLIGHT + "Appuyez sur Entrée pour continuer..." + RESET);
@@ -169,9 +173,9 @@ public class TexteConsole {
 	    }
 	    
 	    public static void afficherTitre() {
-			System.out.println(HIGHLIGHT + "==================================" + RESET);
+			System.out.println(HIGHLIGHT + SEPARATEURFORT + RESET);
 	        System.out.println(HIGHLIGHT + "          LATICE GAME            " + RESET);
-	        System.out.println(HIGHLIGHT + "==================================" + RESET);
+	        System.out.println(HIGHLIGHT + SEPARATEURFORT + RESET);
 	        System.out.println();
 		}
 	    
@@ -183,9 +187,9 @@ public class TexteConsole {
 	    
 	    public static void finPartie(Arbitre arbitre, Joueur joueur1, Joueur joueur2, String colorJ1, String colorJ2,
 				String gagnantNom, String gagnantColor) {
-			System.out.println(HIGHLIGHT + "==================================" + RESET);
+			System.out.println(HIGHLIGHT + SEPARATEURFORT + RESET);
 			System.out.println(HIGHLIGHT + "         FIN DE PARTIE           " + RESET);
-			System.out.println(HIGHLIGHT + "==================================" + RESET);
+			System.out.println(HIGHLIGHT + SEPARATEURFORT + RESET);
 			System.out.println();
 			System.out.println("Scores finaux:");
 			System.out.println(colorJ1 + joueur1.getName() + ": " + arbitre.getScore(0) + " points" + RESET);
@@ -207,6 +211,29 @@ public class TexteConsole {
 	    public static void placementImpossible() {
 			System.out.println(HIGHLIGHT + "Placement impossible selon les règles du jeu. Veuillez réessayer." + RESET);
 			System.out.println(HIGHLIGHT + "Rappel: La tuile doit correspondre à au moins une tuile adjacente (même couleur ou même symbole)." + RESET);
+		}
+	    
+	    public static void sautDeLigne() {
+	        System.out.println();
+	    }
+	    
+	    public static void affichageJoueurs(Joueur joueur1, Joueur joueur2, String colorJ1, String colorJ2) {
+			System.out.println(HIGHLIGHT + "Premier joueur : " + colorJ1 + joueur1.getName() + RESET);
+	        System.out.println(HIGHLIGHT + "Second joueur  : " + colorJ2 + joueur2.getName() + RESET);
+	        sautDeLigne();
+		}
+	    
+	    public static void affichageEtatJeu(Joueur joueurCourant, String currentPlayerColor) {
+			System.out.println(HIGHLIGHT + SEPARATEURFORT + RESET);
+			System.out.println(HIGHLIGHT + "TOUR DE " + currentPlayerColor + joueurCourant.getName() + TexteConsole.RESET);
+			System.out.println(HIGHLIGHT + SEPARATEURFORT + RESET);
+			sautDeLigne();
+		}
+	    
+	    public static void affichageScore(Arbitre arbitre, Joueur joueur1, Joueur joueur2, String colorJ1, String colorJ2) {
+			System.out.println(colorJ1 + joueur1.getName() + " : " + arbitre.getScore(0) + " points" + TexteConsole.RESET);
+			System.out.println(colorJ2 + joueur2.getName() + " : " + arbitre.getScore(1) + " points" + TexteConsole.RESET);
+			sautDeLigne();
 		}
 	    	    
 }

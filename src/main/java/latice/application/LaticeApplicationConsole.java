@@ -16,13 +16,7 @@ import latice.ihm.*;
 
 public class LaticeApplicationConsole {
     
-    // ANSI color codes for player differentiation //TODO mettre les couleurs dans la classe TexteConsole
-    private static final String RESET = "\u001B[0m";
-    private static final String PLAYER1 = "\u001B[34m"; // Blue for player 1
-    private static final String PLAYER2 = "\u001B[35m"; // Purple for player 2
-    private static final String HIGHLIGHT = "\u001B[1;33m"; // Bold yellow for highlights
 
-    
     public static void main(String[] args) {
         // Créer une pioche pour 2 joueurs
         Pioche pioche = new Pioche(2);
@@ -31,6 +25,7 @@ public class LaticeApplicationConsole {
         boolean afficherIndices = false;
         int totalTours = 0;
         final int MAX_TOURS = 10;
+        String reponse;
 
         Rack rackJoueur1 = new Rack(pioche);
         rackJoueur1.remplir(pioche, 0);
@@ -48,15 +43,24 @@ public class LaticeApplicationConsole {
         TexteConsole.afficherTitre();
         
         // Demander si les joueurs veulent voir les indices des lignes et colonnes
-        System.out.println("Voulez-vous afficher les indices des lignes et colonnes? (O/N)");
-        String reponse = scanner.nextLine().trim().toUpperCase();
-        afficherIndices = reponse.equals("O") || reponse.equals("OUI"); //TODO s'assurer que le joueur saisit O ou N
+        do {
+            System.out.println("Voulez-vous afficher les indices des lignes et colonnes? (O/N)");
+            reponse = scanner.nextLine().trim().toUpperCase();
+        } while (!reponse.equals("O") && !reponse.equals("N"));
+        afficherIndices = reponse.equals("O");
         
-        System.out.println(PLAYER1 + "Joueur 1 :" + RESET); // Remplacer par la méthode formatPlayer1 dans TexteConsole
+        TexteConsole.formatPlayer(TexteConsole.PLAYER1, "Joueur 1 :");
         String nom1 = SaisieConsole.saisieChar(); 
-        System.out.println();
-        System.out.println(PLAYER2 + "Joueur 2 :" + RESET);
-        String nom2 = SaisieConsole.saisieChar();
+        TexteConsole.sautDeLigne();
+        TexteConsole.formatPlayer(TexteConsole.PLAYER2, "Joueur 2 :");
+        String nom2 = SaisieConsole.saisieChar(); 
+        
+        // Vérifier que les noms des joueurs sont différents
+        while (nom2.equals(nom1)) {
+            System.out.println(TexteConsole.HIGHLIGHT + "Les noms des joueurs doivent être différents. Veuillez choisir un autre nom." + TexteConsole.RESET);
+            TexteConsole.formatPlayer(TexteConsole.PLAYER2, "Joueur 2 :");
+            nom2 = SaisieConsole.saisieChar();
+        }
         System.out.println();
         
         // Détermine aléatoirement l'ordre des joueurs
@@ -64,17 +68,14 @@ public class LaticeApplicationConsole {
         Joueur joueur1 = new Joueur(ordreJoueurs[0], rackJoueur1, pioche); 
         Joueur joueur2 = new Joueur(ordreJoueurs[1], rackJoueur2, pioche);
         
-        String colorJ1 = (joueur1.getName().equals(nom1)) ? PLAYER1 : PLAYER2;
-        String colorJ2 = (joueur2.getName().equals(nom1)) ? PLAYER1 : PLAYER2;
+        // Determiner la couleur des joueurs par rapport à leur nom
+        String colorJ1 = (joueur1.getName().equals(nom1)) ? TexteConsole.PLAYER1 : TexteConsole.PLAYER2;
+        String colorJ2 = (joueur2.getName().equals(nom1)) ? TexteConsole.PLAYER1 : TexteConsole.PLAYER2;
         
-        System.out.println(HIGHLIGHT + "Premier joueur : " + colorJ1 + joueur1.getName() + RESET);
-        System.out.println(HIGHLIGHT + "Second joueur  : " + colorJ2 + joueur2.getName() + RESET);
-        System.out.println();
+        TexteConsole.affichageJoueurs(joueur1, joueur2, colorJ1, colorJ2);
         
         TexteConsole.afficherBienvenue();
-        System.out.println();
         TexteConsole.afficherMenu();
-        System.out.println();
         
         // Initialiser le joueur courant
         Joueur joueurCourant = joueur1;
@@ -84,19 +85,14 @@ public class LaticeApplicationConsole {
             TexteConsole.clearScreen();
             
             // Display game state info
-            System.out.println(HIGHLIGHT + "==================================" + RESET);
             String currentPlayerColor = (joueurCourant == joueur1) ? colorJ1 : colorJ2;
-            System.out.println(HIGHLIGHT + "TOUR DE " + currentPlayerColor + joueurCourant.getName() + RESET);
-            System.out.println(HIGHLIGHT + "==================================" + RESET);
-            System.out.println();
+            TexteConsole.affichageEtatJeu(joueurCourant, currentPlayerColor);
             
             // Afficher les scores
-            System.out.println(colorJ1 + joueur1.getName() + " : " + arbitre.getScore(0) + " points" + RESET);
-            System.out.println(colorJ2 + joueur2.getName() + " : " + arbitre.getScore(1) + " points" + RESET);
-            System.out.println();
+            TexteConsole.affichageScore(arbitre, joueur1, joueur2, colorJ1, colorJ2);
             
             // Afficher le plateau
-            System.out.println(HIGHLIGHT + "PLATEAU DE JEU:" + RESET);
+            System.out.println(TexteConsole.HIGHLIGHT + "PLATEAU DE JEU:" + TexteConsole.RESET);
             PlateauView plateauView = new PlateauViewConsole();
             
             PlateauViewConsole plateauViewConsole = (PlateauViewConsole) plateauView;
@@ -106,9 +102,9 @@ public class LaticeApplicationConsole {
             
             // Afficher le rack du joueur courant
             if (joueurCourant.equals(joueur1)) {
-                System.out.println(rackJoueur1.afficherRack(currentPlayerColor + "C'est au tour de " + joueur1.getName() + ", voici votre rack :" + RESET));
+                System.out.println(rackJoueur1.afficherRack(currentPlayerColor + "C'est au tour de " + joueur1.getName() + ", voici votre rack :" + TexteConsole.RESET));
             } else {
-                System.out.println(rackJoueur2.afficherRack(currentPlayerColor + "C'est au tour de " + joueur2.getName() + ", voici votre rack :" + RESET));
+                System.out.println(rackJoueur2.afficherRack(currentPlayerColor + "C'est au tour de " + joueur2.getName() + ", voici votre rack :" + TexteConsole.RESET));
             }
             System.out.println();
             
@@ -124,7 +120,7 @@ public class LaticeApplicationConsole {
                     int choixTuile = SaisieConsole.saisieTuiles();
                     
                     if (premierCoup) {
-                        System.out.println(HIGHLIGHT + "Premier coup: vous devez jouer au centre (position 5,5)" + RESET);
+                        System.out.println(TexteConsole.HIGHLIGHT + "Premier coup: vous devez jouer au centre (position 5,5)" + TexteConsole.RESET);
                         System.out.println();
                     }
                     
@@ -150,28 +146,28 @@ public class LaticeApplicationConsole {
                             
                             // Feedback sur le coup joué
                             System.out.println();
-                            System.out.println(currentPlayerColor + "Tuile placée avec succès!" + RESET);
+                            System.out.println(currentPlayerColor + "Tuile placée avec succès!" + TexteConsole.RESET);
                             
                          // Points gagnés
                             if (resultat > 0) {
-                                System.out.println(HIGHLIGHT + "Correspondances: " + resultat + RESET);
+                                System.out.println(TexteConsole.HIGHLIGHT + "Correspondances: " + resultat + TexteConsole.RESET);
                                 float pointsGagnes = 0;
                                 
                                 if (resultat == 2) {
                                     pointsGagnes = 0.5f;
-                                    System.out.println(HIGHLIGHT + "Double! +0.5 point" + RESET);
+                                    System.out.println(TexteConsole.HIGHLIGHT + "Double! +0.5 point" + TexteConsole.RESET);
                                 } else if (resultat == 3) {
                                     pointsGagnes = 1;
-                                    System.out.println(HIGHLIGHT + "Trefoil! +1 point" + RESET);
+                                    System.out.println(TexteConsole.HIGHLIGHT + "Trefoil! +1 point" + TexteConsole.RESET);
                                 } else if (resultat == 4) {
                                     pointsGagnes = 2;
-                                    System.out.println(HIGHLIGHT + "Latice! +2 points" + RESET);
+                                    System.out.println(TexteConsole.HIGHLIGHT + "Latice! +2 points" + TexteConsole.RESET);
                                 }
                                 
                                 // Vérifier les cases spéciales
                                 if (plateau.caseIsSunStones(pos)) {
                                     TexteConsole.caseSunStone();
-                                    System.out.println(HIGHLIGHT + "Bonus soleil: +1 point" + RESET);
+                                    System.out.println(TexteConsole.HIGHLIGHT + "Bonus soleil: +1 point" + TexteConsole.HIGHLIGHT);
                                     pointsGagnes += 1;
                                 } else {
                                     TexteConsole.notCaseSunStone();
@@ -183,7 +179,7 @@ public class LaticeApplicationConsole {
                                     TexteConsole.notCaseMoonStone();
                                 }
                                 
-                                System.out.println(HIGHLIGHT + "Total des points gagnés: " + pointsGagnes + RESET);
+                                System.out.println(TexteConsole.HIGHLIGHT + "Total des points gagnés: " + pointsGagnes + TexteConsole.HIGHLIGHT);
                                 
                                 // Convert to integer for adding to the score
                                 int pointsToAdd = Math.round(pointsGagnes);
@@ -191,7 +187,7 @@ public class LaticeApplicationConsole {
                                 
                                 // Handle rule: if more than 3 points in one turn, discard extra points
                                 if (pointsToAdd > 3) {
-                                    System.out.println(HIGHLIGHT + "Maximum de 3 points par tour! Points en excès perdus." + RESET);
+                                    System.out.println(TexteConsole.HIGHLIGHT + "Maximum de 3 points par tour! Points en excès perdus." + TexteConsole.RESET);
                                     arbitre.ajouterPoints(joueurIndex, 3 - pointsToAdd); // Adjust to max 3 points
                                 }
                             }
@@ -205,7 +201,7 @@ public class LaticeApplicationConsole {
                             // Changer de joueur
                             if (tourSupplementaireActif) {
                                 tourSupplementaireActif = false;
-                                System.out.println(HIGHLIGHT + "Vous jouez votre tour supplémentaire." + RESET);
+                                System.out.println(TexteConsole.HIGHLIGHT + "Vous jouez votre tour supplémentaire." + TexteConsole.RESET);
                             } else {
                                 joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
                                 if (joueurCourant == joueur1) {
@@ -216,7 +212,7 @@ public class LaticeApplicationConsole {
                         } else {
                             System.out.println();
                             if (premierCoup) {
-                                System.out.println(HIGHLIGHT + "Le premier coup doit être joué au centre (position 5,5). Veuillez réessayer." + RESET);
+                                System.out.println(TexteConsole.HIGHLIGHT + "Le premier coup doit être joué au centre (position 5,5). Veuillez réessayer." + TexteConsole.RESET);
                             } else {
                                 TexteConsole.placementImpossible();
                             }
@@ -227,19 +223,30 @@ public class LaticeApplicationConsole {
                     }
                     break;
                     
-                case 2: // Piocher une nouvelle main
+                case 2: // Piocher une nouvelle main (-1 point)
                     System.out.println();
-                    joueurCourant.getRack().vider();
                     
+                    // Vérifier si le joueur a au moins 1 point à dépenser
                     int idxJoueur = (joueurCourant == joueur1) ? 0 : 1;
-                    joueurCourant.getRack().remplir(pioche, idxJoueur);
+                    if (arbitre.getScore(idxJoueur) < 1) {
+                        System.out.println(TexteConsole.HIGHLIGHT + "Vous n'avez pas assez de points pour piocher une nouvelle main (coût: 1 point)." + TexteConsole.RESET);
+                    } else {
+                        // Déduire 1 point du score
+                        arbitre.ajouterPoints(idxJoueur, -1);
+                        
+                        // Vider le rack actuel et le remplir avec de nouvelles tuiles
+                        joueurCourant.getRack().vider();
+                        joueurCourant.getRack().remplir(pioche, idxJoueur);
+                        
+                        System.out.println(currentPlayerColor + "Vous avez pioché une nouvelle main (-1 point)." + TexteConsole.RESET);
+                    }
                     
-                    System.out.println(currentPlayerColor + "Vous avez pioché une nouvelle main." + RESET);
                     TexteConsole.waitForEnter();
                     
                     // Changer de joueur
                     joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
                     break;
+
                     
                 case 3: // Passer son tour
                 	TexteConsole.passerTour(joueurCourant, currentPlayerColor);
@@ -268,10 +275,10 @@ public class LaticeApplicationConsole {
                     );
                     
                     if (achatReussi) {
-                        System.out.println(currentPlayerColor + "Tour supplémentaire acheté avec succès (-2 points)." + RESET);
+                        System.out.println(currentPlayerColor + "Tour supplémentaire acheté avec succès (-2 points)." + TexteConsole.RESET);
                         tourSupplementaireActif = true;
                     } else {
-                        System.out.println(HIGHLIGHT + "Vous n'avez pas assez de points pour acheter un tour supplémentaire." + RESET);
+                        System.out.println(TexteConsole.HIGHLIGHT + "Vous n'avez pas assez de points pour acheter un tour supplémentaire." + TexteConsole.RESET);
                     }
                     TexteConsole.waitForEnter();
                     break;
@@ -306,6 +313,11 @@ public class LaticeApplicationConsole {
         
         scanner.close();
     }
+
+	
+
+	
+
 }
 
 
