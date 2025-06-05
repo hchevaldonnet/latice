@@ -1,5 +1,6 @@
 package latice.application;
 
+import java.util.List;
 import java.util.Scanner;
 
 import latice.model.ActionSpeciale;
@@ -20,6 +21,7 @@ public class LaticeApplicationConsole {
     private static final String PLAYER1 = "\u001B[34m"; // Blue for player 1
     private static final String PLAYER2 = "\u001B[35m"; // Purple for player 2
     private static final String HIGHLIGHT = "\u001B[1;33m"; // Bold yellow for highlights
+
     
     public static void main(String[] args) {
         // Créer une pioche pour 2 joueurs
@@ -27,6 +29,8 @@ public class LaticeApplicationConsole {
         Arbitre arbitre = new Arbitre(2);
         boolean premierCoup = true;
         boolean afficherIndices = false;
+        int totalTours = 0;
+        final int MAX_TOURS = 10;
 
         Rack rackJoueur1 = new Rack(pioche);
         rackJoueur1.remplir(pioche, 0);
@@ -204,6 +208,9 @@ public class LaticeApplicationConsole {
                                 System.out.println(HIGHLIGHT + "Vous jouez votre tour supplémentaire." + RESET);
                             } else {
                                 joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
+                                if (joueurCourant == joueur1) {
+                                    totalTours++;
+                                }
                             }
 
                         } else {
@@ -282,14 +289,19 @@ public class LaticeApplicationConsole {
             }
             
             // Vérifier la fin de partie
-            if (arbitre.finDePartie(new Rack[]{rackJoueur1, rackJoueur2}, pioche)) {
-            	TexteConsole.clearScreen();
-                int gagnant = arbitre.getGagnant(new Rack[]{rackJoueur1, rackJoueur2});
+            if (arbitre.finDePartie(new Rack[]{rackJoueur1, rackJoueur2}, totalTours, MAX_TOURS)) {
+                TexteConsole.clearScreen();
+                
+                Joueur[] joueurs = {joueur1, joueur2};
+                List<Integer> gagnants = arbitre.getGagnants(joueurs);
+                int gagnant = gagnants.get(0);
                 String gagnantNom = (gagnant == 0) ? joueur1.getName() : joueur2.getName();
                 String gagnantColor = (gagnant == 0) ? colorJ1 : colorJ2;
+                
                 TexteConsole.finPartie(arbitre, joueur1, joueur2, colorJ1, colorJ2, gagnantNom, gagnantColor);
                 quitter = true;
             }
+
         }
         
         scanner.close();

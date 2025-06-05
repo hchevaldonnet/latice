@@ -9,7 +9,6 @@ public class Joueur {
 	private Pioche pioche;
 	
 	
-	
 	public Joueur(String name, Rack rack, Pioche pioche) {
 		this.name = name;
 		this.rack = rack;
@@ -46,7 +45,7 @@ public class Joueur {
 	            return false;
 
 	        case ECHANGER_RACK:
-	            if (!pioche.estVide(joueurActuel)) {
+	            if (arbitre.getScore(joueurActuel) >= 1 && !pioche.estVide(joueurActuel)) {
 	                List<Tuile> anciennesTuiles = new ArrayList<>(rack.getTuiles());
 	                rack.vider();
 	                for (int i = 0; i < anciennesTuiles.size(); i++) {
@@ -56,9 +55,13 @@ public class Joueur {
 	                    }
 	                }
 	                pioche.ajouterTout(anciennesTuiles, joueurActuel);
-	                return false;
+
+	                // Retirer 2 points pour l’échange
+	                arbitre.getPointsJoueur()[joueurActuel] -= 1;
+
+	                return true;  // Échange réussi
 	            }
-	            return false;
+	            return false;  // Pas assez de points ou pioche vide
 
 	        default:
 	            return false;
