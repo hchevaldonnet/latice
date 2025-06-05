@@ -25,6 +25,7 @@ public class LaticeApplicationConsole {
         boolean afficherIndices = false;
         int totalTours = 0;
         final int MAX_TOURS = 10;
+        String reponse;
 
         Rack rackJoueur1 = new Rack(pioche);
         rackJoueur1.remplir(pioche, 0);
@@ -42,15 +43,24 @@ public class LaticeApplicationConsole {
         TexteConsole.afficherTitre();
         
         // Demander si les joueurs veulent voir les indices des lignes et colonnes
-        System.out.println("Voulez-vous afficher les indices des lignes et colonnes? (O/N)");
-        String reponse = scanner.nextLine().trim().toUpperCase();
-        afficherIndices = reponse.equals("O") || reponse.equals("OUI"); //TODO s'assurer que le joueur saisit O ou N
+        do {
+            System.out.println("Voulez-vous afficher les indices des lignes et colonnes? (O/N)");
+            reponse = scanner.nextLine().trim().toUpperCase();
+        } while (!reponse.equals("O") && !reponse.equals("N"));
+        afficherIndices = reponse.equals("O");
         
         TexteConsole.formatPlayer(TexteConsole.PLAYER1, "Joueur 1 :");
         String nom1 = SaisieConsole.saisieChar(); 
         TexteConsole.sautDeLigne();
         TexteConsole.formatPlayer(TexteConsole.PLAYER2, "Joueur 2 :");
-        String nom2 = SaisieConsole.saisieChar();
+        String nom2 = SaisieConsole.saisieChar(); 
+        
+        // Vérifier que les noms des joueurs sont différents
+        while (nom2.equals(nom1)) {
+            System.out.println(TexteConsole.HIGHLIGHT + "Les noms des joueurs doivent être différents. Veuillez choisir un autre nom." + TexteConsole.RESET);
+            TexteConsole.formatPlayer(TexteConsole.PLAYER2, "Joueur 2 :");
+            nom2 = SaisieConsole.saisieChar();
+        }
         System.out.println();
         
         // Détermine aléatoirement l'ordre des joueurs

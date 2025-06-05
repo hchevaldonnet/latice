@@ -14,6 +14,7 @@ public class PlateauViewConsole implements PlateauView {
     
     public void afficherPlateau(Plateau plateau, boolean avecIndices) {
         // Afficher les indices de colonnes si demandé
+    	//TODO: résoudre le probème de léger décalage des cases quand on insére des tuiles
         if (avecIndices) {
             System.out.print("    "); // Espace pour l'alignement
             for (int i = 1; i <= GRID_SIZE; i++) {
@@ -31,17 +32,18 @@ public class PlateauViewConsole implements PlateauView {
             for (int y = 0; y < GRID_SIZE; y++) {
                 System.out.print("[");
                 if (plateau.caseLibre(new PositionTuiles(x, y))) {
-                    System.out.print("  "); 
+                    System.out.print("  ");
                 } else {
                     Tuile tuile = plateau.getTuile(new PositionTuiles(x, y));
-                    System.out.print(tuile.toString());     
+                    System.out.printf("%-2s", tuile.toString()); 
                 }
                 if (y != GRID_SIZE - 1) {
-                    System.out.print("]");    
+                    System.out.print("]");
                 } else {
-                    System.out.println("]");    
+                    System.out.println("]");
                 }
             }
+
         }
     }
 }
