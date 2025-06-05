@@ -1,10 +1,13 @@
 package latice.test;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import latice.ihm.PlateauViewConsole;
 import latice.ihm.RackViewConsole;
 import latice.model.*;
+import latice.model.setup.GameSetup;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -151,18 +154,40 @@ public class LaticeJeuxEssais {
     
     // V4 - Initialisation de la partie dans l'interface graphique
 
-	   @Test
-	   public void testOrdrejoueurVrai() {
-		   //TODO
-	   }
-	   @Test 
-	   public void testOrdrejoueurFaux() {
-		   //TODO
-	   }
-		@Test
-		public void CreerGererPioche() {
-			//TODO
-		}
+    @Test
+    public void testOrdreJoueurNom1EnPremier() {
+        String nom1 = "Alice";
+        String nom2 = "Bob";
+        boolean trouve = false;
+
+        for (int i = 0; i < 100; i++) {
+            String[] ordre = GameSetup.ordreJoueur(nom1, nom2);
+            if (ordre[0].equals(nom1)) {
+                trouve = true;
+                break;
+            }
+        }
+
+        assertTrue("Alice n'a jamais été en première position", trouve);
+    }
+
+    @Test
+    public void testOrdreJoueurNom2EnPremier() {
+        String nom1 = "Alice";
+        String nom2 = "Bob";
+        boolean trouve = false;
+
+        for (int i = 0; i < 100; i++) {
+            String[] ordre = GameSetup.ordreJoueur(nom1, nom2);
+            if (ordre[0].equals(nom2)) {
+                trouve = true;
+                break;
+            }
+        }
+
+        assertTrue("Bob n'a jamais été en première position", trouve);
+    }
+
 		
 		@Test
 		public void PiochesTailleTuile() {

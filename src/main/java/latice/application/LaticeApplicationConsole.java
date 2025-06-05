@@ -18,7 +18,8 @@ import latice.ihm.*;
 public class LaticeApplicationConsole {
     
 	//TODO: réduire le nombre de commentaires au strict essentiel pour toutes les classes.
-
+	//TODO: permettre d'afficher le nombre de tours
+	//TODO: mettre les variables en français
     public static void main(String[] args) {
         // Créer une pioche pour 2 joueurs
         Pioche pioche = new Pioche(2);
