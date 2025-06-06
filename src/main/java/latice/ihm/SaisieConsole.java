@@ -7,7 +7,7 @@ public class SaisieConsole {
 	static Scanner scanner = new Scanner(System.in);
 	
 	
-	public static int saisieLigneColonne(String string) { //emplacement prend la valeur ligne ou colonne
+	public static int saisieLigneColonne(String string) { 
 		TexteConsole.demanderEmplacement(string);
 		return saisieEntierBorne( 1, 8);
 	}
@@ -19,7 +19,7 @@ public class SaisieConsole {
 	
 	public static int saisieChoix() {
 	    TexteConsole.demanderAction();
-	    return saisieEntierBorne(1, 6); // Modifié pour accepter l'option 6
+	    return saisieEntierBorne(1, 6); 
 	}
 	
 	
@@ -35,7 +35,7 @@ public class SaisieConsole {
 	    return entier - 1; 
 	}
 	
-	public static String saisieChar() { //pour enter le nom du joueur
+	public static String saisieChar() { 
 		String string = "";
 			TexteConsole.demanderNom();
 			if (scanner.hasNext()) {
