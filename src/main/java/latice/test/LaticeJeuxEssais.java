@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+
+
 import latice.ihm.PlateauVueConsole;
 import latice.ihm.RackVueConsole;
 import latice.model.*;
@@ -11,6 +13,9 @@ import latice.model.setup.PreparerJeu;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class LaticeJeuxEssais {
 	
@@ -345,6 +350,164 @@ public class LaticeJeuxEssais {
          assertTrue(arbitre.finDePartie(racks, 10, maxTours), "Le jeu devrait être terminé à 10 tours");
          assertTrue(arbitre.finDePartie(racks, 11, maxTours), "Le jeu devrait être terminé si le nombre de tours est supérieur au maximum");
      }
+    
+    
+//-------------------------------------------------------------
+    @Test
+    public void testerEchangeRackJoueur() {
+        Pioche pioche = new Pioche(1);
+        Rack rack = new Rack(pioche);
+        Joueur joueur = new Joueur("TestJoueur", rack, pioche);
+        Arbitre arbitre = new Arbitre(1);
+        
+        // Give some points to the player (exchange rack costs 1 point)
+        arbitre.ajouterPoints(0, 2);
+        
+        // Make sure the pioche has enough tiles for the exchange
+        List<Tuile> tuilesAPiocher = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            tuilesAPiocher.add(new Tuile(Couleur.BLEU, Symbole.OISEAU));
+        }
+        pioche.ajouterTout(tuilesAPiocher, 0);
+        
+        // Add tiles to rack
+        for (int i = 0; i < 3; i++) {
+            rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
+        }
+        
+        // Save initial tiles
+        List<Tuile> tuilesDAvant = new ArrayList<>();
+        for (Tuile t : rack.getTuiles()) {
+            tuilesDAvant.add(t);
+        }
+        
+        // Perform the special action
+        boolean resultat = joueur.jouerActionSpeciale(0, ActionSpeciale.ECHANGER_RACK, rack, pioche, arbitre);
+        assertTrue(resultat, "L'échange de rack devrait réussir");
+        
+        // Compare tiles after exchange
+        boolean rackAChange = false;
+        if (tuilesDAvant.size() != rack.getTuiles().size()) {
+            rackAChange = true;
+        } else {
+            for (int i = 0; i < tuilesDAvant.size(); i++) {
+                Tuile avant = tuilesDAvant.get(i);
+                if (i >= rack.getTuiles().size() || 
+                    !avant.couleur.equals(rack.getTuiles().get(i).couleur) || 
+                    !avant.symbole.equals(rack.getTuiles().get(i).symbole)) {
+                    rackAChange = true;
+                    break;
+                }
+            }
+        }
+        
+        assertTrue(rackAChange, "Le rack devrait être différent après échange");
+    }
+
+
+
+    @Test
+    public void testerRemplissageRackAutomatique() {
+        Pioche pioche = new Pioche(1);
+        Rack rack = new Rack(pioche);
+        
+        // Vérifier que le rack est vide au début
+        assertEquals(0, rack.getTuiles().size(), "Le rack devrait être vide initialement");
+        
+        // Remplir le rack
+        rack.remplir(pioche, 0);
+        
+        // Vérifier que le rack contient maintenant 5 tuiles
+        assertEquals(5, rack.getTuiles().size(), "Le rack devrait contenir 5 tuiles après remplissage");
+    }
+
+    @Test
+    public void testerCalculPointsAvecCaseSoleil() {
+        Plateau plateau = new Plateau();
+        Arbitre arbitre = new Arbitre(2);
+        
+        // Place a tile on a sun case (0,0)
+        Tuile tuileSoleil = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
+        plateau.placerTuile(tuileSoleil, new PositionTuiles(0, 0));
+        
+        // Place a compatible adjacent tile
+        Tuile tuileAdjacente = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
+        
+        // Verify the move and get the number of correspondences
+        int resultat = arbitre.verifierCoup(0, 1, tuileAdjacente, plateau.getCases(), false, 0);
+        
+        // Check that the move is valid
+        assertTrue(resultat >= 0, "Le placement à côté d'une case soleil devrait être valide");
+        
+        // Actually place the tile (important!)
+        plateau.placerTuile(tuileAdjacente, new PositionTuiles(0, 1));
+        
+        // Calculate points taking into account the sun bonus
+        arbitre.calculerPointsAprèsCoup(0, 1, resultat, 0);
+        
+        // The player should have more points than a normal placement (with sun bonus)
+        assertTrue(arbitre.getScore(0) > 0, "Le score devrait être positif avec bonus case soleil");
+    }
+
+
+
+    @Test
+    public void testerAchatTourSupplementaire() {
+        Arbitre arbitre = new Arbitre(1);
+        Pioche pioche = new Pioche(1);
+        Rack rack = new Rack(pioche);
+        Joueur joueur = new Joueur("TestJoueur", rack, pioche);
+        
+        // Donner des points au joueur
+        arbitre.ajouterPoints(0, 3); // Assez pour acheter un tour supplémentaire
+        
+        // Tenter d'acheter un tour supplémentaire
+        boolean resultat = joueur.jouerActionSpeciale(0, ActionSpeciale.ACTION_SUPPLEMENTAIRE, rack, pioche, arbitre);
+        
+        assertTrue(resultat, "L'achat du tour supplémentaire devrait réussir");
+        assertEquals(1, arbitre.getScore(0), "Le joueur devrait avoir 1 point après l'achat");
+    }
+
+    @Test
+    public void testerDistributionInitialeTuiles() {
+        int nbJoueurs = 2;
+        Arbitre arbitre = new Arbitre(nbJoueurs);
+        Joueur[] joueurs = new Joueur[nbJoueurs];
+        Pioche pioche = new Pioche(nbJoueurs);
+        
+        for (int i = 0; i < nbJoueurs; i++) {
+            joueurs[i] = new Joueur("Joueur" + i, new Rack(pioche), pioche);
+        }
+        
+        arbitre.distribuerTuiles(joueurs);
+        
+        // Vérifier que chaque joueur a 5 tuiles dans son rack
+        for (int i = 0; i < nbJoueurs; i++) {
+            assertEquals(5, joueurs[i].getRack().getTuiles().size(), 
+                    "Chaque joueur devrait avoir 5 tuiles après la distribution initiale");
+        }
+    }
+
+    @Test
+    public void testerViderRack() {
+        Pioche pioche = new Pioche(1);
+        Rack rack = new Rack(pioche);
+        
+        // Ajouter des tuiles
+        for (int i = 0; i < 3; i++) {
+            rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
+        }
+        
+        // Vérifier que le rack n'est pas vide
+        assertFalse(rack.getTuiles().isEmpty(), "Le rack ne devrait pas être vide");
+        
+        // Vider le rack
+        rack.vider();
+        
+        // Vérifier que le rack est vide
+        assertTrue(rack.getTuiles().isEmpty(), "Le rack devrait être vide après l'appel à vider()");
+    }
+
    
 
 }

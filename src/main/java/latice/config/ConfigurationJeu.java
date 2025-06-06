@@ -1,6 +1,6 @@
 package latice.config;
 
-public class ConfigurationJeu {
+public final class ConfigurationJeu {
     // Constantes du jeu
     public static final int NOMBRE_JOUEURS = 2;
     public static final int NOMBRE_MAX_TOURS = 10;
@@ -22,5 +22,11 @@ public class ConfigurationJeu {
     public static final int DOUBLE_CORRESPONDANCES = 2;
     public static final int TREFOIL_CORRESPONDANCES = 3;
     public static final int LATICE_CORRESPONDANCES = 4;
+    
+    // Constructeur privé pour empêcher l'instanciation
+    private ConfigurationJeu() {
+        throw new AssertionError("Cette classe ne doit pas être instanciée");
+    }
 }
+
 
