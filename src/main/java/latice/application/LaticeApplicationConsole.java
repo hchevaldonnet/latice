@@ -92,7 +92,7 @@ public class LaticeApplicationConsole {
 
         plateauDeJeu = new Plateau();
 
-        TexteConsole.clearScreen();
+        TexteConsole.effacerEcran();
         TexteConsole.afficherTitre();
 
         // Demander si les joueurs veulent voir les indices des lignes et colonnes
@@ -111,17 +111,17 @@ public class LaticeApplicationConsole {
      * Gère la saisie des noms des joueurs et détermine l'ordre de jeu aléatoirement.
      */
     private static void gererJoueurs() {
-        TexteConsole.formatPlayer(TexteConsole.PLAYER1, "Joueur 1 :");
+        TexteConsole.formatJoueur(TexteConsole.PLAYER1, "Joueur 1 :");
         String nomJoueur1 = SaisieConsole.saisieChar();
         TexteConsole.sautDeLigne();
 
-        TexteConsole.formatPlayer(TexteConsole.PLAYER2, "Joueur 2 :");
+        TexteConsole.formatJoueur(TexteConsole.PLAYER2, "Joueur 2 :");
         String nomJoueur2 = SaisieConsole.saisieChar();
 
         // Vérifier que les noms des joueurs sont différents
         while (nomJoueur2.equals(nomJoueur1)) {
             System.out.println(TexteConsole.HIGHLIGHT + "Les noms des joueurs doivent être différents. Veuillez choisir un autre nom." + TexteConsole.RESET);
-            TexteConsole.formatPlayer(TexteConsole.PLAYER2, "Joueur 2 :");
+            TexteConsole.formatJoueur(TexteConsole.PLAYER2, "Joueur 2 :");
             nomJoueur2 = SaisieConsole.saisieChar();
         }
         System.out.println();
@@ -145,7 +145,7 @@ public class LaticeApplicationConsole {
      * Affiche l'état actuel du jeu : joueur courant, numéro de tour, scores et plateau.
      */
     private static void afficherEtatJeu() {
-        TexteConsole.clearScreen();
+        TexteConsole.effacerEcran();
 
         // Afficher les informations de l'état du jeu
         String couleurJoueurActuel = (joueurActuel == joueurUn) ? couleurJoueurUn : couleurJoueurDeux;
@@ -265,17 +265,10 @@ public class LaticeApplicationConsole {
 
                     // Vérifier les cases spéciales
                     if (PositionCaseSoleil.estUneCaseSoleil(positionTuile.getX(), positionTuile.getY())) {
-                        TexteConsole.caseSunStone();
-                        System.out.println(TexteConsole.HIGHLIGHT + "Bonus soleil: +" + POINTS_BONUS_SOLEIL + " point" + TexteConsole.RESET);
+                        TexteConsole.afficherSiCaseSoleil(PositionCaseSoleil.estUneCaseSoleil(positionTuile.getX(), positionTuile.getY()), POINTS_BONUS_SOLEIL);
                         pointsGagnesCeTour += POINTS_BONUS_SOLEIL;
                     } else {
-                        TexteConsole.notCaseSunStone();
-                    }
-
-                    if (positionTuile.estUneCaseLune(positionTuile.getX(), positionTuile.getY())) {
-                        TexteConsole.caseMoonStone();
-                    } else {
-                        TexteConsole.notCaseMoonStone();
+                    	TexteConsole.afficherSiCaseSoleil(PositionCaseSoleil.estUneCaseSoleil(positionTuile.getX(), positionTuile.getY()), POINTS_BONUS_SOLEIL);
                     }
 
                     System.out.println(TexteConsole.HIGHLIGHT + "Total des points gagnés: " + pointsGagnesCeTour + TexteConsole.RESET);
@@ -413,7 +406,7 @@ public class LaticeApplicationConsole {
      */
     private static void verifierFinPartie() {
         if (arbitre.finDePartie(new Rack[]{rackDuJoueur1, rackDuJoueur2}, tourActuel, NOMBRE_MAX_TOURS)) {
-            TexteConsole.clearScreen();
+            TexteConsole.effacerEcran();
 
             // Affichage du tour final
             System.out.println(TexteConsole.HIGHLIGHT + "TOUR FINAL: " + tourActuel + "/" + NOMBRE_MAX_TOURS + TexteConsole.RESET);

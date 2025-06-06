@@ -1,13 +1,12 @@
 package latice.ihm;
 
 import java.util.Scanner;
-
 import latice.model.Arbitre;
 import latice.model.Joueur;
 
 public class TexteConsole {
 	
-	// TODO Mettre les attributs en private 
+	// TODO: Mettre les attributs en private 
 	
 	public static final String RESET = "\u001B[0m";
     public static final String PLAYER1 = "\u001B[34m"; // Blue for player 1
@@ -126,21 +125,16 @@ public class TexteConsole {
 	        System.out.print("Veuillez choisir une tuile entre 1 et 5 : ");
 	    }
 
-	    public static void caseSunStone() { //TODO Metre des arguments String pour éviter la dupliaction,
-	        System.out.println("C'est une case soleil !");
-	    }
 	    
-	    public static void notCaseSunStone() {
-	    	System.out.println("Ce n'est pas une case soleil");
+	    public static void afficherSiCaseSoleil(boolean estCorrect, int pointsBonusSoleil) {
+	        if (estCorrect) {
+	            System.out.println(HIGHLIGHT + "C'est une case soleil !" + RESET);
+	            System.out.println(TexteConsole.HIGHLIGHT + "Bonus soleil: +" + pointsBonusSoleil + " point" + TexteConsole.RESET);
+	        } else {
+	            System.out.println(HIGHLIGHT + "Ce n'est pas une case soleil !" + RESET);
+	        }
 	    }
-	    
-	    public static void caseMoonStone() {
-	        System.out.println("C'est la case lune !");
-	    }
-	    
-	    public static void notCaseMoonStone() {
-	    	System.out.println("Ce n'est pas la case lune");
-	    }
+
 	    
 	    public static void tourJoueur(Joueur joueur) {
 	    	System.out.println("C'est à " + joueur.getName());
@@ -150,16 +144,16 @@ public class TexteConsole {
 	    	System.out.println("Veuillez entrer votre nom");
 	    }
 	    
-	    public static void formatHighlight(String text) {
+	    public static void mettreEnSurbrillance(String text) {
 	    	System.out.println(HIGHLIGHT + text + RESET);
 	    }
 	    
-	    public static void formatPlayer(String couleur,String text) {
+	    public static void formatJoueur(String couleur,String text) {
 	    	System.out.println(couleur + text + RESET);
 	    }
 	    
 	    
-	    public static void clearScreen() {
+	    public static void effacerEcran() {
 	        System.out.print("\033[H\033[2J");
 	        System.out.flush();
 	    }

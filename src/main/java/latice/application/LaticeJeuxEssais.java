@@ -42,17 +42,17 @@ public class LaticeJeuxEssais {
         
         // Vérification de l'égalité des pioches
         if (tailleJoueur1 == tailleJoueur2) {
-            TexteConsole.formatHighlight("✓ OK: Les deux pioches ont la même taille");
+            TexteConsole.mettreEnSurbrillance("✓ OK: Les deux pioches ont la même taille");
         } else {
-            TexteConsole.formatHighlight("✗ ERREUR: Les pioches n'ont pas la même taille");
+            TexteConsole.mettreEnSurbrillance("✗ ERREUR: Les pioches n'ont pas la même taille");
         }
         
         // Vérification du nombre total (36 tuiles par joueur attendues)
         int tailleAttendue = 36; // 72 tuiles / 2 joueurs
         if (tailleJoueur1 == tailleAttendue) {
-            TexteConsole.formatHighlight("✓ OK: Chaque pioche contient le nombre correct de tuiles (" + tailleAttendue + ")");
+            TexteConsole.mettreEnSurbrillance("✓ OK: Chaque pioche contient le nombre correct de tuiles (" + tailleAttendue + ")");
         } else {
-            TexteConsole.formatHighlight("✗ ERREUR: Les pioches n'ont pas le nombre correct de tuiles");
+            TexteConsole.mettreEnSurbrillance("✗ ERREUR: Les pioches n'ont pas le nombre correct de tuiles");
         }
     }
     
@@ -80,9 +80,9 @@ public class LaticeJeuxEssais {
         
         // Vérification que les racks contiennent bien 5 tuiles
         if (rackJoueur1.getTuiles().size() == 5 && rackJoueur2.getTuiles().size() == 5) {
-           TexteConsole.formatHighlight("✓ OK: Les deux racks contiennent 5 tuiles chacun");
+           TexteConsole.mettreEnSurbrillance("✓ OK: Les deux racks contiennent 5 tuiles chacun");
         } else {
-           TexteConsole.formatHighlight("✗ ERREUR: Les racks ne contiennent pas 5 tuiles chacun");
+           TexteConsole.mettreEnSurbrillance("✗ ERREUR: Les racks ne contiennent pas 5 tuiles chacun");
         }
         
         // Affichage des tuiles de chaque rack
@@ -97,7 +97,7 @@ public class LaticeJeuxEssais {
     private static void testPlacementTuiles() {
         System.out.println("\n--- Test de placement des tuiles ---");
         
-        Plateau plateau = new Plateau(null);
+        Plateau plateau = new Plateau();
         
         // Création de tuiles pour le test
         Tuile tuile1 = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
