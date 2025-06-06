@@ -17,16 +17,14 @@ import latice.ihm.*;
 
 public class LaticeApplicationConsole {
     
-	//TODO: réduire le nombre de commentaires au strict essentiel pour toutes les classes.
-	//TODO: permettre d'afficher le nombre de tours
-	//TODO: mettre les variables en français
+    
     public static void main(String[] args) {
         // Créer une pioche pour 2 joueurs
         Pioche pioche = new Pioche(2);
         Arbitre arbitre = new Arbitre(2);
         boolean premierCoup = true;
         boolean afficherIndices = false;
-        int totalTours = 0;
+        int totalTours = 1; // Initialiser à 1 pour afficher le premier tour
         final int MAX_TOURS = 10;
         String reponse;
 
@@ -90,6 +88,9 @@ public class LaticeApplicationConsole {
             // Display game state info
             String currentPlayerColor = (joueurCourant == joueur1) ? colorJ1 : colorJ2;
             TexteConsole.affichageEtatJeu(joueurCourant, currentPlayerColor);
+            
+            // Afficher le nombre de tours
+            System.out.println(TexteConsole.HIGHLIGHT + "TOUR " + totalTours + "/" + MAX_TOURS + TexteConsole.RESET);
             
             // Afficher les scores
             TexteConsole.affichageScore(arbitre, joueur1, joueur2, colorJ1, colorJ2);
@@ -170,7 +171,7 @@ public class LaticeApplicationConsole {
                                 // Vérifier les cases spéciales
                                 if (PositionCaseSoleil.estUneCaseSoleil(pos.getX(), pos.getY())) {
                                     TexteConsole.caseSunStone();
-                                    System.out.println(TexteConsole.HIGHLIGHT + "Bonus soleil: +1 point" + TexteConsole.HIGHLIGHT);
+                                    System.out.println(TexteConsole.HIGHLIGHT + "Bonus soleil: +1 point" + TexteConsole.RESET);
                                     pointsGagnes += 1;
                                 } else {
                                     TexteConsole.notCaseSunStone();
@@ -182,7 +183,7 @@ public class LaticeApplicationConsole {
                                     TexteConsole.notCaseMoonStone();
                                 }
                                 
-                                System.out.println(TexteConsole.HIGHLIGHT + "Total des points gagnés: " + pointsGagnes + TexteConsole.HIGHLIGHT);
+                                System.out.println(TexteConsole.HIGHLIGHT + "Total des points gagnés: " + pointsGagnes + TexteConsole.RESET);
                                 
                                 // D'abord, on calcule le nombre total de points à ajouter
                                 int pointsAjouter = Math.round(pointsGagnes);
@@ -194,9 +195,7 @@ public class LaticeApplicationConsole {
                                 } else {
                                     arbitre.ajouterPoints(joueurIndex, pointsAjouter); // Ajouter les points calculés
                                 }
-
                             }
-
                             
                             premierCoup = false;
                             
@@ -250,15 +249,21 @@ public class LaticeApplicationConsole {
                     
                     // Changer de joueur
                     joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
+                    if (joueurCourant == joueur1) {
+                        totalTours++;
+                    }
                     break;
 
                     
                 case 3: // Passer son tour
-                	TexteConsole.passerTour(joueurCourant, currentPlayerColor);
+                    TexteConsole.passerTour(joueurCourant, currentPlayerColor);
                     TexteConsole.waitForEnter();
                     
                     // Changer de joueur
                     joueurCourant = (joueurCourant == joueur1) ? joueur2 : joueur1;
+                    if (joueurCourant == joueur1) {
+                        totalTours++;
+                    }
                     break;
                     
                 case 4: // Règles du jeu
@@ -268,8 +273,8 @@ public class LaticeApplicationConsole {
                     break;
                     
                 
-                case 5:
-                	System.out.println();
+                case 5: // Acheter un tour supplémentaire
+                    System.out.println();
                     // Appeler la méthode existante du joueur pour acheter un tour supplémentaire
                     boolean achatReussi = joueurCourant.jouerActionSpeciale(
                         (joueurCourant == joueur1) ? 0 : 1,  // index du joueur actuel
@@ -290,7 +295,7 @@ public class LaticeApplicationConsole {
                 	
                 
                 case 6: // Quitter la partie
-                	TexteConsole.remerciement();
+                    TexteConsole.remerciement();
                     quitter = true;
                     break;
                     
@@ -304,6 +309,10 @@ public class LaticeApplicationConsole {
             if (arbitre.finDePartie(new Rack[]{rackJoueur1, rackJoueur2}, totalTours, MAX_TOURS)) {
                 TexteConsole.clearScreen();
                 
+                // Affichage du tour final
+                System.out.println(TexteConsole.HIGHLIGHT + "TOUR FINAL: " + totalTours + "/" + MAX_TOURS + TexteConsole.RESET);
+                System.out.println();
+                
                 Joueur[] joueurs = {joueur1, joueur2};
                 List<Integer> gagnants = arbitre.getGagnants(joueurs);
                 int gagnant = gagnants.get(0);
@@ -313,16 +322,10 @@ public class LaticeApplicationConsole {
                 TexteConsole.finPartie(arbitre, joueur1, joueur2, colorJ1, colorJ2, gagnantNom, gagnantColor);
                 quitter = true;
             }
-
         }
         
         scanner.close();
     }
-
-	
-
-	
-
 }
 
 
