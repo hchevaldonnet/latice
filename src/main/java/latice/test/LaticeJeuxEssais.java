@@ -3,6 +3,7 @@ package latice.test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
 import latice.ihm.PlateauVueConsole;
 import latice.ihm.RackVueConsole;
 import latice.model.*;
@@ -15,14 +16,14 @@ public class LaticeJeuxEssais {
 	
 		
     @Test
-    public void testCaseIsMoonFalse() {
+    public void testerCaseLuneNonValide() {
         PositionTuiles notMoonCase = new PositionTuiles(2, 4);
         assertFalse(notMoonCase.estUneCaseLune(notMoonCase.getX(), notMoonCase.getY()), 
                 "La position (2,4) ne devrait pas être une case lune");
     }
     
     @Test
-    public void testCaseIsSunStone() {
+    public void testerCaseSoleilValide() {
         for (PositionCaseSoleil position : PositionCaseSoleil.values()) {
             assertTrue(PositionCaseSoleil.estUneCaseSoleil(position.getX(), position.getY()),
                     "La position (" + position.getX() + "," + position.getY() + ") devrait être une case soleil");
@@ -31,7 +32,7 @@ public class LaticeJeuxEssais {
 
     
     @Test
-    public void testCaseIsSunStonesFalse() {
+    public void testerCaseSoleilNonValide() {
     	assertFalse(PositionCaseSoleil.estUneCaseSoleil(3, 3),
                 "La position (3,3) ne devrait pas être une case soleil");
         assertFalse(PositionCaseSoleil.estUneCaseSoleil(1, 2),
@@ -43,7 +44,7 @@ public class LaticeJeuxEssais {
     }
     
     @Test
-    public void testPlacerTuileSuccess() {
+    public void testerPlacementTuileReussi() {
         Plateau plateau = new Plateau();
         Tuile tuile = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         PositionTuiles pos = new PositionTuiles(1, 1);
@@ -55,7 +56,7 @@ public class LaticeJeuxEssais {
     }
 
     @Test
-    public void testPlacerTuilePositionDejaOccupee() {
+    public void testerPlacementTuilePositionOccupee() {
         Plateau plateau = new Plateau();
         Tuile tuile1 = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         Tuile tuile2 = new Tuile(Couleur.VERT, Symbole.FLEUR);

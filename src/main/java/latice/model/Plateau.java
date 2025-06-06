@@ -8,8 +8,14 @@ public class Plateau {
 	private Map<PositionTuiles, Tuile > cases; 
 	
 	public Plateau(Map<PositionTuiles, Tuile> plateau) {
-		this.setCases(new HashMap<>());
+	    this.setCases(new HashMap<>(plateau));
 	}
+
+	
+	public Plateau() {
+	    this.cases = new HashMap<>();
+	}
+
 	
 	public void placerTuile(Tuile tuile, PositionTuiles pos) {
 		if (caseLibre(pos)) { 
