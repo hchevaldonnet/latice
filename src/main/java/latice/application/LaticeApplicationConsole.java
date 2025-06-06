@@ -35,7 +35,7 @@ public class LaticeApplicationConsole {
         Rack rackJoueur2 = new Rack(pioche);
         rackJoueur2.remplir(pioche, 1);
         
-        Plateau plateau = new Plateau(null);
+        Plateau plateau = new Plateau();
         
         boolean quitter = false;
         boolean tourSupplementaireActif = false;
@@ -184,15 +184,17 @@ public class LaticeApplicationConsole {
                                 
                                 System.out.println(TexteConsole.HIGHLIGHT + "Total des points gagnés: " + pointsGagnes + TexteConsole.HIGHLIGHT);
                                 
-                                // Convert to integer for adding to the score
-                                int pointsToAdd = Math.round(pointsGagnes);
-                                arbitre.ajouterPoints(joueurIndex, pointsToAdd);
-                                
-                                // Handle rule: if more than 3 points in one turn, discard extra points
-                                if (pointsToAdd > 3) {
-                                    System.out.println(TexteConsole.HIGHLIGHT + "Maximum de 3 points par tour! Points en excès perdus." + TexteConsole.RESET);
-                                    arbitre.ajouterPoints(joueurIndex, 3 - pointsToAdd); // Adjust to max 3 points
+                                // D'abord, on calcule le nombre total de points à ajouter
+                                int pointsAjouter = Math.round(pointsGagnes);
+
+                                // Règle : si plus de 3 points en un tour, limiter à 3 points
+                                if (pointsAjouter > 3) {
+                                    System.out.println(TexteConsole.HIGHLIGHT + "Maximum de 3 points par tour ! Points en excès perdus." + TexteConsole.RESET);
+                                    arbitre.ajouterPoints(joueurIndex, 3); // Ajouter exactement 3 points (le maximum)
+                                } else {
+                                    arbitre.ajouterPoints(joueurIndex, pointsAjouter); // Ajouter les points calculés
                                 }
+
                             }
 
                             
