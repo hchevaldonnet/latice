@@ -165,7 +165,7 @@ public class TexteConsole {
 	    }
 	    
 	 
-	    public static void waitForEnter() {
+	    public static void appuyerEnter() {
 	        System.out.println();
 	        System.out.println(HIGHLIGHT + "Appuyez sur Entrée pour continuer..." + RESET);
 	        Scanner scanner = new Scanner(System.in);
@@ -182,7 +182,7 @@ public class TexteConsole {
 	    public static void tuileInvalide() {
 			System.out.println();
 			System.out.println(HIGHLIGHT + "Tuile invalide. Veuillez réessayer." + RESET);
-			waitForEnter();
+			appuyerEnter();
 		}
 	    
 	    public static void finPartie(Arbitre arbitre, Joueur joueur1, Joueur joueur2, String colorJ1, String colorJ2,
@@ -234,6 +234,10 @@ public class TexteConsole {
 			System.out.println(colorJ1 + joueur1.getName() + " : " + arbitre.getScore(0) + " points" + TexteConsole.RESET);
 			System.out.println(colorJ2 + joueur2.getName() + " : " + arbitre.getScore(1) + " points" + TexteConsole.RESET);
 			sautDeLigne();
+		}
+	    
+	    public static void affichageTour(int totalTours, final int MAX_TOURS) {
+			System.out.println(HIGHLIGHT + "TOUR " + totalTours + "/" + MAX_TOURS + RESET);
 		}
 	    	    
 }
