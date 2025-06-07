@@ -2,184 +2,155 @@ package latice.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Arbitre {
-    private int[] pointsJoueur;
+    private double[] scores;
+    private final int nbJoueurs;
 
-    public Arbitre(int nombreJoueurs) {
-        setPointsJoueur(new int[nombreJoueurs]);
+    public Arbitre(int nbJoueurs) {
+        this.nbJoueurs = nbJoueurs;
+        this.scores = new double[nbJoueurs];
     }
-    
-    /**
-     * Vérifie si un coup est valide et retourne le nombre de correspondances
-     * @return -1 si coup invalide, sinon le nombre de correspondances (0-4)
-     */
-    public int verifierCoup(int currentRow, int currentCol, Tuile tuileSelectionnee, 
-                           Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueurActuel) {
-        // Vérifier si la position est déjà occupée
-        if (plateau.containsKey(new PositionTuiles(currentRow, currentCol))) {
-            return -1; // Case déjà occupée
-        }
-        
-        // Vérifier le premier coup (doit être au centre)
-        if (premierCoup && (currentRow != 4 || currentCol != 4)) {
-            return -1; // Le premier coup doit être au centre (5,5 pour l'utilisateur)
-        }
 
-        if (premierCoup) {
-            return 0; // Premier coup valide, pas de correspondances à vérifier
-        }
-
-        // Pour les coups suivants, vérifier au moins une adjacence
-        int correspondances = 0;
-        boolean adjacenceExiste = false;
-
-        // Vérifier en bas
-        PositionTuiles posBas = new PositionTuiles(currentRow + 1, currentCol);
-        if (plateau.containsKey(posBas)) {
-            adjacenceExiste = true;
-            Tuile tuileBas = plateau.get(posBas);
-            if (!sontCompatibles(tuileSelectionnee, tuileBas)) {
-                return -1; // Incompatible avec la tuile du bas
-            }
-            correspondances++;
-        }
-
-        // Vérifier en haut
-        PositionTuiles posHaut = new PositionTuiles(currentRow - 1, currentCol);
-        if (plateau.containsKey(posHaut)) {
-            adjacenceExiste = true;
-            Tuile tuileHaut = plateau.get(posHaut);
-            if (!sontCompatibles(tuileSelectionnee, tuileHaut)) {
-                return -1; // Incompatible avec la tuile du haut
-            }
-            correspondances++;
-        }
-
-        // Vérifier à gauche
-        PositionTuiles posGauche = new PositionTuiles(currentRow, currentCol - 1);
-        if (plateau.containsKey(posGauche)) {
-            adjacenceExiste = true;
-            Tuile tuileGauche = plateau.get(posGauche);
-            if (!sontCompatibles(tuileSelectionnee, tuileGauche)) {
-                return -1; // Incompatible avec la tuile de gauche
-            }
-            correspondances++;
-        }
-
-        // Vérifier à droite
-        PositionTuiles posDroite = new PositionTuiles(currentRow, currentCol + 1);
-        if (plateau.containsKey(posDroite)) {
-            adjacenceExiste = true;
-            Tuile tuileDroite = plateau.get(posDroite);
-            if (!sontCompatibles(tuileSelectionnee, tuileDroite)) {
-                return -1; // Incompatible avec la tuile de droite
-            }
-            correspondances++;
-        }
-
-        // Si aucune adjacence n'existe, le coup est invalide
-        if (!adjacenceExiste) {
+    public int verifierCoup(int ligne, int col, Tuile tuile, java.util.Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueur) {
+        // Vérifier si la position est valide
+        if (ligne < 0 || ligne > 8 || col < 0 || col > 8) {
             return -1;
         }
 
-        return correspondances;
-    }
-    
-    public void calculerPointsAprèsCoup(int currentRow, int currentCol, int correspondances, int joueurActuel) {
-        int points = 0;
-
-        if (correspondances == 2) {
-            points = 1;
-        } else if (correspondances == 3) {
-            points = 2;
-        } else if (correspondances == 4) {
-            points = 4;
+        // Vérifier si la case est déjà occupée
+        PositionTuiles position = new PositionTuiles(ligne, col);
+        if (plateau.containsKey(position)) {
+            return -1;
         }
 
-        if (PositionCaseSoleil.estUneCaseSoleil(currentRow, currentCol)) {
-            points += 1;
+        // Pour le premier coup, vérifier que c'est sur la case lune (4,4)
+        if (premierCoup) {
+            return (ligne == 4 && col == 4) ? 0 : -1;
         }
 
-        ajouterPoints(joueurActuel, points);
-    }
+        // Pour les coups suivants, vérifier l'adjacence et la compatibilité
+        int nbCorrespondances = 0;
+        boolean estAdjacent = false;
 
-    /**
-     * Vérifie si deux tuiles sont compatibles (même couleur ou même symbole)
-     */
-    private boolean sontCompatibles(Tuile tuile1, Tuile tuile2) {
-        return tuile1.symbole == tuile2.symbole || tuile1.couleur == tuile2.couleur;
-    }
-    
-    /**
-     * Vérifie si la partie est terminée
-     */
-    public boolean finDePartie(Rack[] racks, int totalTours, int maxTours) {
-        return totalTours >= maxTours;
-    }
-
-    /**
-     * Retourne la liste des indices des joueurs ayant le moins de tuiles restantes (rack + pioche).
-     */
-    public List<Integer> getGagnants(Joueur[] joueurs) {
-        List<Integer> gagnants = new ArrayList<>();
-        int minTuilesRestantes = Integer.MAX_VALUE;
-
-        for (int i = 0; i < joueurs.length; i++) {
-            int rackSize = joueurs[i].getRack().getTuiles().size();
-            int piocheSize = joueurs[i].getPioche().taille(i);
-            int totalRestantes = rackSize + piocheSize;
-
-            if (totalRestantes < minTuilesRestantes) {
-                gagnants.clear();
-                gagnants.add(i);
-                minTuilesRestantes = totalRestantes;
-            } else if (totalRestantes == minTuilesRestantes) {
-                gagnants.add(i);
+        // Vérifier les 4 cases adjacentes
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // haut, bas, gauche, droite
+        
+        for (int[] dir : directions) {
+            int newLigne = ligne + dir[0];
+            int newCol = col + dir[1];
+            
+            PositionTuiles posAdjacente = new PositionTuiles(newLigne, newCol);
+            Tuile tuileAdjacente = plateau.get(posAdjacente);
+            
+            if (tuileAdjacente != null) {
+                estAdjacent = true;
+                // Vérifier la compatibilité (même couleur ou même symbole)
+                if (tuileAdjacente.couleur == tuile.couleur || tuileAdjacente.symbole == tuile.symbole) {
+                    nbCorrespondances++;
+                } else {
+                    // Si une tuile adjacente n'est pas compatible, le coup est invalide
+                    return -1;
+                }
             }
         }
 
+        // Si aucune tuile adjacente, le coup est invalide sauf premier coup
+        if (!estAdjacent) {
+            return -1;
+        }
+
+        return nbCorrespondances;
+    }
+
+    public void calculerPointsAprèsCoup(int ligne, int col, int nbCorrespondances, int joueur) {
+        double points = 0;
+        
+        // Points de base selon le nombre de correspondances
+        if (nbCorrespondances == 2) {
+            points = 0.5;
+        } else if (nbCorrespondances == 3) {
+            points = 1.0;
+        } else if (nbCorrespondances == 4) {
+            points = 2.0;
+        }
+        
+        // Bonus pour case soleil
+        if (PositionCaseSoleil.estUneCaseSoleil(ligne, col)) {
+            points += 1.0;
+        }
+        
+        ajouterPoints(joueur, points);
+    }
+
+    public void ajouterPoints(int joueur, double points) {
+        if (joueur >= 0 && joueur < nbJoueurs) {
+            scores[joueur] += points;
+            // Limiter à un maximum de 3 points
+            if (scores[joueur] > 3) {
+                scores[joueur] = 3;
+            }
+        }
+    }
+
+    public void retirerPoints(int joueur, double points) {
+        if (joueur >= 0 && joueur < nbJoueurs) {
+            scores[joueur] -= points;
+            if (scores[joueur] < 0) {
+                scores[joueur] = 0;
+            }
+        }
+    }
+
+    public double getScore(int joueur) {
+        return (joueur >= 0 && joueur < nbJoueurs) ? scores[joueur] : 0;
+    }
+
+    public boolean finDePartie(Rack[] racks, int totalTours, int maxTours) {
+        // Vérifier si le nombre de tours maximal est atteint
+        if (totalTours >= maxTours) {
+            return true;
+        }
+        
+        // Vérifier si un joueur a un rack vide et sa pioche vide
+        for (int i = 0; i < nbJoueurs; i++) {
+            if (racks[i].getTuiles().isEmpty()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public List<Integer> getGagnants(Joueur[] joueurs) {
+        List<Integer> gagnants = new ArrayList<>();
+        int minTuiles = Integer.MAX_VALUE;
+        
+        // Trouver le nombre minimum de tuiles restantes
+        for (int i = 0; i < nbJoueurs; i++) {
+            int tuileRestantes = joueurs[i].getRack().getTuiles().size() + joueurs[i].getPioche().taille(i);
+            if (tuileRestantes < minTuiles) {
+                minTuiles = tuileRestantes;
+            }
+        }
+        
+        // Ajouter tous les joueurs qui ont ce nombre minimum de tuiles
+        for (int i = 0; i < nbJoueurs; i++) {
+            int tuileRestantes = joueurs[i].getRack().getTuiles().size() + joueurs[i].getPioche().taille(i);
+            if (tuileRestantes == minTuiles) {
+                gagnants.add(i);
+            }
+        }
+        
         return gagnants;
     }
 
-
-    /**
-     * Distribue les tuiles aux joueurs
-     */
     public void distribuerTuiles(Joueur[] joueurs) {
-        for (int i = 0; i < joueurs.length; i++) {
-            Rack rack = joueurs[i].getRack();
-            Pioche pioche = joueurs[i].getPioche();
-            rack.remplir(pioche, i);
+        for (int i = 0; i < nbJoueurs; i++) {
+            joueurs[i].getRack().remplir(joueurs[i].getPioche(), i);
         }
     }
-    
-    /**
-     * Retourne le score d'un joueur
-     */
-    public int getScore(int joueurIndex) {
-        if (joueurIndex >= 0 && joueurIndex < getPointsJoueur().length) {
-            return getPointsJoueur()[joueurIndex];
-        }
-        return 0;
-    }
-    
-    /**
-     * Ajoute des points à un joueur
-     */
-    public void ajouterPoints(int joueurIndex, int points) {
-        if (joueurIndex >= 0 && joueurIndex < getPointsJoueur().length) {
-            getPointsJoueur()[joueurIndex] += points;
-        }
-    }
-
-	public int[] getPointsJoueur() {
-		return pointsJoueur;
-	}
-
-	public void setPointsJoueur(int[] pointsJoueur) {
-		this.pointsJoueur = pointsJoueur;
-	}
 }
+
+
 

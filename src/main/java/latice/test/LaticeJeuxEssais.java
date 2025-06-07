@@ -329,67 +329,76 @@ public class LaticeJeuxEssais {
         int maxTours = 10;
         Arbitre arbitre = new Arbitre(nbJoueurs);
         Rack[] racks = new Rack[nbJoueurs];
+        Pioche pioche = new Pioche(nbJoueurs); // Create a pioche to initialize racks properly
+        
         for (int i = 0; i < nbJoueurs; i++) {
-            racks[i] = new Rack(new Pioche(nbJoueurs));
+            racks[i] = new Rack(pioche);
+            // Add some tuiles to each rack to ensure they're not empty
+            racks[i].ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
         }
+        
+        // Test with 5 tours - game should not be finished
         assertFalse(arbitre.finDePartie(racks, 5, maxTours), "Le jeu ne doit pas être terminé en 5 tours");
+        
+        // Test with max tours - game should be finished
         assertTrue(arbitre.finDePartie(racks, 10, maxTours), "Le jeu devrait être terminé à 10 tours");
+        
+        // Test with tours > maxTours - game should be finished
         assertTrue(arbitre.finDePartie(racks, 11, maxTours), "Le jeu devrait être terminé si le nombre de tours est supérieur au maximum");
     }
+
     
     @Test
     public void testEchangeRackJoueur() {
-        Pioche pioche = new Pioche(1);
+        Pioche pioche = new Pioche(1); // 1 player
         Rack rack = new Rack(pioche);
         Joueur joueur = new Joueur("TestJoueur", rack, pioche);
-        Arbitre arbitre = new Arbitre(1);
+        Arbitre arbitre = new Arbitre(1); // Arbitre for 1 player
         
         // Donner des points au joueur (l'échange de rack coûte 1 point)
-        arbitre.ajouterPoints(0, 2);
+        arbitre.ajouterPoints(0, 2); // Player 0 gets 2 points
         
-        // S'assurer que la pioche a suffisamment de tuiles pour l'échange
-        List<Tuile> tuilesAPiocher = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            tuilesAPiocher.add(new Tuile(Couleur.BLEU, Symbole.OISEAU));
-        }
-        pioche.ajouterTout(tuilesAPiocher, 0);
+        // S'assurer que la pioche a suffisamment de tuiles pour l'échange et le remplissage initial.
+        // La pioche est initialisée avec suffisamment de tuiles pour un joueur.
         
-        // Ajouter des tuiles au rack
-        for (int i = 0; i < 3; i++) {
-            rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
-        }
+        rack.remplir(pioche, 0); // Fill rack for player 0
+        assertEquals(5, rack.getTuiles().size(), "Le rack devrait contenir 5 tuiles avant l'action d'échange.");
         
-        // Sauvegarder les tuiles initiales
-        List<Tuile> tuilesDAvant = new ArrayList<>();
-        for (Tuile t : rack.getTuiles()) {
-            tuilesDAvant.add(t);
-        }
+        List<Tuile> tuilesDAvant = new ArrayList<>(rack.getTuiles());
         
-        // Effectuer l'action spéciale
         boolean resultat = joueur.jouerActionSpeciale(0, ActionSpeciale.ECHANGER_RACK, rack, pioche, arbitre);
-        assertTrue(resultat, "L'échange de rack devrait réussir");
+        assertTrue(resultat, "L'échange de rack devrait réussir.");
         
-        // Comparer les tuiles après l'échange
-        boolean rackAChange = false;
-        if (tuilesDAvant.size() != rack.getTuiles().size()) {
-            rackAChange = true;
-        } else {
-            for (int i = 0; i < tuilesDAvant.size(); i++) {
-                Tuile avant = tuilesDAvant.get(i);
-                if (i >= rack.getTuiles().size() || 
-                    !avant.couleur.equals(rack.getTuiles().get(i).couleur) || 
-                    !avant.symbole.equals(rack.getTuiles().get(i).symbole)) {
-                    rackAChange = true;
-                    break;
-                }
+        assertEquals(5, rack.getTuiles().size(), "Le rack devrait contenir 5 tuiles après l'échange.");
+        assertEquals(1, arbitre.getScore(0), "Le joueur devrait avoir 1 point après l'échange (-1 point).");
+
+        assertNotEquals(0, tuilesDAvant.size(), "Le rack initial (après remplissage) ne devrait pas être vide.");
+        
+        // Vérifier que les tuiles ont changé.
+        // Il est possible, bien que très improbable avec une grande pioche, que les mêmes tuiles soient piochées.
+        boolean tuilesIdentiques = true;
+        // Les assertions précédentes garantissent que tuilesDAvant.size() et rack.getTuiles().size() sont toutes les deux 5.
+        for (int i = 0; i < tuilesDAvant.size(); i++) {
+            Tuile avant = tuilesDAvant.get(i);
+            Tuile apres = rack.getTuiles().get(i);
+            // Vérifie si la tuile à la même position est différente
+            if (!avant.couleur.equals(apres.couleur) || !avant.symbole.equals(apres.symbole)) {
+                tuilesIdentiques = false; // Au moins une tuile est différente, donc les racks sont différents
+                break; 
             }
         }
+        // Si la boucle se termine et tuilesIdentiques est toujours true, cela signifie que toutes les tuiles sont les mêmes.
+        // Dans le contexte de l'échange, on s'attend à ce qu'elles soient différentes.
         
-        assertTrue(rackAChange, "Le rack devrait être différent après échange");
+        assertFalse(tuilesIdentiques, "Le rack devrait être différent après échange. Si ce test échoue occasionnellement, cela peut être dû à la pioche aléatoire redonnant les mêmes tuiles.");
     }
 
+
+
+
+
     @Test
-    public void testerRemplissageRackAutomatique() {
+    public void testRemplissageRackAutomatique() {
         Pioche pioche = new Pioche(1);
         Rack rack = new Rack(pioche);
         
@@ -404,7 +413,7 @@ public class LaticeJeuxEssais {
     }
 
     @Test
-    public void testerCalculPointsAvecCaseSoleil() {
+    public void testCalculPointsAvecCaseSoleil() {
         Plateau plateau = new Plateau();
         Arbitre arbitre = new Arbitre(2);
         
@@ -436,7 +445,7 @@ public class LaticeJeuxEssais {
     }
 
     @Test
-    public void testerAchatTourSupplementaire() {
+    public void testAchatTourSupplementaire() {
         Arbitre arbitre = new Arbitre(1);
         Pioche pioche = new Pioche(1);
         Rack rack = new Rack(pioche);
@@ -491,5 +500,146 @@ public class LaticeJeuxEssais {
         // Vérifier que le rack est vide
         assertTrue(rack.getTuiles().isEmpty(), "Le rack devrait être vide après l'appel à vider()");
     }
+    
+    @Test
+    public void testCaseLuneValide() {
+        PositionTuiles moonCase = new PositionTuiles(4, 4);
+        assertTrue(moonCase.estUneCaseLune(moonCase.getX(), moonCase.getY()), 
+                "La position (4,4) devrait être une case lune");
+    }
+
+    @Test
+    public void testPlacementLaticeQuatreCotes() {
+        Plateau plateau = new Plateau();
+        Arbitre arbitre = new Arbitre(2);
+        
+        // D'abord placer une tuile sur la case lune pour initialiser le jeu
+        Tuile tuileLune = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
+        plateau.placerTuile(tuileLune, new PositionTuiles(4, 4));
+        
+        // Utiliser la position (3,3) comme point central pour notre test
+        int centerX = 3;
+        int centerY = 3;
+        
+        // Placer des tuiles autour de notre point central
+        Tuile tuileHaut = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
+        Tuile tuileDroite = new Tuile(Couleur.BLEU, Symbole.FLEUR);
+        Tuile tuileBas = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
+        Tuile tuileGauche = new Tuile(Couleur.BLEU, Symbole.FLEUR);
+        
+        // Placer des tuiles autour de (3,3)
+        plateau.placerTuile(tuileHaut, new PositionTuiles(centerX-1, centerY));  // Au-dessus
+        plateau.placerTuile(tuileDroite, new PositionTuiles(centerX, centerY+1)); // À droite
+        plateau.placerTuile(tuileBas, new PositionTuiles(centerX+1, centerY));   // En-dessous
+        plateau.placerTuile(tuileGauche, new PositionTuiles(centerX, centerY-1)); // À gauche
+
+        Tuile tuileLatice = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
+        
+        // Vérifier le coup
+        int resultat = arbitre.verifierCoup(centerX, centerY, tuileLatice, plateau.getCases(), false, 0);
+        
+        // Vérifier que le coup est valide et a 4 correspondances
+        assertEquals(4, resultat, "Le placement devrait avoir exactement 4 correspondances");
+    }
+
+
+
+    @Test
+    public void testComportementPiocheVide() {
+        Pioche pioche = new Pioche(1);
+        Rack rack = new Rack(pioche);
+        
+        // Vider la pioche en piochant toutes les tuiles
+        while(!pioche.estVide(0)) {
+            pioche.piocher(0);
+        }
+        
+        // Vérifier que la pioche est bien vide
+        assertTrue(pioche.estVide(0), "La pioche devrait être vide");
+        assertEquals(0, pioche.taille(0), "La taille de la pioche devrait être 0");
+        
+        // Tenter de piocher sur une pioche vide
+        Tuile tuilePiochee = pioche.piocher(0);
+        assertNull(tuilePiochee, "Piocher sur une pioche vide devrait retourner null");
+        
+        // Tenter de remplir un rack depuis une pioche vide
+        int tailleDepartRack = rack.getTuiles().size();
+        rack.remplir(pioche, 0);
+        assertEquals(tailleDepartRack, rack.getTuiles().size(), 
+                "La taille du rack ne devrait pas changer quand la pioche est vide");
+    }
+
+    @Test
+    public void testLimiteCapaciteRack() {
+        Pioche pioche = new Pioche(1);
+        Rack rack = new Rack(pioche);
+        
+        // Ajouter 8 tuiles au rack (dépassant la limite normale de 5)
+        for (int i = 0; i < 8; i++) {
+            rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
+        }
+        
+        // Le rack peut contenir plus de 5 tuiles si on ajoute manuellement
+        assertEquals(8, rack.getTuiles().size(), "Le rack peut contenir plus de 5 tuiles si ajoutées manuellement");
+        
+        // Mais lors du remplissage automatique, il devrait s'arrêter à 5
+        rack.vider(); // Vider d'abord le rack
+        rack.remplir(pioche, 0); // Remplir automatiquement
+        assertEquals(5, rack.getTuiles().size(), 
+                "Le remplissage automatique du rack devrait s'arrêter à 5 tuiles");
+    }
+
+    @Test
+    public void testCalculPointsAvecCaseSoleilCorrige() {
+        Plateau plateau = new Plateau();
+        Arbitre arbitre = new Arbitre(2);
+
+        // Placer une tuile adjacente à une case soleil
+        Tuile tuileAdjacente = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
+        plateau.placerTuile(tuileAdjacente, new PositionTuiles(0, 1));
+
+        // Placer une tuile sur la case soleil (0,0)
+        Tuile tuileSoleil = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
+
+        // Vérifier le coup et obtenir le nombre de correspondances
+        int resultat = arbitre.verifierCoup(0, 0, tuileSoleil, plateau.getCases(), false, 0);
+
+        // Vérifier que le coup est valide et a au moins 1 correspondance
+        assertTrue(resultat >= 1, "Le placement devrait avoir au moins 1 correspondance");
+
+        // Placer réellement la tuile
+        plateau.placerTuile(tuileSoleil, new PositionTuiles(0, 0));
+
+        // Calculer les points en tenant compte du bonus soleil
+        arbitre.calculerPointsAprèsCoup(0, 0, resultat, 0);
+
+        // La formule de calcul est 0 point pour 1 correspondance + 1 point bonus soleil
+        assertEquals(1.0, arbitre.getScore(0), "Le score devrait être de 1.0 point avec une correspondance sur case soleil");
+    }
+
+
+    @Test
+    public void testActionSpecialePointsInsuffisants() {
+        Arbitre arbitre = new Arbitre(1);
+        Pioche pioche = new Pioche(1);
+        Rack rack = new Rack(pioche);
+        Joueur joueur = new Joueur("TestJoueur", rack, pioche);
+        
+        // Cas 1: Tour supplémentaire sans assez de points (besoin de 2 points)
+        arbitre.ajouterPoints(0, 1); // Seulement 1 point
+        boolean resultat = joueur.jouerActionSpeciale(0, ActionSpeciale.ACTION_SUPPLEMENTAIRE, rack, pioche, arbitre);
+        assertFalse(resultat, "L'achat du tour supplémentaire devrait échouer avec seulement 1 point");
+        assertEquals(1, arbitre.getScore(0), "Le score ne devrait pas changer après un échec d'action");
+        
+        // Cas 2: Échange de rack sans assez de points (besoin de 1 point)
+        // Assurer que le score est 0 pour ce test spécifique
+        arbitre.retirerPoints(0, arbitre.getScore(0)); // Met le score à 0
+        
+        resultat = joueur.jouerActionSpeciale(0, ActionSpeciale.ECHANGER_RACK, rack, pioche, arbitre);
+        assertFalse(resultat, "L'échange de rack devrait échouer sans points");
+        assertEquals(0, arbitre.getScore(0), "Le score devrait rester à 0");
+    }
+
 }
+
 
