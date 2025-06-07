@@ -205,11 +205,11 @@ public class LaticeJeuxEssais {
         Tuile tuile = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         
         // Premier coup valide (au centre)
-        int resultat = arbitre.verifierCoup(4, 4, tuile, plateau.getCases(), true, 0);
+        int resultat = arbitre.verifierCoup(4, 4, tuile, plateau.getCases(), true);
         assertTrue(resultat >= 0, "Le premier coup au centre (4,4) devrait être valide");
         
         // Premier coup invalide (pas au centre)
-        resultat = arbitre.verifierCoup(1, 1, tuile, plateau.getCases(), true, 0);
+        resultat = arbitre.verifierCoup(1, 1, tuile, plateau.getCases(), true);
         assertEquals(-1, resultat, "Le premier coup ailleurs qu'au centre devrait être invalide");
     }
     
@@ -225,17 +225,17 @@ public class LaticeJeuxEssais {
         
         // Tuile compatible (même couleur)
         Tuile tuileCompatibleCouleur = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
-        int resultat = arbitre.verifierCoup(4, 5, tuileCompatibleCouleur, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(4, 5, tuileCompatibleCouleur, plateau.getCases(), false);
         assertTrue(resultat >= 0, "Une tuile de même couleur devrait être compatible");
         
         // Tuile compatible (même symbole)
         Tuile tuileCompatibleSymbole = new Tuile(Couleur.BLEU, Symbole.FLEUR);
-        resultat = arbitre.verifierCoup(5, 4, tuileCompatibleSymbole, plateau.getCases(), false, 0);
+        resultat = arbitre.verifierCoup(5, 4, tuileCompatibleSymbole, plateau.getCases(), false);
         assertTrue(resultat >= 0, "Une tuile de même symbole devrait être compatible");
         
         // Tuile incompatible (ni même couleur, ni même symbole)
         Tuile tuileIncompatible = new Tuile(Couleur.BLEU, Symbole.LEZARD);
-        resultat = arbitre.verifierCoup(3, 4, tuileIncompatible, plateau.getCases(), false, 0);
+        resultat = arbitre.verifierCoup(3, 4, tuileIncompatible, plateau.getCases(), false);
         assertEquals(-1, resultat, "Une tuile incompatible devrait être rejetée");
     }
     
@@ -247,10 +247,10 @@ public class LaticeJeuxEssais {
         Tuile tuile = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         
         // Placer une tuile hors des limites
-        int resultat = arbitre.verifierCoup(-1, 4, tuile, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(-1, 4, tuile, plateau.getCases(), false);
         assertEquals(-1, resultat, "Le placement hors limites devrait être invalide");
         
-        resultat = arbitre.verifierCoup(9, 4, tuile, plateau.getCases(), false, 0);
+        resultat = arbitre.verifierCoup(9, 4, tuile, plateau.getCases(), false);
         assertEquals(-1, resultat, "Le placement hors limites devrait être invalide");
     }
     
@@ -277,12 +277,12 @@ public class LaticeJeuxEssais {
         
         // Tester une tuile compatible et adjacente
         Tuile tuileAdjacente = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
-        int resultat = arbitre.verifierCoup(4, 5, tuileAdjacente, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(4, 5, tuileAdjacente, plateau.getCases(), false);
         assertTrue(resultat >= 0, "Une tuile adjacente et compatible devrait être acceptée");
         
         // Tester une tuile compatible mais non adjacente
         Tuile tuileNonAdjacente = new Tuile(Couleur.ROUGE, Symbole.OISEAU);
-        resultat = arbitre.verifierCoup(2, 2, tuileNonAdjacente, plateau.getCases(), false, 0);
+        resultat = arbitre.verifierCoup(2, 2, tuileNonAdjacente, plateau.getCases(), false);
         assertEquals(-1, resultat, "Une tuile non adjacente devrait être rejetée");
     }
     
@@ -304,7 +304,7 @@ public class LaticeJeuxEssais {
         Tuile tuileLatice = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         
         // Vérifier le placement sur une position libre (3,6) entourée de 3 tuiles compatibles
-        int resultat = arbitre.verifierCoup(3, 6, tuileLatice, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(3, 6, tuileLatice, plateau.getCases(), false);
         
         // Vérifier le nombre de correspondances
         assertEquals(3, resultat, "Placer une tuile avec 3 correspondances");
@@ -319,7 +319,7 @@ public class LaticeJeuxEssais {
         plateau.placerTuile(tuileCentre, new PositionTuiles(4, 4));
         
         Tuile tuileDiagonale = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
-        int resultat = arbitre.verifierCoup(3, 5, tuileDiagonale, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(3, 5, tuileDiagonale, plateau.getCases(), false);
         assertEquals(-1, resultat, "Une tuile diagonale ne doit pas être acceptée");
     }
     
@@ -428,7 +428,7 @@ public class LaticeJeuxEssais {
         Tuile tuileAdjacente = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
         
         // Vérifier le coup et obtenir le nombre de correspondances
-        int resultat = arbitre.verifierCoup(0, 1, tuileAdjacente, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(0, 1, tuileAdjacente, plateau.getCases(), false);
         
         // Vérifier que le coup est valide et a au moins 1 correspondance
         assertTrue(resultat >= 1, "Le placement devrait avoir au moins 1 correspondance");
@@ -438,7 +438,7 @@ public class LaticeJeuxEssais {
         
         // Calculer les points en tenant compte du bonus soleil
         // Important: Nous devons spécifier les coordonnées de la case soleil (0,0)
-        arbitre.calculerPointsAprèsCoup(0, 0, resultat, 0);
+        arbitre.calculerPointsApresCoup(0, 0, resultat, 0);
         
         // Le joueur devrait avoir plus de points qu'un placement normal (avec bonus soleil)
         assertTrue(arbitre.getScore(0) > 0, "Le score devrait être positif avec bonus case soleil");
@@ -536,7 +536,7 @@ public class LaticeJeuxEssais {
         Tuile tuileLatice = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         
         // Vérifier le coup
-        int resultat = arbitre.verifierCoup(centerX, centerY, tuileLatice, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(centerX, centerY, tuileLatice, plateau.getCases(), false);
         
         // Vérifier que le coup est valide et a 4 correspondances
         assertEquals(4, resultat, "Le placement devrait avoir exactement 4 correspondances");
@@ -602,7 +602,7 @@ public class LaticeJeuxEssais {
         Tuile tuileSoleil = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
 
         // Vérifier le coup et obtenir le nombre de correspondances
-        int resultat = arbitre.verifierCoup(0, 0, tuileSoleil, plateau.getCases(), false, 0);
+        int resultat = arbitre.verifierCoup(0, 0, tuileSoleil, plateau.getCases(), false);
 
         // Vérifier que le coup est valide et a au moins 1 correspondance
         assertTrue(resultat >= 1, "Le placement devrait avoir au moins 1 correspondance");
@@ -611,7 +611,7 @@ public class LaticeJeuxEssais {
         plateau.placerTuile(tuileSoleil, new PositionTuiles(0, 0));
 
         // Calculer les points en tenant compte du bonus soleil
-        arbitre.calculerPointsAprèsCoup(0, 0, resultat, 0);
+        arbitre.calculerPointsApresCoup(0, 0, resultat, 0);
 
         // La formule de calcul est 0 point pour 1 correspondance + 1 point bonus soleil
         assertEquals(1.0, arbitre.getScore(0), "Le score devrait être de 1.0 point avec une correspondance sur case soleil");

@@ -34,7 +34,7 @@ public class PlacementService {
             // Utiliser l'arbitre pour vérifier le coup
             int resultatVerificationCoup = arbitre.verifierCoup(
                 ligneSelectionnee, colonneSelectionnee, tuileSelectionnee, 
-                plateauDeJeu.getCases(), premierCoup, indexJoueur);
+                plateauDeJeu.getCases(), premierCoup);
             
             if (resultatVerificationCoup >= 0) {
                 executerPlacementValide(joueurActuel, rackActuel, plateauDeJeu, pioche, arbitre, 

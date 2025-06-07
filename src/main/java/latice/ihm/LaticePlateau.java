@@ -169,12 +169,12 @@ public class LaticePlateau extends Application {
 
     public void gererClicTuile(int ligne, int col, ImageView tuileView) {
         if (tuileSelectionnee != null && !(boolean) tuileView.getUserData()) {
-            int resultat = arbitre.verifierCoup(ligne, col, tuileSelectionnee, plateau, premierCoup, joueurActuel);
+            int resultat = arbitre.verifierCoup(ligne, col, tuileSelectionnee, plateau, premierCoup);
             if (resultat != -1) {
                 tuileView.setImage(new javafx.scene.image.Image(PlateauVueJavaFX.CHEMIN_IMAGE + tuileSelectionnee.getImagePath()));
                 tuileView.setUserData(true);
                 plateau.put(new PositionTuiles(ligne, col), tuileSelectionnee);
-                arbitre.calculerPointsAprèsCoup(ligne, col, resultat, joueurActuel);
+                arbitre.calculerPointsApresCoup(ligne, col, resultat, joueurActuel);
                 retirerTuileDuRack(joueurActuel, indexTuileSelectionnee);
                 premierCoup = false;
                 majPoints();

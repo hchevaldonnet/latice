@@ -12,7 +12,7 @@ public class Arbitre {
         this.scores = new double[nbJoueurs];
     }
 
-    public int verifierCoup(int ligne, int col, Tuile tuile, java.util.Map<PositionTuiles, Tuile> plateau, boolean premierCoup, int joueur) {
+    public int verifierCoup(int ligne, int col, Tuile tuile, java.util.Map<PositionTuiles, Tuile> plateau, boolean premierCoup) {
         // Vérifier si la position est valide
         if (ligne < 0 || ligne > 8 || col < 0 || col > 8) {
             return -1;
@@ -63,7 +63,7 @@ public class Arbitre {
         return nbCorrespondances;
     }
 
-    public void calculerPointsAprèsCoup(int ligne, int col, int nbCorrespondances, int joueur) {
+    public void calculerPointsApresCoup(int ligne, int col, int nbCorrespondances, int joueur) {
         double points = 0;
         
         // Points de base selon le nombre de correspondances
