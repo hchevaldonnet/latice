@@ -71,7 +71,7 @@ public class JeuController {
         TexteConsole.affichageScore(arbitre, joueurs[0], joueurs[1], couleursJoueurs[0], couleursJoueurs[1]);
 
         // Afficher le plateau
-        System.out.println(TexteConsole.HIGHLIGHT + "PLATEAU DE JEU:" + TexteConsole.RESET);
+        System.out.println(TexteConsole.SURBRILLANCE + "PLATEAU DE JEU:" + TexteConsole.REINITIALISATION);
         PlateauVue plateauView = new PlateauVueConsole();
         PlateauVueConsole plateauViewConsole = (PlateauVueConsole) plateauView;
         plateauViewConsole.afficherPlateau(plateauDeJeu, afficherIndices);
@@ -81,7 +81,7 @@ public class JeuController {
         // Afficher le rack du joueur courant
         System.out.println(racks[joueurActuelIndex].afficherRack(couleurJoueurActuel + 
                 "C'est au tour de " + joueurs[joueurActuelIndex].getName() + 
-                ", voici votre rack :" + TexteConsole.RESET));
+                ", voici votre rack :" + TexteConsole.REINITIALISATION));
         System.out.println();
 
         // Afficher les options du menu
@@ -147,8 +147,8 @@ public class JeuController {
             TexteConsole.effacerEcran();
 
             // Affichage du tour final
-            System.out.println(TexteConsole.HIGHLIGHT + "TOUR FINAL: " + tourActuel + "/" + 
-                              ConfigurationJeu.NOMBRE_MAX_TOURS + TexteConsole.RESET);
+            System.out.println(TexteConsole.SURBRILLANCE + "TOUR FINAL: " + tourActuel + "/" + 
+                              ConfigurationJeu.NOMBRE_MAX_TOURS + TexteConsole.REINITIALISATION);
             System.out.println();
 
             List<Integer> indicesGagnants = arbitre.getGagnants(joueurs);

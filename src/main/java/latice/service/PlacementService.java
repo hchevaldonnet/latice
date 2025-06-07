@@ -18,9 +18,9 @@ public class PlacementService {
         int indexTuileSelectionnee = latice.ihm.SaisieConsole.saisieTuiles();
         
         if (premierCoup) {
-            System.out.println(TexteConsole.HIGHLIGHT + 
+            System.out.println(TexteConsole.SURBRILLANCE + 
                               "Premier coup: vous devez jouer au centre (position 5,5)" + 
-                              TexteConsole.RESET);
+                              TexteConsole.REINITIALISATION);
             System.out.println();
         }
         
@@ -61,7 +61,7 @@ public class PlacementService {
         
         // Feedback sur le coup joué
         System.out.println();
-        System.out.println(couleurJoueur + "Tuile placée avec succès!" + TexteConsole.RESET);
+        System.out.println(couleurJoueur + "Tuile placée avec succès!" + TexteConsole.REINITIALISATION);
         
         // Points gagnés
         if (resultatVerification > 0) {
@@ -73,7 +73,7 @@ public class PlacementService {
         // Gérer le tour supplémentaire
         if (this.tourSpecialActif) {
             this.tourSpecialActif = false;
-            System.out.println(TexteConsole.HIGHLIGHT + "Vous jouez votre tour supplémentaire." + TexteConsole.RESET);
+            System.out.println(TexteConsole.SURBRILLANCE + "Vous jouez votre tour supplémentaire." + TexteConsole.REINITIALISATION);
         }
         
         TexteConsole.appuyerEnter();
@@ -81,21 +81,21 @@ public class PlacementService {
     
     private void calculerEtAfficherPoints(Arbitre arbitre, PositionTuiles position, 
                                          int correspondances, int indexJoueur) {
-        System.out.println(TexteConsole.HIGHLIGHT + "Correspondances: " + correspondances + TexteConsole.RESET);
+        System.out.println(TexteConsole.SURBRILLANCE + "Correspondances: " + correspondances + TexteConsole.REINITIALISATION);
         float pointsGagnesCeTour = 0;
         
         if (correspondances == ConfigurationJeu.DOUBLE_CORRESPONDANCES) {
             pointsGagnesCeTour = ConfigurationJeu.POINTS_DOUBLE;
-            System.out.println(TexteConsole.HIGHLIGHT + "Double! +" + 
-                              ConfigurationJeu.POINTS_DOUBLE + " point" + TexteConsole.RESET);
+            System.out.println(TexteConsole.SURBRILLANCE + "Double! +" + 
+                              ConfigurationJeu.POINTS_DOUBLE + " point" + TexteConsole.REINITIALISATION);
         } else if (correspondances == ConfigurationJeu.TREFOIL_CORRESPONDANCES) {
             pointsGagnesCeTour = ConfigurationJeu.POINTS_TREFOIL;
-            System.out.println(TexteConsole.HIGHLIGHT + "Trefoil! +" + 
-                              ConfigurationJeu.POINTS_TREFOIL + " point" + TexteConsole.RESET);
+            System.out.println(TexteConsole.SURBRILLANCE + "Trefoil! +" + 
+                              ConfigurationJeu.POINTS_TREFOIL + " point" + TexteConsole.REINITIALISATION);
         } else if (correspondances == ConfigurationJeu.LATICE_CORRESPONDANCES) {
             pointsGagnesCeTour = ConfigurationJeu.POINTS_LATICE;
-            System.out.println(TexteConsole.HIGHLIGHT + "Latice! +" + 
-                              ConfigurationJeu.POINTS_LATICE + " points" + TexteConsole.RESET);
+            System.out.println(TexteConsole.SURBRILLANCE + "Latice! +" + 
+                              ConfigurationJeu.POINTS_LATICE + " points" + TexteConsole.REINITIALISATION);
         }
         
         // Vérifier les cases spéciales
@@ -106,17 +106,17 @@ public class PlacementService {
             TexteConsole.afficherSiCaseSoleil(false, ConfigurationJeu.POINTS_BONUS_SOLEIL);
         }
         
-        System.out.println(TexteConsole.HIGHLIGHT + "Total des points gagnés: " + 
-                          pointsGagnesCeTour + TexteConsole.RESET);
+        System.out.println(TexteConsole.SURBRILLANCE + "Total des points gagnés: " + 
+                          pointsGagnesCeTour + TexteConsole.REINITIALISATION);
         
         // D'abord, on calcule le nombre total de points à ajouter
         int pointsAAjouter = Math.round(pointsGagnesCeTour);
         
         // Règle : si plus de 3 points en un tour, limiter à 3 points
         if (pointsAAjouter > ConfigurationJeu.MAX_POINTS_PAR_TOUR) {
-            System.out.println(TexteConsole.HIGHLIGHT + "Maximum de " + 
+            System.out.println(TexteConsole.SURBRILLANCE + "Maximum de " + 
                               ConfigurationJeu.MAX_POINTS_PAR_TOUR + 
-                              " points par tour ! Points en excès perdus." + TexteConsole.RESET);
+                              " points par tour ! Points en excès perdus." + TexteConsole.REINITIALISATION);
             arbitre.ajouterPoints(indexJoueur, ConfigurationJeu.MAX_POINTS_PAR_TOUR);
         } else {
             arbitre.ajouterPoints(indexJoueur, pointsAAjouter);
@@ -126,9 +126,9 @@ public class PlacementService {
     private void afficherErreurPlacement(boolean premierCoup) {
         System.out.println();
         if (premierCoup) {
-            System.out.println(TexteConsole.HIGHLIGHT + 
+            System.out.println(TexteConsole.SURBRILLANCE + 
                               "Le premier coup doit être joué au centre (position 5,5). Veuillez réessayer." + 
-                              TexteConsole.RESET);
+                              TexteConsole.REINITIALISATION);
         } else {
             TexteConsole.placementImpossible();
         }

@@ -12,9 +12,9 @@ public class TourService {
         
         // Vérifier si le joueur a au moins 1 point à dépenser
         if (arbitre.getScore(indexJoueur) < ConfigurationJeu.COUT_NOUVELLE_MAIN) {
-            System.out.println(TexteConsole.HIGHLIGHT + 
+            System.out.println(TexteConsole.SURBRILLANCE + 
                               "Vous n'avez pas assez de points pour piocher une nouvelle main (coût: " + 
-                              ConfigurationJeu.COUT_NOUVELLE_MAIN + " point)." + TexteConsole.RESET);
+                              ConfigurationJeu.COUT_NOUVELLE_MAIN + " point)." + TexteConsole.REINITIALISATION);
         } else {
             // Déduire 1 point du score
             arbitre.ajouterPoints(indexJoueur, -ConfigurationJeu.COUT_NOUVELLE_MAIN);
@@ -24,7 +24,7 @@ public class TourService {
             joueurActuel.getRack().remplir(pioche, indexJoueur);
             
             System.out.println(couleurJoueur + "Vous avez pioché une nouvelle main (-" + 
-                              ConfigurationJeu.COUT_NOUVELLE_MAIN + " point)." + TexteConsole.RESET);
+                              ConfigurationJeu.COUT_NOUVELLE_MAIN + " point)." + TexteConsole.REINITIALISATION);
         }
         
         TexteConsole.appuyerEnter();
@@ -50,13 +50,13 @@ public class TourService {
         
         if (actionSpecialeReussie) {
             System.out.println(couleurJoueur + "Tour supplémentaire acheté avec succès (-" + 
-                              ConfigurationJeu.COUT_TOUR_SUPPLEMENTAIRE + " points)." + TexteConsole.RESET);
+                              ConfigurationJeu.COUT_TOUR_SUPPLEMENTAIRE + " points)." + TexteConsole.REINITIALISATION);
             TexteConsole.appuyerEnter();
             return true;
         } else {
-            System.out.println(TexteConsole.HIGHLIGHT + 
+            System.out.println(TexteConsole.SURBRILLANCE + 
                               "Vous n'avez pas assez de points pour acheter un tour supplémentaire." + 
-                              TexteConsole.RESET);
+                              TexteConsole.REINITIALISATION);
             TexteConsole.appuyerEnter();
             return false;
         }

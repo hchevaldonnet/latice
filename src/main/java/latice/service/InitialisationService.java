@@ -38,7 +38,7 @@ public class InitialisationService {
                                                       racks, joueurs, afficherIndices);
         
         // Configuration des couleurs des joueurs
-        String[] couleursJoueurs = {TexteConsole.PLAYER1, TexteConsole.PLAYER2};
+        String[] couleursJoueurs = {TexteConsole.JOUEUR1, TexteConsole.JOUEUR2};
         jeuController.setCouleursJoueurs(couleursJoueurs);
         
         TexteConsole.afficherBienvenue();
@@ -58,19 +58,19 @@ public class InitialisationService {
     }
     
     private Joueur[] initialiserJoueurs(Rack[] racks, Pioche pioche) {
-        TexteConsole.formatJoueur(TexteConsole.PLAYER1, "Joueur 1 :");
+        TexteConsole.formatJoueur(TexteConsole.JOUEUR1, "Joueur 1 :");
         String nomJoueur1 = SaisieConsole.saisieChar();
         TexteConsole.sautDeLigne();
         
-        TexteConsole.formatJoueur(TexteConsole.PLAYER2, "Joueur 2 :");
+        TexteConsole.formatJoueur(TexteConsole.JOUEUR2, "Joueur 2 :");
         String nomJoueur2 = SaisieConsole.saisieChar();
         
         // Vérifier que les noms des joueurs sont différents
         while (nomJoueur2.equals(nomJoueur1)) {
-            System.out.println(TexteConsole.HIGHLIGHT + 
+            System.out.println(TexteConsole.SURBRILLANCE + 
                               "Les noms des joueurs doivent être différents. Veuillez choisir un autre nom." + 
-                              TexteConsole.RESET);
-            TexteConsole.formatJoueur(TexteConsole.PLAYER2, "Joueur 2 :");
+                              TexteConsole.REINITIALISATION);
+            TexteConsole.formatJoueur(TexteConsole.JOUEUR2, "Joueur 2 :");
             nomJoueur2 = SaisieConsole.saisieChar();
         }
         System.out.println();
@@ -83,7 +83,7 @@ public class InitialisationService {
         joueurs[1] = new Joueur(ordreDesJoueurs[1], racks[1], pioche);
         
         TexteConsole.affichageJoueurs(joueurs[0], joueurs[1], 
-                                     TexteConsole.PLAYER1, TexteConsole.PLAYER2);
+                                     TexteConsole.JOUEUR1, TexteConsole.JOUEUR2);
         
         return joueurs;
     }
