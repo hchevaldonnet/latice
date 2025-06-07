@@ -426,6 +426,9 @@ public class LaticeJeuxEssais {
         Plateau plateau = new Plateau();
         Arbitre arbitre = new Arbitre(2);
         
+        // Verify initial score is 0
+        assertEquals(0, arbitre.getScore(0), "Score initial devrait être 0");
+        
         // Place a tile on a sun case (0,0)
         Tuile tuileSoleil = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         plateau.placerTuile(tuileSoleil, new PositionTuiles(0, 0));
@@ -436,18 +439,21 @@ public class LaticeJeuxEssais {
         // Verify the move and get the number of correspondences
         int resultat = arbitre.verifierCoup(0, 1, tuileAdjacente, plateau.getCases(), false, 0);
         
-        // Check that the move is valid
-        assertTrue(resultat >= 0, "Le placement à côté d'une case soleil devrait être valide");
+        // Check that the move is valid and has at least 1 correspondence
+        assertTrue(resultat >= 1, "Le placement devrait avoir au moins 1 correspondance");
         
-        // Actually place the tile (important!)
+        // Actually place the tile
         plateau.placerTuile(tuileAdjacente, new PositionTuiles(0, 1));
         
         // Calculate points taking into account the sun bonus
-        arbitre.calculerPointsAprèsCoup(0, 1, resultat, 0);
+        // Important: We need to specify the coordinates of the sun case (0,0)
+        arbitre.calculerPointsAprèsCoup(0, 0, resultat, 0);
         
         // The player should have more points than a normal placement (with sun bonus)
         assertTrue(arbitre.getScore(0) > 0, "Le score devrait être positif avec bonus case soleil");
     }
+
+
 
 
 
@@ -509,5 +515,4 @@ public class LaticeJeuxEssais {
     }
 
    
-
 }
