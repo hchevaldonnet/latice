@@ -1,10 +1,7 @@
 package latice.test;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-
-
 
 import latice.ihm.PlateauVueConsole;
 import latice.ihm.RackVueConsole;
@@ -16,12 +13,10 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class LaticeJeuxEssais {
-	
-		
+    
     @Test
-    public void testerCaseLuneNonValide() {
+    public void testCaseLuneNonValide() {
         PositionTuiles notMoonCase = new PositionTuiles(2, 4);
         assertFalse(notMoonCase.estUneCaseLune(notMoonCase.getX(), notMoonCase.getY()), 
                 "La position (2,4) ne devrait pas être une case lune");
@@ -34,11 +29,10 @@ public class LaticeJeuxEssais {
                     "La position (" + position.getX() + "," + position.getY() + ") devrait être une case soleil");
         }
     }
-
     
     @Test
-    public void testerCaseSoleilNonValide() {
-    	assertFalse(PositionCaseSoleil.estUneCaseSoleil(3, 3),
+    public void testCaseSoleilNonValide() {
+        assertFalse(PositionCaseSoleil.estUneCaseSoleil(3, 3),
                 "La position (3,3) ne devrait pas être une case soleil");
         assertFalse(PositionCaseSoleil.estUneCaseSoleil(1, 2),
                 "La position (1,2) ne devrait pas être une case soleil");
@@ -49,7 +43,7 @@ public class LaticeJeuxEssais {
     }
     
     @Test
-    public void testerPlacementTuileReussi() {
+    public void testPlacementTuileReussi() {
         Plateau plateau = new Plateau();
         Tuile tuile = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         PositionTuiles pos = new PositionTuiles(1, 1);
@@ -61,7 +55,7 @@ public class LaticeJeuxEssais {
     }
 
     @Test
-    public void testerPlacementTuilePositionOccupee() {
+    public void testPlacementTuilePositionOccupee() {
         Plateau plateau = new Plateau();
         Tuile tuile1 = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         Tuile tuile2 = new Tuile(Couleur.VERT, Symbole.FLEUR);
@@ -78,9 +72,9 @@ public class LaticeJeuxEssais {
     @Test
     public void testAffichagePlateauConsole() {
         // Rediriger la sortie standard pour tester l'affichage
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
+        ByteArrayOutputStream contenuSortie = new ByteArrayOutputStream();
+        PrintStream sortieOriginale = System.out;
+        System.setOut(new PrintStream(contenuSortie));
         
         try {
             // Créer et configurer le plateau
@@ -91,48 +85,48 @@ public class LaticeJeuxEssais {
             plateau.placerTuile(new Tuile(Couleur.BLEU, Symbole.LEZARD), new PositionTuiles(4, 5));
             
             // Afficher le plateau avec la vue console
-            PlateauVueConsole plateauView = new PlateauVueConsole();
-            plateauView.afficherPlateau(plateau);
+            PlateauVueConsole plateauVue = new PlateauVueConsole();
+            plateauVue.afficherPlateau(plateau);
             
             // Vérifier que la sortie contient des caractères attendus
-            String output = outContent.toString();
-            assertTrue(output.contains("["), "L'affichage devrait contenir des crochets");
-            assertTrue(output.length() > 100, "L'affichage devrait être assez long pour un plateau 9x9");
+            String sortie = contenuSortie.toString();
+            assertTrue(sortie.contains("["), "L'affichage devrait contenir des crochets");
+            assertTrue(sortie.length() > 100, "L'affichage devrait être assez long pour un plateau 9x9");
             
         } finally {
             // Restaurer la sortie standard
-            System.setOut(originalOut);
+            System.setOut(sortieOriginale);
         }
     }
-    
+
     @Test
     public void testAffichagePlateauConsoleAvecIndices() {
         // Rediriger la sortie standard
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
+        ByteArrayOutputStream contenuSortie = new ByteArrayOutputStream();
+        PrintStream sortieOriginale = System.out;
+        System.setOut(new PrintStream(contenuSortie));
         
         try {
             Plateau plateau = new Plateau();
-            PlateauVueConsole plateauView = new PlateauVueConsole();
+            PlateauVueConsole plateauVue = new PlateauVueConsole();
             
             // Afficher avec indices
-            plateauView.afficherPlateau(plateau, true);
+            plateauVue.afficherPlateau(plateau, true);
             
-            String output = outContent.toString();
-            assertTrue(output.contains("1"), "Les indices numériques devraient être affichés");
-            assertTrue(output.contains("9"), "L'indice 9 devrait être présent pour une grille 9x9");
+            String sortie = contenuSortie.toString();
+            assertTrue(sortie.contains("1"), "Les indices numériques devraient être affichés");
+            assertTrue(sortie.contains("9"), "L'indice 9 devrait être présent pour une grille 9x9");
             
         } finally {
-            System.setOut(originalOut);
+            System.setOut(sortieOriginale);
         }
     }
-    
+
     @Test
     public void testAffichageRackConsole() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
+        ByteArrayOutputStream contenuSortie = new ByteArrayOutputStream();
+        PrintStream sortieOriginale = System.out;
+        System.setOut(new PrintStream(contenuSortie));
         
         try {
             // Créer une pioche et un rack
@@ -144,22 +138,19 @@ public class LaticeJeuxEssais {
             rack.ajoutTuile(new Tuile(Couleur.BLEU, Symbole.OISEAU));
             
             // Afficher le rack
-            RackVueConsole rackView = new RackVueConsole();
-            rackView.afficherRack(rack);
+            RackVueConsole rackVue = new RackVueConsole();
+            rackVue.afficherRack(rack);
             
-            String output = outContent.toString();
-            assertTrue(output.contains("Votre rack contient"), "L'affichage devrait indiquer le contenu du rack");
+            String sortie = contenuSortie.toString();
+            assertTrue(sortie.contains("Votre rack contient"), "L'affichage devrait indiquer le contenu du rack");
             
         } finally {
-            System.setOut(originalOut);
+            System.setOut(sortieOriginale);
         }
     }
-    
-    // V3 - Interface graphique pour le plateau et les racks
-   
+
     
     // V4 - Initialisation de la partie dans l'interface graphique
-
     @Test
     public void testOrdreJoueurNom1EnPremier() {
         String nom1 = "Alice";
@@ -174,7 +165,7 @@ public class LaticeJeuxEssais {
             }
         }
 
-        assertTrue("Alice n'a jamais été en première position", trouve);
+        assertTrue(trouve, "Alice n'a jamais été en première position");
     }
 
     @Test
@@ -191,24 +182,21 @@ public class LaticeJeuxEssais {
             }
         }
 
-        assertTrue("Bob n'a jamais été en première position", trouve);
+        assertTrue(trouve, "Bob n'a jamais été en première position");
     }
 
-		
-		@Test
-		public void PiochesTailleTuile() {
-			Pioche pioche = new Pioche(2);
-	        int tailleJoueur1 = pioche.taille(0);
-	        int tailleJoueur2 = pioche.taille(1);
-	        assertEquals(36, tailleJoueur1, "Joueur 1 doit avoir 36 tuiles");
-	        assertEquals(36, tailleJoueur2, "Joueur doit avoir 36 tuiles");
-	        assertEquals(tailleJoueur1, tailleJoueur2, "Les deux joueurs doivent avoir le même nombre de tuiles");
-		}
-	
-	
+    @Test
+    public void testPiochesTailleTuile() {
+        Pioche pioche = new Pioche(2);
+        int tailleJoueur1 = pioche.taille(0);
+        int tailleJoueur2 = pioche.taille(1);
+        assertEquals(36, tailleJoueur1, "Joueur 1 doit avoir 36 tuiles");
+        assertEquals(36, tailleJoueur2, "Joueur 2 doit avoir 36 tuiles");
+        assertEquals(tailleJoueur1, tailleJoueur2, "Les deux joueurs doivent avoir le même nombre de tuiles");
+    }
+    
     // V5 - Tests de placement de tuiles via l'interface graphique
     // Tests unitaires pour contrôler le placement des tuiles
-    
     @Test
     public void testPlacementTuilePremierCoup() {
         // Test du premier coup qui doit être au centre (4,4)
@@ -268,7 +256,7 @@ public class LaticeJeuxEssais {
     
     @Test
     public void testPlacementTuileCasesSpeciales() {
-    	PositionTuiles posLune = new PositionTuiles(4, 4);
+        PositionTuiles posLune = new PositionTuiles(4, 4);
         assertTrue(posLune.estUneCaseLune(posLune.getX(), posLune.getY()), 
                 "La position (4,4) devrait être une case lune");
         
@@ -322,15 +310,13 @@ public class LaticeJeuxEssais {
         assertEquals(3, resultat, "Placer une tuile avec 3 correspondances");
     }
 
-
     @Test
-    public void testPlacementTuileDiagonale(){
+    public void testPlacementTuileDiagonale() {
         Plateau plateau = new Plateau();
         Arbitre arbitre = new Arbitre(2);
         
         Tuile tuileCentre = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         plateau.placerTuile(tuileCentre, new PositionTuiles(4, 4));
-        
         
         Tuile tuileDiagonale = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
         int resultat = arbitre.verifierCoup(3, 5, tuileDiagonale, plateau.getCases(), false, 0);
@@ -339,53 +325,51 @@ public class LaticeJeuxEssais {
     
     @Test
     public void testFindePartie() {
-    	 int nbJoueurs = 2;
-         int maxTours = 10;
-         Arbitre arbitre = new Arbitre(nbJoueurs);
-         Rack[] racks = new Rack[nbJoueurs];
-         for (int i = 0; i < nbJoueurs; i++) {
-             racks[i] = new Rack(new Pioche(nbJoueurs));
-         }
-         assertFalse(arbitre.finDePartie(racks, 5, maxTours), "Le jeu ne doit pas être terminé en 5 tours");
-         assertTrue(arbitre.finDePartie(racks, 10, maxTours), "Le jeu devrait être terminé à 10 tours");
-         assertTrue(arbitre.finDePartie(racks, 11, maxTours), "Le jeu devrait être terminé si le nombre de tours est supérieur au maximum");
-     }
+        int nbJoueurs = 2;
+        int maxTours = 10;
+        Arbitre arbitre = new Arbitre(nbJoueurs);
+        Rack[] racks = new Rack[nbJoueurs];
+        for (int i = 0; i < nbJoueurs; i++) {
+            racks[i] = new Rack(new Pioche(nbJoueurs));
+        }
+        assertFalse(arbitre.finDePartie(racks, 5, maxTours), "Le jeu ne doit pas être terminé en 5 tours");
+        assertTrue(arbitre.finDePartie(racks, 10, maxTours), "Le jeu devrait être terminé à 10 tours");
+        assertTrue(arbitre.finDePartie(racks, 11, maxTours), "Le jeu devrait être terminé si le nombre de tours est supérieur au maximum");
+    }
     
-    
-//-------------------------------------------------------------
     @Test
-    public void testerEchangeRackJoueur() {
+    public void testEchangeRackJoueur() {
         Pioche pioche = new Pioche(1);
         Rack rack = new Rack(pioche);
         Joueur joueur = new Joueur("TestJoueur", rack, pioche);
         Arbitre arbitre = new Arbitre(1);
         
-        // Give some points to the player (exchange rack costs 1 point)
+        // Donner des points au joueur (l'échange de rack coûte 1 point)
         arbitre.ajouterPoints(0, 2);
         
-        // Make sure the pioche has enough tiles for the exchange
+        // S'assurer que la pioche a suffisamment de tuiles pour l'échange
         List<Tuile> tuilesAPiocher = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             tuilesAPiocher.add(new Tuile(Couleur.BLEU, Symbole.OISEAU));
         }
         pioche.ajouterTout(tuilesAPiocher, 0);
         
-        // Add tiles to rack
+        // Ajouter des tuiles au rack
         for (int i = 0; i < 3; i++) {
             rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
         }
         
-        // Save initial tiles
+        // Sauvegarder les tuiles initiales
         List<Tuile> tuilesDAvant = new ArrayList<>();
         for (Tuile t : rack.getTuiles()) {
             tuilesDAvant.add(t);
         }
         
-        // Perform the special action
+        // Effectuer l'action spéciale
         boolean resultat = joueur.jouerActionSpeciale(0, ActionSpeciale.ECHANGER_RACK, rack, pioche, arbitre);
         assertTrue(resultat, "L'échange de rack devrait réussir");
         
-        // Compare tiles after exchange
+        // Comparer les tuiles après l'échange
         boolean rackAChange = false;
         if (tuilesDAvant.size() != rack.getTuiles().size()) {
             rackAChange = true;
@@ -403,8 +387,6 @@ public class LaticeJeuxEssais {
         
         assertTrue(rackAChange, "Le rack devrait être différent après échange");
     }
-
-
 
     @Test
     public void testerRemplissageRackAutomatique() {
@@ -426,36 +408,32 @@ public class LaticeJeuxEssais {
         Plateau plateau = new Plateau();
         Arbitre arbitre = new Arbitre(2);
         
-        // Verify initial score is 0
+        // Vérifier que le score initial est 0
         assertEquals(0, arbitre.getScore(0), "Score initial devrait être 0");
         
-        // Place a tile on a sun case (0,0)
+        // Placer une tuile sur une case soleil (0,0)
         Tuile tuileSoleil = new Tuile(Couleur.ROUGE, Symbole.FLEUR);
         plateau.placerTuile(tuileSoleil, new PositionTuiles(0, 0));
         
-        // Place a compatible adjacent tile
+        // Placer une tuile adjacente compatible
         Tuile tuileAdjacente = new Tuile(Couleur.ROUGE, Symbole.LEZARD);
         
-        // Verify the move and get the number of correspondences
+        // Vérifier le coup et obtenir le nombre de correspondances
         int resultat = arbitre.verifierCoup(0, 1, tuileAdjacente, plateau.getCases(), false, 0);
         
-        // Check that the move is valid and has at least 1 correspondence
+        // Vérifier que le coup est valide et a au moins 1 correspondance
         assertTrue(resultat >= 1, "Le placement devrait avoir au moins 1 correspondance");
         
-        // Actually place the tile
+        // Placer réellement la tuile
         plateau.placerTuile(tuileAdjacente, new PositionTuiles(0, 1));
         
-        // Calculate points taking into account the sun bonus
-        // Important: We need to specify the coordinates of the sun case (0,0)
+        // Calculer les points en tenant compte du bonus soleil
+        // Important: Nous devons spécifier les coordonnées de la case soleil (0,0)
         arbitre.calculerPointsAprèsCoup(0, 0, resultat, 0);
         
-        // The player should have more points than a normal placement (with sun bonus)
+        // Le joueur devrait avoir plus de points qu'un placement normal (avec bonus soleil)
         assertTrue(arbitre.getScore(0) > 0, "Le score devrait être positif avec bonus case soleil");
     }
-
-
-
-
 
     @Test
     public void testerAchatTourSupplementaire() {
@@ -475,7 +453,7 @@ public class LaticeJeuxEssais {
     }
 
     @Test
-    public void testerDistributionInitialeTuiles() {
+    public void testDistributionInitialeTuiles() {
         int nbJoueurs = 2;
         Arbitre arbitre = new Arbitre(nbJoueurs);
         Joueur[] joueurs = new Joueur[nbJoueurs];
@@ -513,6 +491,5 @@ public class LaticeJeuxEssais {
         // Vérifier que le rack est vide
         assertTrue(rack.getTuiles().isEmpty(), "Le rack devrait être vide après l'appel à vider()");
     }
-
-   
 }
+
