@@ -6,7 +6,6 @@ import latice.model.setup.PreparerJeu;
 
 public class PreparerJeuTest {
 
-	//TODO: changer le nom de tous les test par "doit" + verbe à l'infinitif pour respecter la convention de nommage des tests unitaires	
     @Test
     public void doitPermettreNom1SoitPremierePosition() {
         String nom1 = "Alice";
