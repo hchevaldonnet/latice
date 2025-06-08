@@ -15,7 +15,7 @@ public class Tuile {
 		 return this.couleur.getAnsiCode() + this.symbole.getSymboleUnicode() + "\u001B[0m";
 	}
 
-	public String getImagePath() {
+	public String getCheminImage() {
 		return this.symbole.getSymboleTexte() +"_"+this.couleur.getcouleur()+".png";	
 	}	
 	
