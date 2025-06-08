@@ -41,17 +41,15 @@ public class LaticePlateau extends Application {
     private Label[] tuilesRestantesLabel = new Label[NB_JOUEURS];
     private Label[] pointsLabels = new Label[NB_JOUEURS];
 
-    private PlateauVueJavaFX plateauVue;
+    private PlateauVue plateauVue;
 
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
 
         plateauVue = new PlateauVueJavaFX(this);
-        GridPane plateau = plateauVue.creerPlateau();
-        root.setCenter(plateau);
+        root.setCenter(plateauVue.getVuePlateau());
 
-        // Saisie noms joueurs
         String[] nomsJoueurs = new String[NB_JOUEURS];
         for (int i = 0; i < NB_JOUEURS; i++) {
             boolean nomValide = false;
@@ -69,10 +67,10 @@ public class LaticePlateau extends Application {
                         nomsJoueurs[i] = nomEntre;
                         nomValide = true;
                     } else {
-                    	montrerAlerte("Le nom ne peut pas être vide !");
+                        montrerAlerte("Le nom ne peut pas être vide !");
                     }
                 } else {
-                	montrerAlerte("Vous devez entrer un nom pour continuer.");
+                    montrerAlerte("Vous devez entrer un nom pour continuer.");
                 }
             }
         }
@@ -101,6 +99,7 @@ public class LaticePlateau extends Application {
         arbitre.distribuerTuiles(joueurs);
         majRack();
         majTuilesRestantes();
+        plateauVue.afficherPlateau(new Plateau(plateau)); // Initialisation visuelle
 
         VBox rackBox = new VBox(10);
         rackBox.setPadding(new Insets(10));
@@ -179,7 +178,7 @@ public class LaticePlateau extends Application {
                 premierCoup = false;
                 majPoints();
                 changerDeTour();
-                plateauVue.afficherPlateau(new Plateau(plateau)); // rafraîchissement visuel
+                plateauVue.afficherPlateau(new Plateau(plateau)); // Rafraîchissement visuel
             } else {
                 montrerAlerte("Coup invalide !");
             }
@@ -244,7 +243,7 @@ public class LaticePlateau extends Application {
         if (arbitre.finDePartie(racks, totalTours, MAX_TOURS)) {
             List<Integer> gagnants = arbitre.getGagnants(joueurs);
             proclamerResultats(gagnants);
-            return; // Stoppe ici, ne continue pas le tour
+            return;
         }
 
         tourLabel.setText("Tour de " + joueurs[joueurActuel].getName());
@@ -278,13 +277,13 @@ public class LaticePlateau extends Application {
             int piocheTuiles = joueurs[i].getPioche().taille(i);
             int total = rackTuiles + piocheTuiles;
             resultats.append(joueurs[i].getName())
-                     .append(" : ")
-                     .append(total)
-                     .append(" tuiles restantes (Rack: ")
-                     .append(rackTuiles)
-                     .append(", Pioche: ")
-                     .append(piocheTuiles)
-                     .append(")\n");
+                    .append(" : ")
+                    .append(total)
+                    .append(" tuiles restantes (Rack: ")
+                    .append(rackTuiles)
+                    .append(", Pioche: ")
+                    .append(piocheTuiles)
+                    .append(")\n");
         }
 
         resultats.append("\n");
@@ -292,10 +291,10 @@ public class LaticePlateau extends Application {
         if (gagnants.size() == 1) {
             int gagnant = gagnants.get(0);
             resultats.append("Le gagnant est : ")
-                     .append(joueurs[gagnant].getName())
-                     .append(" avec ")
-                     .append(joueurs[gagnant].getRack().getTuiles().size() + joueurs[gagnant].getPioche().taille(gagnant))
-                     .append(" tuiles restantes !");
+                    .append(joueurs[gagnant].getName())
+                    .append(" avec ")
+                    .append(joueurs[gagnant].getRack().getTuiles().size() + joueurs[gagnant].getPioche().taille(gagnant))
+                    .append(" tuiles restantes !");
         } else {
             resultats.append("Égalité entre : ");
             for (int i = 0; i < gagnants.size(); i++) {
@@ -303,8 +302,8 @@ public class LaticePlateau extends Application {
                 if (i < gagnants.size() - 1) resultats.append(", ");
             }
             resultats.append(" avec ")
-                     .append(joueurs[gagnants.get(0)].getRack().getTuiles().size() + joueurs[gagnants.get(0)].getPioche().taille(gagnants.get(0)))
-                     .append(" tuiles restantes !");
+                    .append(joueurs[gagnants.get(0)].getRack().getTuiles().size() + joueurs[gagnants.get(0)].getPioche().taille(gagnants.get(0)))
+                    .append(" tuiles restantes !");
         }
 
         Alert alerte = new Alert(Alert.AlertType.INFORMATION);
@@ -319,6 +318,7 @@ public class LaticePlateau extends Application {
 
         alerte.show();
     }
+
     private void montrerAlerte(String message) {
         Alert alerte = new Alert(Alert.AlertType.INFORMATION);
         alerte.setTitle("Latice");

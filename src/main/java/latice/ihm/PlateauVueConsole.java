@@ -1,5 +1,6 @@
 package latice.ihm;
 
+import javafx.scene.layout.Pane;
 import latice.model.Plateau;
 import latice.model.PositionTuiles;
 import latice.model.Tuile;
@@ -46,6 +47,12 @@ public class PlateauVueConsole implements PlateauVue {
 
         }
     }
+
+	@Override
+	public Pane getVuePlateau() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
 
