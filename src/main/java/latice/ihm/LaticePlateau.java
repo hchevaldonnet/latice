@@ -48,7 +48,7 @@ public class LaticePlateau extends Application {
         BorderPane root = new BorderPane();
 
         plateauVue = new PlateauVueJavaFX(this);
-        GridPane plateau = plateauVue.createBoard();
+        GridPane plateau = plateauVue.creerPlateau();
         root.setCenter(plateau);
 
         // Saisie noms joueurs
@@ -171,7 +171,7 @@ public class LaticePlateau extends Application {
         if (tuileSelectionnee != null && !(boolean) tuileView.getUserData()) {
             int resultat = arbitre.verifierCoup(ligne, col, tuileSelectionnee, plateau, premierCoup);
             if (resultat != -1) {
-                tuileView.setImage(new javafx.scene.image.Image(PlateauVueJavaFX.CHEMIN_IMAGE + tuileSelectionnee.getImagePath()));
+                tuileView.setImage(new javafx.scene.image.Image(PlateauVueJavaFX.CHEMIN_RESSOURCES_IMAGES + tuileSelectionnee.getImagePath()));
                 tuileView.setUserData(true);
                 plateau.put(new PositionTuiles(ligne, col), tuileSelectionnee);
                 arbitre.calculerPointsApresCoup(ligne, col, resultat, joueurActuel);
@@ -193,10 +193,10 @@ public class LaticePlateau extends Application {
             if (joueur != joueurActuel) continue;
             for (int i = 0; i < racks[j].getTuiles().size(); i++) {
                 Tuile tuile = racks[j].getTuiles().get(i);
-                String cheminImage = PlateauVueJavaFX.CHEMIN_IMAGE + tuile.getImagePath();
+                String cheminImage = PlateauVueJavaFX.CHEMIN_RESSOURCES_IMAGES + tuile.getImagePath();
                 ImageView tileVue = new ImageView(new javafx.scene.image.Image(cheminImage));
-                tileVue.setFitWidth(PlateauVueJavaFX.TUILE_TAILLE);
-                tileVue.setFitHeight(PlateauVueJavaFX.TUILE_TAILLE);
+                tileVue.setFitWidth(PlateauVueJavaFX.DIMENSION_IMAGE_TUILE);
+                tileVue.setFitHeight(PlateauVueJavaFX.DIMENSION_IMAGE_TUILE);
 
                 final int index = i;
                 tileVue.setOnMouseClicked(event -> {
