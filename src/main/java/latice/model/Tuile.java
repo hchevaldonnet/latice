@@ -11,13 +11,17 @@ public class Tuile {
 	
 	@Override
 	public String toString() {
-
-		 return this.couleur.getAnsiCode() + this.symbole.getSymboleUnicode() + "\u001B[0m";
+		String symboleUnicode = this.symbole.getSymboleUnicode();
+		String suffixePadding = "\u2004"; 
+		
+		return this.couleur.getAnsiCode() + symboleUnicode + suffixePadding + "\u001B[0m";
 	}
 
 	public String getCheminImage() {
 		return this.symbole.getSymboleTexte() +"_"+this.couleur.getcouleur()+".png";	
 	}	
-	
-
 }
+
+
+
+

@@ -114,10 +114,9 @@ public class ArbitreTest {
         int maxTours = 10;
         Arbitre arbitre = new Arbitre(nbJoueurs);
         Rack[] racks = new Rack[nbJoueurs];
-        Pioche pioche = new Pioche(nbJoueurs);
         
         for (int i = 0; i < nbJoueurs; i++) {
-            racks[i] = new Rack(pioche);
+            racks[i] = new Rack();
             racks[i].ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
         }
         
@@ -154,7 +153,7 @@ public class ArbitreTest {
         Pioche pioche = new Pioche(nbJoueurs);
         
         for (int i = 0; i < nbJoueurs; i++) {
-            joueurs[i] = new Joueur("Joueur" + i, new Rack(pioche), pioche);
+            joueurs[i] = new Joueur("Joueur" + i, new Rack(), pioche);
         }
         
         arbitre.distribuerTuiles(joueurs);

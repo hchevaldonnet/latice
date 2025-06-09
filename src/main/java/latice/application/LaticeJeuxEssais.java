@@ -63,8 +63,8 @@ public class LaticeJeuxEssais {
         Pioche pioche = new Pioche(2);
         
         // Création des racks pour chaque joueur
-        Rack rackJoueur1 = new Rack(pioche);
-        Rack rackJoueur2 = new Rack(pioche);
+        Rack rackJoueur1 = new Rack();
+        Rack rackJoueur2 = new Rack();
         
         // Remplissage des racks
         rackJoueur1.remplir(pioche, 0);
@@ -146,7 +146,7 @@ public class LaticeJeuxEssais {
         System.out.println("Résultat de pioche dans une pioche vide: " + (tuilePiochee == null ? "null (correct)" : "une tuile (incorrect)"));
         
         // Test de remplissage d'un rack avec une pioche vide
-        Rack rack = new Rack(pioche);
+        Rack rack = new Rack();
         rack.remplir(pioche, 0);
         System.out.println("Nombre de tuiles dans le rack après tentative de remplissage avec une pioche vide: " + rack.getTuiles().size());
     }

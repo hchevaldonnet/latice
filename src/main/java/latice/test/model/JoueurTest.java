@@ -17,7 +17,7 @@ public class JoueurTest {
     @Test
     public void doitEchangerRackJoueur() {
         Pioche pioche = new Pioche(1);
-        Rack rack = new Rack(pioche);
+        Rack rack = new Rack();
         Joueur joueur = new Joueur("TestJoueur", rack, pioche);
         Arbitre arbitre = new Arbitre(1);
         
@@ -56,7 +56,7 @@ public class JoueurTest {
     public void doitAcheterTourSupplementaire() {
         Arbitre arbitre = new Arbitre(1);
         Pioche pioche = new Pioche(1);
-        Rack rack = new Rack(pioche);
+        Rack rack = new Rack();
         Joueur joueur = new Joueur("TestJoueur", rack, pioche);
         
         arbitre.ajouterPoints(0, 3);
@@ -71,7 +71,7 @@ public class JoueurTest {
     public void doitTesterActionSpecialePointsInsuffisants() {
         Arbitre arbitre = new Arbitre(1);
         Pioche pioche = new Pioche(1);
-        Rack rack = new Rack(pioche);
+        Rack rack = new Rack();
         Joueur joueur = new Joueur("TestJoueur", rack, pioche);
         
         // Cas 1: Tour supplémentaire sans assez de points (besoin de 2 points)

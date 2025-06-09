@@ -86,7 +86,7 @@ public class LaticePlateau extends Application {
         majLabelTours();
 
         for (int i = 0; i < NB_JOUEURS; i++) {
-            racks[i] = new Rack(pioches);
+            racks[i] = new Rack();
             racksHbox[i] = new HBox(5);
             tuilesRestantesLabel[i] = new Label();
             pointsLabels[i] = new Label("Points " + nomsJoueurs[i] + " : 0");

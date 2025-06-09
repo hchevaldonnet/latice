@@ -6,7 +6,7 @@ import java.util.List;
 public class Rack {
 	private List<Tuile> tuiles;
 	
-	public Rack(Pioche pioches) {
+	public Rack() {
 		this.tuiles = new ArrayList<>();
 	}
 	

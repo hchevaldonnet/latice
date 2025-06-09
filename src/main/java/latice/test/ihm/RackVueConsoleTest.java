@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import latice.ihm.RackVueConsole;
 import latice.model.Rack;
-import latice.model.Pioche;
 import latice.model.Tuile;
 import latice.model.Couleur;
 import latice.model.Symbole;
@@ -20,9 +19,8 @@ public class RackVueConsoleTest {
         System.setOut(new PrintStream(contenuSortie));
         
         try {
-            // Créer une pioche et un rack
-            Pioche pioche = new Pioche(1);
-            Rack rack = new Rack(pioche);
+            // Créer un rack
+            Rack rack = new Rack();
             
             // Ajouter des tuiles au rack
             rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));

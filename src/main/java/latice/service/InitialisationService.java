@@ -18,7 +18,7 @@ public class InitialisationService {
         
         Rack[] racks = new Rack[ConfigurationJeu.NOMBRE_JOUEURS];
         for (int i = 0; i < ConfigurationJeu.NOMBRE_JOUEURS; i++) {
-            racks[i] = new Rack(pioche);
+            racks[i] = new Rack();
             racks[i].remplir(pioche, i);
         }
         

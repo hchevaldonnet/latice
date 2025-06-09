@@ -13,7 +13,7 @@ public class RackTest {
     @Test
     public void doitRemplirRackAutomatiquement() {
         Pioche pioche = new Pioche(1);
-        Rack rack = new Rack(pioche);
+        Rack rack = new Rack();
         
         assertEquals(0, rack.getTuiles().size(), "Le rack devrait être vide initialement");
         
@@ -23,8 +23,7 @@ public class RackTest {
 
     @Test
     public void doitViderRack() {
-        Pioche pioche = new Pioche(1);
-        Rack rack = new Rack(pioche);
+        Rack rack = new Rack();
         
         for (int i = 0; i < 3; i++) {
             rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
@@ -39,7 +38,7 @@ public class RackTest {
     @Test
     public void doitRespecterLimiteCapaciteRack() {
         Pioche pioche = new Pioche(1);
-        Rack rack = new Rack(pioche);
+        Rack rack = new Rack();
         
         for (int i = 0; i < 8; i++) {
             rack.ajoutTuile(new Tuile(Couleur.ROUGE, Symbole.FLEUR));
