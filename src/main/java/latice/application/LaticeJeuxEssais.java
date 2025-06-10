@@ -12,21 +12,21 @@ public class LaticeJeuxEssais {
         System.out.println("=== DÉBUT DES TESTS DE LATICE ===");
         
         // Test 1: Création et vérification de la pioche
-        testCreationPioche();
+        doitCreerPioche();
         
         // Test 2: Distribution des tuiles aux joueurs
-        testDistributionTuiles();
+        doittDistribuerTuiles();
         
         // Test 3: Test de placement de tuiles
-        testPlacementTuiles();
+        doitPlacerTuiles();
         
         // Test 4: Test des pioches vides (test aux limites)
-        testPiocheVide();
+        doitTesterPiocheVide();
         
         System.out.println("\n=== FIN DES TESTS DE LATICE ===");
     }
     
-    private static void testCreationPioche() {
+    private static void doitCreerPioche() {
         System.out.println("\n--- Test de création de la pioche ---");
         
         // Création d'une pioche pour 2 joueurs
@@ -56,7 +56,7 @@ public class LaticeJeuxEssais {
         }
     }
     
-    private static void testDistributionTuiles() {
+    private static void doittDistribuerTuiles() {
         System.out.println("\n--- Test de distribution des tuiles ---");
         
         // Création d'une pioche pour 2 joueurs
@@ -94,7 +94,7 @@ public class LaticeJeuxEssais {
     }
     
     
-    private static void testPlacementTuiles() {
+    private static void doitPlacerTuiles() {
         System.out.println("\n--- Test de placement des tuiles ---");
         
         Plateau plateau = new Plateau();
@@ -125,7 +125,7 @@ public class LaticeJeuxEssais {
         System.out.println("Tuile 2 placée en (4,5): " + (plateau.getTuile(position2) != null));
     }
     
-    private static void testPiocheVide() {
+    private static void doitTesterPiocheVide() {
         System.out.println("\n--- Test des pioches vides (test aux limites) ---");
         
         // Création d'une pioche pour 2 joueurs
